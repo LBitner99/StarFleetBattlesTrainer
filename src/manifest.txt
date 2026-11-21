@@ -2,6 +2,7 @@
 js/01-geometry.js
 js/02-rule-tables.js
 data/ships.js
+data/starbase.js
 js/03-ships.js
 js/04-weapon-info.js
 js/05-crew-quality.js
@@ -35,6 +36,7 @@ js/28-refits.js
 js/28b-tugs.js
 js/28c-fighters.js
 js/28d-orion-mounts.js
+js/28e-starbase.js
 js/29-ui.js
 js/30-match-history.js
 js/31-victory-points.js

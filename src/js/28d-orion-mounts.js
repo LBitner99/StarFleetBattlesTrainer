@@ -32,4 +32,4 @@ function omRoll(){const T=[['D22',40],['D15',6],['D30',9],['PHO',10],['P3',7],['
 function omUI(who){if(!optOM)return'';const ids=slotRf(who),m=omGet(ids);
  return`<div class="rfs"><b>Option mounts (G15.4, Master Rulebook)</b>`+m.map((c,k)=>`<label class="rf">${OMNAME[k]} <select onchange="setOM(${who},${k},this.value)">${Object.keys(OMW).filter(x=>k===0||!OMW[x].ctr).map(x=>`<option value="${x}" ${x===c?'selected':''}>${OMW[x].n} (${OMW[x].pv>0?'+':''}${OMW[x].pv} BPV)</option>`).join('')}</select></label>`).join('')+`<small>Weapons from Annex #8B that a size-3 Orion ship can take: no Phaser-4, hellbore, Plasma-R, Plasma-G or S (they need two adjacent centerline mounts) and no D40 (not in this game). Wing mounts cannot hold hull or transporters (G15.42).</small></div>`}
 // [FD4.5] OAKDISC: an Orion ship with it controls twice as many seeking weapons as its sensor rating (F3.21)
-const ctlMax=s=>sensorRate(s)*(s.d&&s.d.oak?2:1);
+const ctlMax=s=>sensorRate(s)*(s.d&&(s.d.oak||s.d.ctl2)?2:1);

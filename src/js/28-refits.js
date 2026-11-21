@@ -71,7 +71,7 @@ function deadSet(s,S){const d={};
  Object.keys(S.by).forEach(n=>{if(!(n in s.d.sys))return;const a=S.by[n],n2=Math.max(0,a.length-(s.sys[n]||0));for(let i=0;i<n2;i++)d[a[i].id]=1});
  [['ph',s.ph],['pt',s.tu],['ds',s.di],['pl',s.pl]].forEach(([k,L])=>S.w[k].forEach((b,i)=>{if(L[i]&&!L[i].alive)d[b.id]=1}));return d}
 const SHC=b=>b.t==='s'?'#3b82f6':b.t==='w'?(b.k==='ph'?'#a855f7':b.k==='pt'?'#f97316':b.k==='pl'?'#06b6d4':'#22c55e'):/W En|Impulse|APR|Battery/.test(b.n)?'#f59e0b':(TRK[b.n]||b.n==='Excess Damage')?'#14b8a6':'#94a3b8';
-const ABR={'Left W En':'L WARP','Right W En':'R WARP','Trans':'TRAN','Tractor':'TRAC','Battery':'BTTY','Emer Bridge':'EMER','Aux Control':'AUX','Damage Control':'DAM CON','Excess Damage':'EX DAM','Shuttle':'SHTL','A Hull':'A HULL','F Hull':'F HULL','Impulse':'IMP','Bridge':'BRIDGE','Probe':'PRB','Lab':'LAB','Drone':'DRONE','Armor':'ARMOR','C Hull':'C HULL','APR':'APR','Sensor':'SENSOR','Scanner':'SCANNER','SS-A':'SPEC 1-4','SS-B':'SPEC 5-8'};
+const ABR={'Left W En':'L WARP','Right W En':'R WARP','Trans':'TRAN','Tractor':'TRAC','Battery':'BTTY','Emer Bridge':'EMER','Aux Control':'AUX','Damage Control':'DAM CON','Excess Damage':'EX DAM','Shuttle':'SHTL','A Hull':'A HULL','F Hull':'F HULL','Impulse':'IMP','Bridge':'BRIDGE','Probe':'PRB','Lab':'LAB','Drone':'DRONE','Add':'ADD','Armor':'ARMOR','C Hull':'C HULL','APR':'APR','Sensor':'SENSOR','Scanner':'SCANNER','SS-A':'SPEC 1-4','SS-B':'SPEC 5-8'};
 function ssdSvg(s,k){TRK=s.d.trk;const S=prep(s.key,s.rf),d=deadSet(s,S),B=S.bx,OL=GEO[s.key].o||[];
  const M=26,ox=OL.flat().map(p=>p[0]),oy=OL.flat().map(p=>p[1]),x0=Math.min(...B.map(b=>b.x),...ox)-M,x1=Math.max(...B.map(b=>b.x+28),...ox)+M+20,y0=Math.min(...B.map(b=>b.y),...oy)-50,y1=Math.max(...B.map(b=>b.y+28),...oy)+M;
  let o=`<svg viewBox="${x0} ${y0} ${x1-x0} ${y1-y0}" style="width:100%;max-height:calc(100vh - 250px);display:block;color:var(--tx)" font-family="system-ui,-apple-system,Segoe UI,sans-serif">`;
@@ -82,7 +82,7 @@ function ssdSvg(s,k){TRK=s.d.trk;const S=prep(s.key,s.rf),d=deadSet(s,S),B=S.bx,
  B.forEach(b=>{const c=SHC(b);
   if(b.rf){o+=`<rect x="${b.x+1}" y="${b.y+1}" width="26" height="26" rx="5" fill="none" stroke="${c}" stroke-opacity=".35" stroke-dasharray="4 3"/>`;return}
   const dd=d[b.id];let fo=.22,tx='',ring='';
-  if(b.t==='w'){const m=b.lab.match(/#(\d+)|([A-D])(?: \(rear\))?$/);tx=m?(m[1]||m[2]):'';
+  if(b.t==='w'){const m=b.lab.match(/#(\d+)|([A-M])(?: \(rear\))?$/);tx=m?(m[1]||m[2]):'';
    if(!dd){if(b.k==='pt'){const t=s.tu[S.w.pt.indexOf(b)]||{state:'empty'};fo=t.state==='armed'?.85:t.state==='half'?.5:.15}
     else if(b.k==='pl'){const q=s.pl[S.w.pl.indexOf(b)];fo=q?(q.rdy||q.st===3?.85:q.st===2?.6:q.st===1?.4:.15):.15}
     else if(b.k==='ds'){const t=s.di[b.gi-0];const idx=S.w.ds.indexOf(b);const q=s.di[idx];fo=q&&q.armed?.85:.15}
