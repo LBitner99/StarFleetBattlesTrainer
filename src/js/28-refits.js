@@ -36,8 +36,8 @@ const REFITS={
  GCA:[{id:'plus',n:'Plus refit: plasma-S on swivel mounts, two Ph-3, two plasma-F (R6.2)',pv:26,g:[39,40,43,46],arcs:{39:LSA,40:RSA,43:LSA,46:RSA},pl:{0:{T:'S',arcs:LPA},1:{T:'S',arcs:RPA}}}],
  GCL:[{id:'plus',n:'Plus refit: plasma-S on swivel mounts (R6.3)',pv:16,pl:{0:{T:'S',arcs:LPA},1:{T:'S',arcs:RPA}}},{id:'f',n:'F refit: two Ph-3 and two plasma-F (R6.3)',pv:14,g:[32,33,34,37],arcs:{32:LSA,33:RSA,34:LSA,37:RSA}}],
  GDD:[{id:'plus',n:'Plus refit: stronger shields and a battery (R6.4)',pv:6,g:[0,1,2,3,4,5,16]}],
- CR:[{id:'plus',n:'Plus refit (Y169): the shaded shield boxes are added, six more on #1 and eight on each of the others (R8.2)',pv:8,sh:[6,8,8,8,8,8]},{id:'cloak',n:'Cloak refit (Y155): a cloaking device, cost 10/2 (G15.3, R8.2)',pv:18,clk:[10,2]}]};
-const RFTODO={CR:'OAKDISC (Y127; it only matters for drone or plasma racks in option mounts, which this game does not fit) and the SSD drawing of the extra Plus shield boxes',KR:'sabot (rules are in Module R10)',K5R:'sabot (rules are in Module R10)',GCA:'sabot (Module R10)',GCL:'sabot (Module R10)',GDD:'sabot (Module R10)',WE:'sabot (Module R10)'};
+ CR:[{id:'plus',n:'Plus refit (Y169): the shaded shield boxes are added, six more on #1 and eight on each of the others (R8.2)',pv:8,sh:[6,8,8,8,8,8]},{id:'cloak',n:'Cloak refit (Y155): a cloaking device, cost 10/2 (G15.3, R8.2)',pv:18,clk:[10,2]},{id:'oak',n:'OAKDISC (Y127): seeking-weapon control doubled, every rack can fire at its full rate (FD4.5)',pv:5,oak:1}]};
+const RFTODO={CR:'the SSD drawing of the extra Plus shield boxes',KR:'sabot (rules are in Module R10)',K5R:'sabot (rules are in Module R10)',GCA:'sabot (Module R10)',GCL:'sabot (Module R10)',GDD:'sabot (Module R10)',WE:'sabot (Module R10)'};
 const rfSet=(key,ids)=>{const a=new Set();(REFITS[key]||[]).forEach(r=>{if(r.g&&ids&&ids.includes(r.id))r.g.forEach(g=>a.add(g))});return a};
 const UIMSTD={C8:2,C9:2},DERNEEDB=['D7','C8','C9'];
 function refitDef(key,ids){const base=DEFS[key];ids=ids||[];
@@ -52,18 +52,19 @@ function refitDef(key,ids){const base=DEFS[key];ids=ids||[];
   else if(g[0]==='w'&&g[1]==='pl'){const lab=g[2]?g[2][i]:'',own=RL.find(r=>r.g&&r.g.includes(gi)&&ids.includes(r.id)&&r.arcs&&r.arcs[gi]);d.plas.push({T:/Plasma-(\w)/.exec(lab)[1],arcs:own?own.arcs[gi]:['ALL']})}})});
  RL.forEach(r=>{if(!ids.includes(r.id))return;d.pv+=r.pv;if(r.sh)for(let i=0;i<6;i++)d.shields[i]+=r.sh[i]; // [R8.2] Plus refit shield boxes
   if(r.clk)d.clk=r.clk; // [G15.3] Orion cloak refit
-  if(r.wt)wt+=r.wt;if(r.gad)d.gad=true;if(r.awr)d.awr=true;if(r.uim)d.uim+=r.uim;if(r.y175){d.rackAmmo=6;d.addAmmo=12}if(r.y175k){d.rackKz=true;d.pv+=d.sys.Drone||0} // [R5.R5, FD3.2, FD3.3] Kzinti Y175: the first two type-A racks become type-C (4 spaces, two launches a turn), the rest type-B (6 spaces); one point each
+  if(r.wt)wt+=r.wt;if(r.gad)d.gad=true;if(r.awr)d.awr=true;if(r.uim)d.uim+=r.uim;if(r.oak)d.oak=true;if(r.y175){d.rackAmmo=6;d.addAmmo=12}if(r.y175k){d.rackKz=true;d.pv+=d.sys.Drone||0} // [R5.R5, FD3.2, FD3.3] Kzinti Y175: the first two type-A racks become type-C (4 spaces, two launches a turn), the rest type-B (6 spaces); one point each
  if(r.ph)for(const i in r.ph)d.phs[i]={...d.phs[i],T:TT[r.ph[i]]};if(r.phArcs)for(const i in r.phArcs)d.phs[i]={...d.phs[i],arcs:r.phArcs[i]};if(r.pl)for(const i in r.pl)d.plas[i]={...d.plas[i],...r.pl[i]};if(r.dmax)d.dis.max=r.dmax;if(r.disArcs)for(const i in r.disArcs)d.dis.each[i]=r.disArcs[i]});
  if(base.tug&&wt>=2){d.mc=wt>=3?2:1.5;d.cat=wt>=3?'F':'E'} // [G14.21, Annex #3A] two pod weights: movement cost 1.5, turn mode E
- d.derf=!!(d.dis&&d.dis.max>=30&&(!DERNEEDB.includes(key)||ids.includes('b')));d.rfIds=ids;if(ids.length)d.n=base.n+' ('+ids.map(i=>(RL.find(r=>r.id===i)||{id:i}).id.toUpperCase()).join(', ')+' refit'+(ids.length>1?'s':'')+')';return d}
+ d.derf=!!(d.dis&&d.dis.max>=30&&(!DERNEEDB.includes(key)||ids.includes('b')));if(optOM&&omOn(key,ids))omApply(d,ids);d.rfIds=ids;if(ids.filter(i=>!isOM(i)).length)d.n=base.n+' ('+ids.filter(i=>!isOM(i)).map(i=>(RL.find(r=>r.id===i)||{id:i}).id.toUpperCase()).join(', ')+' refit'+(ids.filter(i=>!isOM(i)).length>1?'s':'')+')';return d}
 let rfA=[],rfB=[];
 function togRf(who,id,key){const t=curTab(who);if(key&&key!==slotK(who,t))setSlot(who,t,key,[]);let a=slotRf(who,t);a=a.includes(id)?a.filter(x=>x!==id):[...a,id];key=slotK(who,t);
- a=a.filter(x=>{const r=REFITS[key].find(q=>q.id===x);return !r.req||a.includes(r.req)});setSlot(who,t,key,a);drawSel()}
+ a=a.filter(x=>{const r=REFITS[key].find(q=>q.id===x);return !r||!r.req||a.includes(r.req)});setSlot(who,t,key,a);drawSel()}
 const SSDS={};
 function prep(key,ids){ids=ids||[];const ck=key+'|'+[...ids].sort().join(',');if(SSDS[ck])return SSDS[ck];const act=rfSet(key,ids);const G=GEO[key],S={W:G.W,H:G.H,bx:[],gr:[],by:{},sh:[[],[],[],[],[],[]],w:{ph:[],pt:[],ds:[],pl:[]}},WX={ph:[],pt:[],ds:[],pl:[]};
- G.g.forEach((g,gi)=>{const grp=[];if((g[5]==='x'&&act.has(gi))||(g[5]==='o'&&!act.has(gi)))return;g[3].forEach((b,i)=>{const o={id:S.bx.length,x:b[0],y:b[1],t:g[0],k:g[1],rf:!!(g[4]||b[2])&&!act.has(gi),lab:g[2]?g[2][i]:null,gi:i};S.bx.push(o);grp.push(o);
+ const omA=optOM&&omOn(key,ids);G.g.forEach((g,gi)=>{const grp=[];if((g[5]==='x'&&act.has(gi))||(g[5]==='o'&&!act.has(gi))||(omA&&g[0]==='w'&&g[1]==='ds'))return;g[3].forEach((b,i)=>{const o={id:S.bx.length,x:b[0],y:b[1],t:g[0],k:g[1],rf:!!(g[4]||b[2])&&!act.has(gi),lab:g[2]?g[2][i]:null,gi:i};S.bx.push(o);grp.push(o);
   if(g[0]==='s'){if(!o.rf)S.sh[g[1]].push(o)}else if(g[0]==='w'){if(!o.rf)(g[4]||b[2]?WX:S.w)[g[1]].push(o)}else{o.n=g[1];if(!o.rf)(S.by[g[1]]=S.by[g[1]]||[]).push(o)}});S.gr.push(grp)});
  for(const k in WX)S.w[k]=S.w[k].concat(WX[k]);
+ if(omA){const P=G.g.find(g=>g[0]==='w'&&g[1]==='ds')[3];omGet(ids).forEach((c,k)=>{const w=OMW[c],grp=[],o={id:S.bx.length,x:P[k][0],y:P[k][1],rf:false,gi:0};if(['ds','ph','pt','pl'].includes(w.k)){o.t='w';o.k=w.k;o.lab=w.n.replace(' (standard)','')+' '+'ABC'[k];S.bx.push(o);grp.push(o);S.w[w.k].push(o)}else{o.t='y';o.k=o.n=w.k==='rk'?'Drone':w.k==='ad'?'Add':w.sy;o.lab=null;S.bx.push(o);grp.push(o);(S.by[o.n]=S.by[o.n]||[]).push(o)}S.gr.push(grp)})}
  return SSDS[ck]=S}
 function deadSet(s,S){const d={};
  S.sh.forEach((a,k)=>{const n=Math.max(0,a.length-s.sh[k]);for(let i=0;i<n;i++)d[a[a.length-1-i].id]=1});

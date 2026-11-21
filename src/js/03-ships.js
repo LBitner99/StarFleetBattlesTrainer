@@ -31,13 +31,13 @@ function mkShip(key,c,r,f,col,tag,rf){const d=refitDef(key,rf);
  const s={tm:1,rf:rf||[],awr:!!d.awr,pl:d.plas.map((q,i)=>({alive:true,T:q.T,arcs:q.arcs,st:q.T==='F'?3:2,rdy:q.T==='F',fired:false,name:'Plasma-'+q.T+' '+'ABCD'[i]})),ck:{mode:'off',start:-99,onT:0,offT:0,lockBy:true,lastP:9},ckPaid:false,key,d,n:d.n,tag:tag||d.tag,col,c,r,f,sp:15,prev:15,st:99,sl:1,path:[[c,r]],sh:[...d.shields],sys:{...d.sys},retreat:false,
   ph:d.phs.map((a,i)=>({arcs:a.arcs,alive:true,fired:false,T:a.T,name:(a.T===P4?'Ph-4':a.T===P3?'Ph-3':a.T===P2?'Ph-2':'Ph-1')+' #'+(i+1)})),
   tu:d.torp?Array.from({length:d.torp.n},(_,i)=>({alive:true,state:'half',fired:false,ovl:0,arcs:d.torp.arcs,name:'Photon '+'ABCDEF'[i]})):[],
-  di:d.dis?Array.from({length:d.dis.n},(_,i)=>({alive:true,armed:false,fired:false,ovl:false,arcs:(d.dis.each&&d.dis.each[i])||d.dis.arcs,max:d.dis.max,name:'Disruptor '+'ABCDEF'[i]})):[],
+  di:d.dis?Array.from({length:d.dis.n},(_,i)=>({alive:true,armed:false,fired:false,ovl:false,arcs:(d.dis.each&&d.dis.each[i])||d.dis.arcs,max:(d.dis.maxs&&d.dis.maxs[i])||d.dis.max,name:'Disruptor '+'ABCDEF'[i]})):[],
   rep:[0,0,0,0,0,0],ecm:0,eccm:0,lock:true,bd:d.bd0,bat:d.sys.Battery||0,bw:0,bi:0,impMove:false,hetUsed:false,hetAvail:0,lastHet:-99,hetAt:-99,gc:d.cr-d.bp/2,gc0:d.cr-d.bp/2,bp:d.bp,intTot:0,cK:0,bK:0,underN:false,noMove:-1,noFire:-1,hetNext:undefined,ed:null,edPost:false,capCur:0,shOn:2,gen:0,spec:[0,0,0,0,0,0],fc:true,plan:null};
- s.rk=Array.from({length:d.sys.Drone||0},(_,j)=>d.rackKz?({ammo:j<2?4:6,last:-99,turn:0,nT:0,C:j<2}):({ammo:d.rackAmmo||4,last:-99,turn:0,nT:0,C:!!optRackC}));
+ s.rk=Array.from({length:d.sys.Drone||0},(_,j)=>d.rackT&&d.rackT[j]?({ammo:d.rackT[j]==='B'?6:4,last:-99,turn:0,nT:0,C:d.rackT[j]==='C'||(d.rackT[j]==='A'&&!!optRackC)}):d.rackKz?({ammo:j<2?4:6,last:-99,turn:0,nT:0,C:j<2}):({ammo:d.rackAmmo||4,last:-99,turn:0,nT:0,C:!!optRackC}));
  s.dn=[];s.tnLeft=0;s.cap={};s.part=0;
  s.pr=Array.from({length:d.sys.Probe||0},(_,i)=>({alive:true,ammo:5,st:0,fired:false,arcs:['ALL'],pr:true,name:'Probe '+(i+1)}));
- s.ad=Array.from({length:d.sys.Add||0},()=>({ammo:d.addAmmo||6}));if(d.gad)s.rk.forEach((r,j)=>{r.ammo=0;r.adm=true;s.ad.push({ammo:16,g:j})}); // [FD3.7] a type-G rack loaded with anti-drones (8 in the rack and 8 in the all-ADD reload) fires them like an ADD launcher and launches no drones
- s.uim=d.uim||0;s.uimWait=0;s.derf=!!d.derf;s.di.forEach(w=>w.derf=s.derf);
+ s.ad=Array.from({length:d.sys.Add||0},(_,j)=>({ammo:(d.addT&&d.addT[j])||d.addAmmo||6}));if(d.gad)s.rk.forEach((r,j)=>{r.ammo=0;r.adm=true;s.ad.push({ammo:16,g:j})}); // [FD3.7] a type-G rack loaded with anti-drones (8 in the rack and 8 in the all-ADD reload) fires them like an ADD launcher and launches no drones
+ s.uim=d.uim||0;s.uimWait=0;s.derf=!!d.derf;s.di.forEach(w=>w.derf=s.derf&&(w.max||DIS.max)>=30);
  s.capCur=capMax(s);s.p0=pw(s).warp+pw(s).imp+pw(s).apr;return s}
 const DCT=[4,4,2,2,2,0];
 // [D9.2] Damage control rating, from the damage control track on the SSD.

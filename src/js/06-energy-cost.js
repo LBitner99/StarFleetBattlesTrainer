@@ -99,7 +99,7 @@ function autoPlan(s,foe,lv,human){const p={het:0,fc:1,ph:0,tu:s.tu.map(()=> 'non
  if(!human&&!s.neu&&s.d.dbl&&(turn<=2||s.retreat)){const a=(s.sys['Left W En']||0)>0?1:0,b=(s.sys['Right W En']||0)>0?1:0;if(a||b){p.dbl=[a,b,optAI2&&(s.sys.Impulse||0)>0?1:0];s.dbl=p.dbl.slice()}} // G15.2: the raider doubles its engines for a first strike or to run
  const range=dist(s,foe),lim=accLim(s);
  let want=range>24?20:range>12?14:10;if(!human&&AICFG.matchSpd&&lv!=='easy'&&!s.retreat&&range<=12)want=Math.max(want,Math.min(AICFG.matchSpd,foe.prev));if(s.retreat)want=31;if(lv==='easy')want+=Math.round((Math.random()-.5)*4);
- if(!human&&s.merch)want=range>16?6:12; // SG4.2: the convoy plods along at speed 6 and runs when the pirate gets close
+ if(!human&&s.goal)want=s.spcap||4;else if(!human&&s.merch)want=range>16?6:12; // SG4.2: the convoy plods along at speed 6 and runs when the pirate gets close
  if(!human&&TER.bh&&dist(s,TER.bh)<=34)want=Math.min(want,10); // the computer slows down near a black hole so that it has room to steer around it (P4.1)
  if(!human&&MN.size&&MINEZ.size){let md=99;MINEZ.forEach(k=>{const[c,r]=k.split(',').map(Number);md=Math.min(md,dist(s,{c,r}))});if(md<=22)want=Math.min(want,md<=8?4:8)} // the computer slows down near the minefield so that it can steer round it (M2.40)
  if(!human&&TBLK.size&&!s.retreat){let md=99;TBLK.forEach(k=>{const[c,r]=k.split(',').map(Number);md=Math.min(md,dist(s,{c,r}))});if(md<=18)want=Math.min(want,md<=8?6:9)} // slower near a planet so there is room to turn away (P2.812)

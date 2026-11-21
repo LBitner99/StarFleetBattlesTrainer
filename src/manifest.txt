@@ -20,6 +20,7 @@ js/17-mine-sweeping.js
 js/18-pirate.js
 js/19-monsters.js
 js/19b-scenarios.js
+js/19c-scenarios2.js
 js/20-movement.js
 js/21-firing.js
 js/22-seeking-weapons.js
@@ -33,6 +34,7 @@ data/ssd-geometry.js
 js/28-refits.js
 js/28b-tugs.js
 js/28c-fighters.js
+js/28d-orion-mounts.js
 js/29-ui.js
 js/30-match-history.js
 js/31-victory-points.js

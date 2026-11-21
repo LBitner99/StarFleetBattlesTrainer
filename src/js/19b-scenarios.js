@@ -16,7 +16,7 @@ const SCX={
   log:()=>`Scenario SG7.0, The Pirates Go for Big Game: your ${sh[0].tag} starts in 2203 heading D at high speed. One Orion CR is in 2219 heading D at high speed, the others in 0725 (heading B) and 3625 (heading F), both at speed 4. All ships start at Weapon Status III. The map floats and any unit can leave by any edge (SG7.41). Victory uses the Modified Victory Conditions (S2.201): no points for the starting BPV difference.`+RL('SG7.2, SG7.41, SG7.5, S2.201'),
   pick(){selB='CR';XE=[];XF=[];selTab=[0,0];if(['ori','civ','bas'].includes(SHIPS[selA].side))selA='CA'},
   build(){const me=mkShip(selA,22,3,3,'var(--ca)',undefined,rfA); // [SG7.2] Navy ship in 2203 heading D
-   const cr=[[22,19,3,20],[7,25,1,4],[36,25,5,4]].map((p,i)=>{const s=mkShip('CR',p[0],p[1],p[2],'var(--d7)','CR-'+(i+1),[]);s.prev=s.sp=p[3];setWS(s,'III');return s}); // [SG7.2] CRs in 2219 (speed max), 0725 and 3625 (speed 4), WS-III
+   const cr=[[22,19,3,20],[7,25,1,4],[36,25,5,4]].map((p,i)=>{const s=mkShip('CR',p[0],p[1],p[2],'var(--d7)','CR-'+(i+1),optOM?omRoll():[]);s.prev=s.sp=p[3];setWS(s,'III');return s}); // [SG7.2] CRs in 2219 (speed max), 0725 and 3625 (speed 4), WS-III
    me.prev=me.sp=20;me.tm=0;setWS(me,'III');sh=[me,...cr];selB='CR'}},
  sh1:{btn:'Sabotage',tip:'Sabotage (SH1, Y161): your Federation cruiser has sabotaged warp engines and a Klingon D7 is closing in',ttl:'Sabotage &middot; Scenario SH1.0',code:'SH1.0',name:'SH1.0, Sabotage',go:'Start the scenario',he:['E','S'],ae:['W','N'],
   opp:()=>`Klingon D7 (${DEFS.D7.pv} BPV)`,

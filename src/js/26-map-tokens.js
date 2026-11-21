@@ -27,5 +27,5 @@ function drawMap(){const a=sh[0],b=TG(),dsh=(sh[0].col);
  const mx=(cx(a.c)+cx(b.c))/2,my=(cy(a.c,a.r)+cy(b.c,b.r))/2;
  const rl=ckHid(b)?'':`<line x1="${cx(a.c)}" y1="${cy(a.c,a.r)}" x2="${cx(b.c)}" y2="${cy(b.c,b.r)}" stroke="var(--mu)" stroke-dasharray="6 6" stroke-opacity=".6"/><text x="${mx}" y="${my-6}" font-size="14" font-weight="700" text-anchor="middle" fill="var(--tx)" stroke="var(--bg)" stroke-width="4" paint-order="stroke">range ${dist(a,b)}</text>`;
  const showFoe=openInfo||over;
- $('#dyn').innerHTML=astSvg()+terSvg()+webSvg()+lines+rl+sh.filter(s=>!ckHid(s)).map(token).join('')+(ckHid(TG())?'':ringsSvg(sh[0],TG(),true))+(showFoe?sh.slice(1).filter(x=>!x.out&&!ckHid(x)).map(x=>ringsSvg(x,sh[0],true)).join(''):'')+drSvg()+prevSvg()}
+ $('#dyn').innerHTML=astSvg()+terSvg()+nzSvg()+webSvg()+lines+rl+sh.filter(s=>!ckHid(s)).map(token).join('')+(ckHid(TG())?'':ringsSvg(sh[0],TG(),true))+(showFoe?sh.slice(1).filter(x=>!x.out&&!ckHid(x)).map(x=>ringsSvg(x,sh[0],true)).join(''):'')+drSvg()+metSvg()+prevSvg()}
 
