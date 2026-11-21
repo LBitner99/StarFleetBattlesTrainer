@@ -75,6 +75,7 @@ function dac(tgt,src,used){crewTick(tgt);used=used||new Set();const hid=isFoe(tg
  for(let j=0;j<12;j++){let n=row[j];const bold=n.endsWith('*');if(bold)n=n.slice(0,-1);const key=r+'|'+j;
   if(bold&&used.has(key))continue;
   const done=()=>{if(bold)used.add(key)};
+  if((n==='Torp'||n==='Phaser')&&(tgt.sys[n==='Torp'?'SS-A':'SS-B']||0)>0){const q=n==='Torp'?'SS-A':'SS-B';tgt.sys[q]--;done();out(j,`a special sensor (${n==='Torp'?'#1-#4':'#5-#8'}) is destroyed by the ${n==='Torp'?'torpedo':'phaser'} damage point`,'R2.7, D4.326');return} // [R2.7, D4.326] a scout's special sensors #1-#4 take the torpedo hits and #5-#8 the phaser hits
   if(n==='Phaser'){const a=src?rel(tgt,src):null,c=tgt.ph.find(w=>w.alive&&w.arcs.some(t=>inTok(t,a)));if(c){kill(c);done();out(j,`${c.name} destroyed`,'D4.321');return}continue}
   if(n==='Torp'){const c=tgt.tu.find(w=>w.alive)||tgt.pl.find(w=>w.alive)||tgt.di.find(w=>w.alive);if(c){kill(c);done();out(j,`${c.name} destroyed`,'D4.323');return}continue}
   if(n==='Any Weapon'){const ph=tgt.ph.filter(w=>w.alive).sort((x,y)=>((x.T.cp?0:x.T===P2?1:2)-(y.T.cp?0:y.T===P2?1:2)));const c=ph[0]||tgt.di.find(w=>w.alive)||tgt.tu.find(w=>w.alive)||tgt.pl.find(w=>w.alive);if(c){kill(c);done();out(j,`${c.name} destroyed (any weapon hit, the owner picks)`,'D4.324');return}continue}

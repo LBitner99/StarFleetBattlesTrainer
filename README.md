@@ -5,7 +5,20 @@ A single-file, solo web game based on Star Fleet Battles (Captain's Basic Set), 
 - `sfb-duel.html` - the game. Open it in any modern browser; no server needed. This file is generated from `src/` (see Source layout below), so edit the files in `src/`, never this one.
 - `docs/rules-coverage-audit.md` - which rules are implemented, which are optional, and which are not done.
 
-Current build: v169.
+## Download and run the game
+
+The game is one self-contained file, so there is nothing to install and no server to run.
+
+1. Download `sfb-duel.html`:
+   - On GitHub, open the file in the repository, click **Raw** (or the download icon), and save the page as `sfb-duel.html`; or
+   - Click **Code > Download ZIP** on the repository page, unzip it, and use the `sfb-duel.html` inside; or
+   - With Git: `git clone https://github.com/LBitner99/StarFleetBattlesTrainer.git` and open `sfb-duel.html` from the new folder.
+2. Double-click `sfb-duel.html` to open it in a modern browser (Chrome, Edge, Firefox or Safari). It works offline once opened.
+3. Pick a scenario and ships on the first screen, then press the start button. Progress such as the match history is kept in the browser, so use the same browser and the same copy of the file to keep it.
+
+If you change anything in `src/`, run `build.ps1` (Windows PowerShell) or `python3 build.py` to regenerate `sfb-duel.html` before opening it. Downloaders of the finished game do not need to do this.
+
+Current build: v171.
 
 ## Source layout
 

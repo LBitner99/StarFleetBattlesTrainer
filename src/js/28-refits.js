@@ -12,6 +12,7 @@ const REFITS={
   {id:'awr',n:'AWR: the APRs become warp reactors (R2.R3)',pv:2,awr:1},{id:'y175',n:'Y175 refit: type-B drone rack (R2.R4)',pv:0,req:'plus',y175:1}],
  DN:[{id:'awr',n:'AWR: the APRs become warp reactors (R2.R3)',pv:2,awr:1}],
  DD:[{id:'plus',n:'DD+: two Ph-3 (R2.R1)',pv:6,g:[28,29],arcs:{28:LSA,29:RSA}}],
+ SC:[{id:'plus',n:'SC+: two Ph-3 and four of the labs become APRs (R2.7)',pv:4,g:[15,27,28,29],arcs:{27:LSA,28:RSA}}],
  CL:[{id:'plus',n:'CL+: stronger shields, a drone rack, two Ph-3 (R2.R1)',pv:13,g:[0,1,2,3,4,5,30,36],arcs:{36:['ALL']}},
   {id:'awr',n:'AWR: the APRs become warp reactors (R2.R3)',pv:2,awr:1},{id:'y175',n:'Y175 refit: type-B drone rack (R2.R4)',pv:0,req:'plus',y175:1}],
  D7:[{id:'b',n:'B-refit: stronger #3/#4/#5 shields, an ADD rack, DERFACS (R3.R1)',pv:7,g:[2,3,4,33]},{id:'k',n:'K-refit: phasers #1 to #3 become Ph-1 (R3.R2)',pv:3,req:'b',ph:{0:'P1',1:'P1',2:'P1'}},{id:'uim1',n:'UIM refit: one Ubitron interface module (D6.5)',pv:5,uim:1},{id:'uim2',n:'A second UIM (D6.5)',pv:5,req:'uim1',uim:1},{id:'y175',n:'Y175 refit: type-B drone racks, ADD-12 (R3.R4)',pv:4,y175:1}],
@@ -38,7 +39,8 @@ const UIMSTD={C8:2,C9:2},DERNEEDB=['D7','C8','C9'];
 function refitDef(key,ids){const base=DEFS[key];ids=ids||[];
  const d=Object.assign({},base),G=GEO[key],act=rfSet(key,ids),RL=REFITS[key]||[];
  d.sys={...base.sys};d.shields=[...base.shields];d.phs=base.phs.map(p=>({...p}));d.plas=base.plas.map(q=>({...q}));d.dis=base.dis?{...base.dis,each:(base.dis.each||Array.from({length:base.dis.n},()=>base.dis.arcs)).map(a=>[...a])}:null;d.pv=base.pv;d.awr=false;d.uim=UIMSTD[key]||0;d.rackAmmo=4;d.addAmmo=6;
- G.g.forEach((g,gi)=>{if(!act.has(gi))return;g[3].forEach((b,i)=>{if(!(g[4]||b[2]))return;
+ G.g.forEach((g,gi)=>{if(!act.has(gi))return;if(g[5]==='x'){if(g[0]==='y')d.sys[g[1]]-=g[3].length;return} // a group marked 'x' is removed by the refit (SC+ labs)
+  g[3].forEach((b,i)=>{if(!(g[4]||b[2]))return;
   if(g[0]==='s')d.shields[g[1]]++;else if(g[0]==='y')d.sys[g[1]]=(d.sys[g[1]]||0)+1;
   else if(g[0]==='w'&&g[1]==='ph'){const lab=g[2]?g[2][i]:'',own=RL.find(r=>r.g&&r.g.includes(gi)&&ids.includes(r.id)&&r.arcs&&r.arcs[gi]);
    d.phs.push({T:/Ph-3/.test(lab)?P3:P1,arcs:own?own.arcs[gi]:['ALL']})}
@@ -54,7 +56,7 @@ function togRf(who,id,key){const t=curTab(who);if(key&&key!==slotK(who,t))setSlo
  a=a.filter(x=>{const r=REFITS[key].find(q=>q.id===x);return !r.req||a.includes(r.req)});setSlot(who,t,key,a);drawSel()}
 const SSDS={};
 function prep(key,ids){ids=ids||[];const ck=key+'|'+[...ids].sort().join(',');if(SSDS[ck])return SSDS[ck];const act=rfSet(key,ids);const G=GEO[key],S={W:G.W,H:G.H,bx:[],gr:[],by:{},sh:[[],[],[],[],[],[]],w:{ph:[],pt:[],ds:[],pl:[]}},WX={ph:[],pt:[],ds:[],pl:[]};
- G.g.forEach((g,gi)=>{const grp=[];g[3].forEach((b,i)=>{const o={id:S.bx.length,x:b[0],y:b[1],t:g[0],k:g[1],rf:!!(g[4]||b[2])&&!act.has(gi),lab:g[2]?g[2][i]:null,gi:i};S.bx.push(o);grp.push(o);
+ G.g.forEach((g,gi)=>{const grp=[];if((g[5]==='x'&&act.has(gi))||(g[5]==='o'&&!act.has(gi)))return;g[3].forEach((b,i)=>{const o={id:S.bx.length,x:b[0],y:b[1],t:g[0],k:g[1],rf:!!(g[4]||b[2])&&!act.has(gi),lab:g[2]?g[2][i]:null,gi:i};S.bx.push(o);grp.push(o);
   if(g[0]==='s'){if(!o.rf)S.sh[g[1]].push(o)}else if(g[0]==='w'){if(!o.rf)(g[4]||b[2]?WX:S.w)[g[1]].push(o)}else{o.n=g[1];if(!o.rf)(S.by[g[1]]=S.by[g[1]]||[]).push(o)}});S.gr.push(grp)});
  for(const k in WX)S.w[k]=S.w[k].concat(WX[k]);
  return SSDS[ck]=S}
@@ -63,7 +65,7 @@ function deadSet(s,S){const d={};
  Object.keys(S.by).forEach(n=>{if(!(n in s.d.sys))return;const a=S.by[n],n2=Math.max(0,a.length-(s.sys[n]||0));for(let i=0;i<n2;i++)d[a[i].id]=1});
  [['ph',s.ph],['pt',s.tu],['ds',s.di],['pl',s.pl]].forEach(([k,L])=>S.w[k].forEach((b,i)=>{if(L[i]&&!L[i].alive)d[b.id]=1}));return d}
 const SHC=b=>b.t==='s'?'#3b82f6':b.t==='w'?(b.k==='ph'?'#a855f7':b.k==='pt'?'#f97316':b.k==='pl'?'#06b6d4':'#22c55e'):/W En|Impulse|APR|Battery/.test(b.n)?'#f59e0b':(TRK[b.n]||b.n==='Excess Damage')?'#14b8a6':'#94a3b8';
-const ABR={'Left W En':'L WARP','Right W En':'R WARP','Trans':'TRAN','Tractor':'TRAC','Battery':'BTTY','Emer Bridge':'EMER','Aux Control':'AUX','Damage Control':'DAM CON','Excess Damage':'EX DAM','Shuttle':'SHTL','A Hull':'A HULL','F Hull':'F HULL','Impulse':'IMP','Bridge':'BRIDGE','Probe':'PRB','Lab':'LAB','Drone':'DRONE','Armor':'ARMOR','C Hull':'C HULL','APR':'APR','Sensor':'SENSOR','Scanner':'SCANNER'};
+const ABR={'Left W En':'L WARP','Right W En':'R WARP','Trans':'TRAN','Tractor':'TRAC','Battery':'BTTY','Emer Bridge':'EMER','Aux Control':'AUX','Damage Control':'DAM CON','Excess Damage':'EX DAM','Shuttle':'SHTL','A Hull':'A HULL','F Hull':'F HULL','Impulse':'IMP','Bridge':'BRIDGE','Probe':'PRB','Lab':'LAB','Drone':'DRONE','Armor':'ARMOR','C Hull':'C HULL','APR':'APR','Sensor':'SENSOR','Scanner':'SCANNER','SS-A':'SPEC 1-4','SS-B':'SPEC 5-8'};
 function ssdSvg(s,k){TRK=s.d.trk;const S=prep(s.key,s.rf),d=deadSet(s,S),B=S.bx,OL=GEO[s.key].o||[];
  const M=26,ox=OL.flat().map(p=>p[0]),oy=OL.flat().map(p=>p[1]),x0=Math.min(...B.map(b=>b.x),...ox)-M,x1=Math.max(...B.map(b=>b.x+28),...ox)+M+20,y0=Math.min(...B.map(b=>b.y),...oy)-50,y1=Math.max(...B.map(b=>b.y+28),...oy)+M;
  let o=`<svg viewBox="${x0} ${y0} ${x1-x0} ${y1-y0}" style="width:100%;max-height:calc(100vh - 250px);display:block;color:var(--tx)" font-family="system-ui,-apple-system,Segoe UI,sans-serif">`;

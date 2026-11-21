@@ -6,7 +6,7 @@ Every scenario also offers the same extras: a year (Y168 by default) that decide
 | Code | Scenario | Setup | Needs | Status |
 |---|---|---|---|---|
 | SG1 | The Duel | CA v D7, speed 15, WS-II, floating map | Basic rules | Built (any two similar ships) |
-| SG2 | Fleet Action | Two teams of 3 to 5 ships (lists per race), WS-II, speed 10, floating map, Standard victory | Allies and computer fleets, ally AI, fleet lists; carriers and BT/SC/WB+ not in game (substitute) | Planned |
+| SG2 | Fleet Action | Two teams of 3 to 5 ships (lists per race), WS-II, speed 10, floating map, Standard victory | Allies and computer fleets, ally AI, fleet lists; SC and WB+ built (v171); BT and CV still played as CA and CS | Built (v170) |
 | SG3 | Base Defense | Base station in 2215 (WS-I) plus a rescue ship (max 135 BPV) arriving on turn 1 to 4 by a secret draw; up to three attackers (max 225 BPV) from the 42xx edge; fixed map; special points table | Base station (built), reinforcement arrival, ally AI, fleet lists (attackers include 2xPC Tholians) | Planned |
 | SG4 | Basic Piracy | Orion CR raids a convoy | Freighters, escorts, relief force | Built (SG4.61 to SG4.63 not supplied) |
 | SG5 | Duel with a Pirate Raider | Orion CR in a duel | Orion CR | Built |
@@ -33,7 +33,7 @@ Every scenario also offers the same extras: a year (Y168 by default) that decide
 | Commander's Option Items (S3.2) | every scenario | Not built |
 | S3.4 bidding, S8 patrol (buy a fleet by BPV) | Master Rulebook only | Not built |
 | Modified Victory Conditions (S2.201) | SG7, SG8, SH2 | Built (v169) |
-| Ally and fleet AI | SG2, SG3, SG8, SG6.62, SG7.71 | Planned |
+| Ally and fleet AI | SG2, SG3, SG8, SG6.62, SG7.71 | Partly built (v170): up to 6 ships a side, ally AI, retreat to the scenario's own edges; SG3 and SG8 still need reinforcements and larger fleets |
 | Orion option mounts (G15.4), OAKDISC (FD4.5) | SG4, SG6, SG7, S5.2 pirate | Planned |
 | Computer plasma shotguns (FP7) | fleet scenarios with Romulans or Gorn | Planned |
 | Fighters and shuttles (J1, J4) | SH5, Kzinti carriers in SG2, SG3, SG8 | Planned block |
