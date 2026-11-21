@@ -56,7 +56,7 @@ function applyVolley(tgt,k,dmg,src,note,lbl,rc){if(PIR&&tgt===PIR.s&&PIR.at&&dmg
  let lkd=0;if(ab){if(optLeak){tgt.lk=(tgt.lk||0)+ab;lkd=Math.floor(tgt.lk/optLeak)-Math.floor((tgt.lk-ab)/optLeak)}tgt.sh[k]-=(ab-lkd);d-=ab;m+=` Shield boxes absorb ${ab-lkd} (${tgt.sh[k]} left).`+(lkd?` ${lkd} point${lkd>1?'s':''} leak${lkd>1?'':'s'} through as internal damage.`+RL('D3.6, D3.61'):'')+RL(tgt.shOn===1?'D3.21, D3.33':'D3.21')}
  if(d>0&&tgt.shOn>0&&tgt.bat>=2&&(tgt===sh[0]?autoRes:true)){const rr=Math.min(Math.floor(tgt.bat/2),d);spendBat(tgt,2*rr);d-=rr;m+=` Reserve power: ${2*rr} batteries discharge into ${rr} point${rr>1?'s':''} of general reinforcement (${tgt.bat} left).`+RL('H7.134, D3.341')}
  if(d>0&&(tgt.sys.Armor||0)>0){const a=Math.min(tgt.sys.Armor,d);tgt.sys.Armor-=a;d-=a;m+=` Armor absorbs ${a} (${tgt.sys.Armor} left).`+RL('D4.12')}
- d+=lkd;if(hid){L(m0+' (the effect on the target is private until the game ends, B3.5)');LS(m0+m,1)}else L(m);if(d>0){if(VCOL){VCOL.d+=d;return}LS(`${d} point${d>1?'s':''} of internal damage on ${tgt.tag}:`+RL('D4.13, D4.22'),hid);const used=new Set();for(let i=0;i<d;i++)dac(tgt,src,used)}}
+ d+=lkd;if(hid){L(m0+' (the effect on the target is private until the game ends, B3.5)');LS(m0+m,1)}else L(m);if(d>0){if(VCOL&&!tgt.d.sb){VCOL.d+=d;return}LS(`${d} point${d>1?'s':''} of internal damage on ${tgt.tag}:`+RL('D4.13, D4.22'),hid);const used=new Set();for(let i=0;i<d;i++)dac(tgt,src,used,k)}}
 // [FP5.0] Enveloping plasma torpedo: damage is done over several shields.
 function envelop(t,W,from,d){const lb=`Enveloping plasma torpedo #${d.id} implodes on ${t.tag} (warhead ${W}):`;
  if(t.shOn===0){applyVolley(t,0,W,from,'',lb+' shields were down, so the full warhead is one volley.','FP5.34');return}
@@ -69,7 +69,8 @@ function envelop(t,W,from,d){const lb=`Enveloping plasma torpedo #${d.id} implod
 const exdOf=k=>{const g=((GEO[k]&&GEO[k].g)||[]).find(x=>x[1]==='Excess Damage');return g?g[3].length:0};
 const WCOL='ABCDEFGHIJKLM';
 // [D4.2, D4.3] Damage allocation chart: roll 2d6, destroy the box listed, or take the excess damage when it is empty.
-function dac(tgt,src,used){crewTick(tgt);used=used||new Set();const hid=isFoe(tgt);const r=d6()+d6(),row=DAC[r];
+function dac(tgt,src,used,k){if(tgt.d.sb)return sbDac(tgt,src,used,k===undefined?d6()-1:k); // [R1.1D] starbases use their own procedure
+ crewTick(tgt);used=used||new Set();const hid=isFoe(tgt);const r=d6()+d6(),row=DAC[r];
  const out=(j,txt,rc)=>LS(`  roll ${r}, column ${WCOL[j]}: ${txt}`+RL(rc),hid);
  const kill=c=>{c.alive=false;if('state' in c)c.state='empty';else if('st' in c){c.st=0;c.rdy=false}else if('armed' in c)c.armed=false;tgt.capCur=Math.min(tgt.capCur,capMax(tgt))};
  for(let j=0;j<12;j++){let n=row[j];const bold=n.endsWith('*');if(bold)n=n.slice(0,-1);const key=r+'|'+j;
