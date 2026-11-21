@@ -6,7 +6,7 @@ Every scenario also offers the same extras: a year (Y168 by default) that decide
 | Code | Scenario | Setup | Needs | Status |
 |---|---|---|---|---|
 | SG1 | The Duel | CA v D7, speed 15, WS-II, floating map | Basic rules | Built (any two similar ships) |
-| SG2 | Fleet Action | Two teams of 3 to 5 ships (lists per race), WS-II, speed 10, floating map, Standard victory | Allies and computer fleets, ally AI, fleet lists; SC and WB+ built (v171); BT and CV still played as CA and CS | Built (v170) |
+| SG2 | Fleet Action | Two teams of 3 to 5 ships (lists per race), WS-II, speed 10, floating map, Standard victory | Allies and computer fleets, ally AI, fleet lists; SC, WB+ (v171), CV, EFF (v172) and BT (v173) built; the CV carries no fighters yet | Built (v170) |
 | SG3 | Base Defense | Base station in 2215 (WS-I) plus a rescue ship (max 135 BPV) arriving on turn 1 to 4 by a secret draw; up to three attackers (max 225 BPV) from the 42xx edge; fixed map; special points table | Base station (built), reinforcement arrival, ally AI, fleet lists (attackers include 2xPC Tholians) | Planned |
 | SG4 | Basic Piracy | Orion CR raids a convoy | Freighters, escorts, relief force | Built (SG4.61 to SG4.63 not supplied) |
 | SG5 | Duel with a Pirate Raider | Orion CR in a duel | Orion CR | Built |

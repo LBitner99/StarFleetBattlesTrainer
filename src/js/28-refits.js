@@ -22,6 +22,8 @@ const REFITS={
  C9:[{id:'b',n:'B-refit: stronger #3/#4/#5 shields, DERFACS (R3.R1)',pv:6,g:[2,3,4]},{id:'k',n:'K-refit: phasers #3 to #6 become Ph-1 (R3.R2)',pv:4,req:'b',ph:{2:'P1',3:'P1',4:'P1',5:'P1'}},{id:'uim1',n:'UIM refit: a third Ubitron interface module (two are standard) (D6.5)',pv:5,uim:1},{id:'uim2',n:'Extra UIM (D6.5)',pv:5,req:'uim1',uim:1},{id:'y175',n:'Y175 refit: type-B drone racks, ADD-12 (R3.R4)',pv:5,y175:1}],
  C8:[{id:'b',n:'B-refit: stronger #3/#4/#5 shields, DERFACS (R3.R1)',pv:7,g:[2,3,4]},{id:'k',n:'K-refit: phasers #3 to #10 become Ph-1 (R3.R2)',pv:8,req:'b',ph:{2:'P1',3:'P1',4:'P1',5:'P1',6:'P1',7:'P1',8:'P1',9:'P1'}},{id:'uim1',n:'UIM refit: a third Ubitron interface module (two are standard) (D6.5)',pv:5,uim:1},{id:'uim2',n:'Extra UIM (D6.5)',pv:5,req:'uim1',uim:1},{id:'y175',n:'Y175 refit: type-B drone racks, ADD-12 (R3.R4)',pv:8,y175:1}],
  WE:[{id:'rear',n:'Rear phaser refit: two Ph-3 (R4.3)',pv:3,g:[26,27],arcs:{26:['L','LR','RR'],27:['R','LR','RR']}}],
+ BT:[{id:'y165',n:'Y165 plus refit: extra shield boxes on the tug and the pod (R2.10)',pv:28,g:[0,1,2,3,4,5,24]}],
+ EFF:[{id:'c10',n:'C-10 refit: stronger #3/#4/#5 shields, two ADD, two drone racks and two Ph-3 (R5.8)',pv:9,g:[2,3,4,13,29,35,36],arcs:{35:LSA,36:RSA}}],
  KFF:[{id:'c10',n:'C-10 refit: stronger #3/#4/#5 shields and more drone racks (R5.8)',pv:9,g:[2,3,4,27,28]},{id:'y175',n:'Y175 refit: two type-C racks, the rest type-B (R5.R5)',pv:0,y175k:1}],
  KR:[{id:'b',n:'B-refit: stronger #3/#4/#5 shields, swivelling plasma-S (R4.R1)',pv:17,g:[2,3,4],pl:{0:{T:'S',arcs:LPA},1:{T:'S',arcs:RPA}}}],
  K5R:[{id:'b',n:'B-refit: stronger #3/#4/#5 shields, swivelling plasma-F (R4.R1)',pv:6,g:[2,3,4],pl:{0:{arcs:LPA},1:{arcs:RPA}}}],
