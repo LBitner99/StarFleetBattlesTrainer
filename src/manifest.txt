@@ -19,6 +19,7 @@ js/16-moon.js
 js/17-mine-sweeping.js
 js/18-pirate.js
 js/19-monsters.js
+js/19b-scenarios.js
 js/20-movement.js
 js/21-firing.js
 js/22-seeking-weapons.js

@@ -4,7 +4,7 @@ let LC={mode:'off',man:{ast:false,plan:false,gas:false,gasR:3,rings:true,bh:fals
 const NEB=()=>!!TER.neb; // [P6.0] the whole map is inside a nebula
 const LCN={2:'Black hole',3:'Nebula',4:'Planet and moon',5:'Wandering monster',6:'Asteroid belt',7:'Empty space',8:'Old minefield',9:'Pirate',10:'Gas giant',11:'Variable pulsar'};
 const LCB=[2,3,4,5,6,7,8,9,10,11]; // the results this game can build: black hole, nebula, planet, moon, asteroid belt, empty space, gas giant
-const lcOn=()=>LC.mode!=='off'&&!scn4&&!scn6; // [S5.31] a scenario with its own terrain (SG4, SG6) does not use the local conditions
+const lcOn=()=>LC.mode!=='off'&&!scr(); // [S5.31] a scenario with its own terrain (SG4, SG6) does not use the local conditions
 // [S5.1, S5.2] Roll 2d6. A result this game cannot build yet is rolled again (the log says so). A 12 means two further results, with the S5.2 exclusions.
 function lcRoll(){const notes=[],one=()=>{let n=0,x;do{x=d6()+d6();if(x===12)continue;if(!LCB.includes(x)&&x!==7){notes.push(`${x} (${LCN[x]}) is not built in this game, rolled again`)}else n=x}while(!n);return n};
  let a=d6()+d6(),res=[];if(a===12){notes.push('12: roll again, twice');res=[one(),one()]}else if(LCB.includes(a)||a===7)res=[a];else{notes.push(`${a} (${LCN[a]}) is not built in this game, rolled again`);res=[one()]}

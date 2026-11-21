@@ -2,7 +2,8 @@
 // [D8.2] Does the ship have this critical hit in force?
 const hasCrit=(s,k)=>(s.crit||[]).some(c=>c.k===k);
 const pw=(s,raw)=>{let w=(s.sys['Left W En']||0)+(s.sys['Right W En']||0)+(s.sys['Center W En']||0);if(!raw&&s.dbl&&s.d.dbl)w+=(s.dbl[0]?(s.sys['Left W En']||0):0)+(s.dbl[1]?(s.sys['Right W En']||0):0); // G15.2: a doubled engine gives twice its output
- return{warp:(hasCrit(s,'warp')?Math.floor(w/2):w)+engP(s),imp:(s.sys.Impulse||0)*((!raw&&s.dbl&&s.d.dbl&&s.dbl[2])?2:1),apr:s.sys.APR||0}}; // [G15.23] doubled impulse engine gives twice its power
+ return{warp:(s.sab&&!raw)?0:(hasCrit(s,'warp')?Math.floor(w/2):w)+engP(s), // [SH1.45] sabotaged warp engines give no power at all
+ imp:(s.sys.Impulse||0)*((!raw&&s.dbl&&s.d.dbl&&s.dbl[2])?2:1),apr:s.sys.APR||0}}; // [G15.23] doubled impulse engine gives twice its power
 const capMax=s=>s.ph.filter(w=>w.alive).reduce((a,w)=>a+(w.T.cp||1),0);
 Object.keys(DEFS).forEach(k=>{const c=CREW[k]||[20,6];DEFS[k].cr=c[0];DEFS[k].bp=c[1]});
 // [G9.42] General crew units needed to man a ship, by its crew size (1 to 4).
