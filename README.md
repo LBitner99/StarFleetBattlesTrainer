@@ -2,10 +2,19 @@
 
 A single-file, solo web game based on Star Fleet Battles (Captain's Basic Set), built to learn the rules by playing them and to serve as a helper at the table.
 
-- `sfb-duel.html` - the game. Open it in any modern browser; no build step or server needed.
+- `sfb-duel.html` - the game. Open it in any modern browser; no server needed. This file is generated from `src/` (see Source layout below), so edit the files in `src/`, never this one.
 - `docs/rules-coverage-audit.md` - which rules are implemented, which are optional, and which are not done.
 
-Current build: v166.
+Current build: v168.
+
+## Source layout
+
+- `src/template.html` and `src/style.css` - the page and its styles.
+- `src/js/` - the game code, one file per area (movement, firing, seeking weapons, planets, monsters, UI and so on), numbered in the order they are joined.
+- `src/data/` - the large data tables: ship data, SSD geometry, ship silhouettes and the rule texts and summaries shown in the pop-ups.
+- `src/manifest.txt` - the order in which the files are joined. Order matters, because the script runs top to bottom.
+- `build.ps1` (Windows) or `build.py` (Python 3) joins them into `sfb-duel.html`. `push.ps1` runs `build.ps1` before every push, so the pushed game always matches `src/`.
+- `docs/` - the rules coverage audit and the rule, scenario and ship tables.
 
 ## Goals
 

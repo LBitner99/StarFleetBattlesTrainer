@@ -1,0 +1,12 @@
+/* ===== Old minefield (S5.2 result 8, M2.0, M3.0) ===== One large mine (NSM, 35 damage, set for ships) and one small mine (10 damage, set for size 5 and smaller, so drones) sit in every hex of an asteroid-belt layout. The field is neutral: a mine goes off for any unit. */
+let MN=new Map(),MINEZ=new Set(); // MN: hex key -> {L:large mine still there, S:small mine still there}; MINEZ: every hex inside the detection zone (range 1) of a remaining mine
+function mineZone(){MINEZ=new Set();MN.forEach((v,k)=>{if(!v.L&&!v.S)return;const[c,r]=k.split(',').map(Number);for(let a=Math.max(1,c-1);a<=Math.min(COLS,c+1);a++)for(let b=Math.max(1,r-1);b<=Math.min(ROWS,r+1);b++)if(dist({c:a,r:b},{c,r})<=1)MINEZ.add(a+','+b)})}
+function mineBuild(){MN=new Map();const hs=new Set(); // [S5.2 #8] the layout of the asteroid belt (P3.11, P3.12) but every hex holds mines
+ ['0505','0713','1007','0522','0730','1024','1905','2113','2407','1922','2128','2424','3322','3513','3807','3305','3528','3824'].forEach(n=>{let c=+n.slice(0,2),r=+n.slice(2);const[nc,nr]=NB(c,r,d6()-1);for(let a=Math.max(1,nc-2);a<=Math.min(COLS,nc+2);a++)for(let b=Math.max(1,nr-3);b<=Math.min(ROWS,nr+3);b++)if(dist({c:a,r:b},{c:nc,r:nr})<=2)hs.add(a+','+b)});
+ hs.forEach(k=>MN.set(k,{L:true,S:true,nL:d6(),nS:d6()}));mineZone()} // [M6.1] every mine also carries its own detection number, 1 to 6 (used only with the minesweeping option)
+const inMineZone=(c,r)=>MINEZ.has(c+','+r);
+// [S5.33] ships set up inside the field (or its detection zone) may be moved up to six hexes to clear it.
+function mineClear(){if(!MN.size)return;sh.forEach(s=>{if(s.d&&s.d.base)return;if(!inMineZone(s.c,s.r))return;let best=null;for(let c=Math.max(1,s.c-6);c<=Math.min(COLS,s.c+6);c++)for(let r=Math.max(1,s.r-6);r<=Math.min(ROWS,s.r+6);r++){const d=dist({c,r},s);if(d>6||inMineZone(c,r)||terBlk(c,r)||sh.some(o=>o!==s&&o.c===c&&o.r===r))continue;if(!best||d<best.d)best={c,r,d}}if(best){s.c=best.c;s.r=best.r}})}
+/* [M2.40-M2.47] A unit that moves into a hex of the detection zone of an armed mine may set it off: roll a die; below the unit's speed (or a 1) triggers it. A unit sets off at most one mine per move; mines are rolled in random order. Ships only trigger large mines, drones only small ones; plasma torpedoes trigger none (M2.48). Erratic ships always trigger (M2.40). Cloaked ships do not (G13.55). */
+function minePre(){return (MN.size||TER.moon)?new Map([...sh.filter(s=>!s.out).map(s=>[s,s.c+','+s.r]),...DR.map(d=>[d,d.c+','+d.r])]):null}
+

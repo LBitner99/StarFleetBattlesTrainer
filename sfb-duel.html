@@ -312,7 +312,7 @@ function mkShip(key,c,r,f,col,tag,rf){const d=refitDef(key,rf);
   tu:d.torp?Array.from({length:d.torp.n},(_,i)=>({alive:true,state:'half',fired:false,ovl:0,arcs:d.torp.arcs,name:'Photon '+'ABCDEF'[i]})):[],
   di:d.dis?Array.from({length:d.dis.n},(_,i)=>({alive:true,armed:false,fired:false,ovl:false,arcs:(d.dis.each&&d.dis.each[i])||d.dis.arcs,max:d.dis.max,name:'Disruptor '+'ABCDEF'[i]})):[],
   rep:[0,0,0,0,0,0],ecm:0,eccm:0,lock:true,bd:d.bd0,bat:d.sys.Battery||0,bw:0,bi:0,impMove:false,hetUsed:false,hetAvail:0,lastHet:-99,hetAt:-99,gc:d.cr-d.bp/2,gc0:d.cr-d.bp/2,bp:d.bp,intTot:0,cK:0,bK:0,underN:false,noMove:-1,noFire:-1,hetNext:undefined,ed:null,edPost:false,capCur:0,shOn:2,gen:0,spec:[0,0,0,0,0,0],fc:true,plan:null};
- s.rk=Array.from({length:d.sys.Drone||0},()=>({ammo:d.rackAmmo||4,last:-99,turn:0,nT:0,C:!!optRackC}));
+ s.rk=Array.from({length:d.sys.Drone||0},(_,j)=>d.rackKz?({ammo:j<2?4:6,last:-99,turn:0,nT:0,C:j<2}):({ammo:d.rackAmmo||4,last:-99,turn:0,nT:0,C:!!optRackC}));
  s.dn=[];s.tnLeft=0;s.cap={};s.part=0;
  s.pr=Array.from({length:d.sys.Probe||0},(_,i)=>({alive:true,ammo:5,st:0,fired:false,arcs:['ALL'],pr:true,name:'Probe '+(i+1)}));
  s.ad=Array.from({length:d.sys.Add||0},()=>({ammo:d.addAmmo||6}));s.uim=d.uim||0;s.uimWait=0;s.derf=!!d.derf;s.di.forEach(w=>w.derf=s.derf);
@@ -401,10 +401,10 @@ function wStatus(s,x,foe){const w=x.w,r=dist(s,foe),a=rel(s,foe);
 const warp0=s=>(s.d.sys['Left W En']||0)+(s.d.sys['Right W En']||0)+(s.d.sys['Center W En']||0);
 const disNeed=s=>Math.min(Math.ceil(warp0(s)/2),15); // C7.11
 function maxSpd(s,p){ // highest speed the warp engines can pay for after life support, shields and fire control (C7.11, C7.124); the acceleration limit does not count (C7.121)
- const P=pw(s),ls=s.d.ls,fc=p.fc?1:0,sh=p.sh===0?0:p.sh===1?s.d.shc[0]:s.d.shc[0]+s.d.shc[1];
+ const P=pw(s),ls=isCrip(s)?0:s.d.ls,fc=p.fc?1:0,sh=p.sh===0?0:p.sh===1?s.d.shc[0]:s.d.shc[0]+s.d.shc[1];
  for(let v=s.d.dbl?30:31;v>=1;v--){const mE=Math.ceil(v*s.d.mc-1e-9),imp=(mE>=1&&P.imp>=1&&!p.stac&&!(optRI&&p.ifree))?1:0,wm=mE-imp,nonW=(P.imp-imp)+P.apr,ex=Math.max(0,ls+fc+sh-nonW);if(wm+ex<=P.warp)return v}return 0}
 function cost(s,p){s.dbl=(s.d.dbl&&p.dbl&&(p.dbl[0]||p.dbl[1]||p.dbl[2]))?[p.dbl[0]?1:0,p.dbl[1]?1:0,p.dbl[2]?1:0]:null; // [G15.21, G15.23] each engine doubles individually, impulse included
-if(!optHet)p.het=0;if(!optTac){p.tac=0;p.stac=0}if(!optOvl){p.tuo=(p.tuo||[]).map(()=>0);p.di=p.di.map(v=>v===2?1:v)}if(!optRev){p.rev=undefined;p.brk=undefined}if(!optChg)p.chg=[];const P=pw(s),e=[],ls=s.d.ls,fc=p.fc?1:0,grE=planPlot(s,p,e);const wsd=!!(p.wsd&&p.clk&&s.d.clk&&s.d.clk[1]!==undefined);if(wsd){P.warp=0;if(p.spd>0)e.push('With the warp engines shut down the ship has no warp power to move with (G13.22): set the speed to 0');if(s.dbl&&(s.dbl[0]||s.dbl[1]))e.push('A ship cannot double a warp engine it has shut down (G13.22)')} // [G13.22] warp engines not used: the cloak costs its (lower) shutdown figure
+if(!optHet)p.het=0;if(!optTac){p.tac=0;p.stac=0}if(!optOvl){p.tuo=(p.tuo||[]).map(()=>0);p.di=p.di.map(v=>v===2?1:v)}if(!optRev){p.rev=undefined;p.brk=undefined}if(!optChg)p.chg=[];const P=pw(s),e=[],ls=isCrip(s)?0:s.d.ls,fc=p.fc?1:0,grE=planPlot(s,p,e);const wsd=!!(p.wsd&&p.clk&&s.d.clk&&s.d.clk[1]!==undefined);if(wsd){P.warp=0;if(p.spd>0)e.push('With the warp engines shut down the ship has no warp power to move with (G13.22): set the speed to 0');if(s.dbl&&(s.dbl[0]||s.dbl[1]))e.push('A ship cannot double a warp engine it has shut down (G13.22)')} // [G13.22] warp engines not used: the cloak costs its (lower) shutdown figure
  const room=Math.max(0,capMax(s)-s.capCur);if(p.ph>room)e.push(`Phasers can take only ${room} more point${room===1?'':'s'} (capacitor, H6.21)`);
  let tuW=0,tuO=0,tuX=0;
  s.tu.forEach((t,i)=>{if(!t.alive)return;const a=p.tu[i],x=(p.tuo&&p.tuo[i])||0;
@@ -1888,16 +1888,18 @@ const REFITS={
  C9:[{id:'b',n:'B-refit: stronger #3/#4/#5 shields, DERFACS (R3.R1)',pv:6,g:[2,3,4]},{id:'k',n:'K-refit: phasers #3 to #6 become Ph-1 (R3.R2)',pv:4,req:'b',ph:{2:'P1',3:'P1',4:'P1',5:'P1'}},{id:'uim1',n:'UIM refit: a third Ubitron interface module (two are standard) (D6.5)',pv:5,uim:1},{id:'uim2',n:'Extra UIM (D6.5)',pv:5,req:'uim1',uim:1},{id:'y175',n:'Y175 refit: type-B drone racks, ADD-12 (R3.R4)',pv:5,y175:1}],
  C8:[{id:'b',n:'B-refit: stronger #3/#4/#5 shields, DERFACS (R3.R1)',pv:7,g:[2,3,4]},{id:'k',n:'K-refit: phasers #3 to #10 become Ph-1 (R3.R2)',pv:8,req:'b',ph:{2:'P1',3:'P1',4:'P1',5:'P1',6:'P1',7:'P1',8:'P1',9:'P1'}},{id:'uim1',n:'UIM refit: a third Ubitron interface module (two are standard) (D6.5)',pv:5,uim:1},{id:'uim2',n:'Extra UIM (D6.5)',pv:5,req:'uim1',uim:1},{id:'y175',n:'Y175 refit: type-B drone racks, ADD-12 (R3.R4)',pv:8,y175:1}],
  WE:[{id:'rear',n:'Rear phaser refit: two Ph-3 (R4.3)',pv:3,g:[26,27],arcs:{26:['L','LR','RR'],27:['R','LR','RR']}}],
- KFF:[{id:'c10',n:'C-10 refit: stronger #3/#4/#5 shields and more drone racks (R5.8)',pv:9,g:[2,3,4,27,28]}],
+ KFF:[{id:'c10',n:'C-10 refit: stronger #3/#4/#5 shields and more drone racks (R5.8)',pv:9,g:[2,3,4,27,28]},{id:'y175',n:'Y175 refit: two type-C racks, the rest type-B (R5.R5)',pv:0,y175k:1}],
  KR:[{id:'b',n:'B-refit: stronger #3/#4/#5 shields, swivelling plasma-S (R4.R1)',pv:17,g:[2,3,4],pl:{0:{T:'S',arcs:LPA},1:{T:'S',arcs:RPA}}}],
  K5R:[{id:'b',n:'B-refit: stronger #3/#4/#5 shields, swivelling plasma-F (R4.R1)',pv:6,g:[2,3,4],pl:{0:{arcs:LPA},1:{arcs:RPA}}}],
- KCL:[{id:'c12',n:'C-12 refit: 2 more APR, drone racks, disruptors C and D, range 30 (R5.5)',pv:12,g:[19,28,29,37,38],arcs:{37:['LF','RF','L'],38:['LF','RF','R']},dmax:30,disArcs:{0:['LF','RF','L'],1:['LF','RF','R']},phArcs:{0:['LF','RF','L'],1:['LF','RF','R']}},{id:'uim1',n:'UIM refit: one Ubitron interface module (D6.5)',pv:5,uim:1},{id:'uim2',n:'A second UIM (D6.5)',pv:5,req:'uim1',uim:1}],
- KCS:[{id:'uim1',n:'UIM refit: one Ubitron interface module (D6.5)',pv:5,uim:1},{id:'uim2',n:'A second UIM (D6.5)',pv:5,req:'uim1',uim:1}],
+ KCL:[{id:'c12',n:'C-12 refit: 2 more APR, drone racks, disruptors C and D, range 30 (R5.5)',pv:12,g:[19,28,29,37,38],arcs:{37:['LF','RF','L'],38:['LF','RF','R']},dmax:30,disArcs:{0:['LF','RF','L'],1:['LF','RF','R']},phArcs:{0:['LF','RF','L'],1:['LF','RF','R']}},{id:'uim1',n:'UIM refit: one Ubitron interface module (D6.5)',pv:5,uim:1},{id:'uim2',n:'A second UIM (D6.5)',pv:5,req:'uim1',uim:1},{id:'y175',n:'Y175 refit: two type-C racks, the rest type-B (R5.R5)',pv:0,y175k:1}],
+ KCS:[{id:'uim1',n:'UIM refit: one Ubitron interface module (D6.5)',pv:5,uim:1},{id:'uim2',n:'A second UIM (D6.5)',pv:5,req:'uim1',uim:1},{id:'y175',n:'Y175 refit: two type-C racks, the rest type-B (R5.R5)',pv:0,y175k:1}],
+ KBC:[{id:'y175',n:'Y175 refit: two type-C racks, the rest type-B (R5.R5)',pv:0,y175k:1}],
+ KCC:[{id:'y175',n:'Y175 refit: two type-C racks, the rest type-B (R5.R5)',pv:0,y175k:1}],
  GCA:[{id:'plus',n:'Plus refit: plasma-S on swivel mounts, two Ph-3, two plasma-F (R6.2)',pv:26,g:[39,40,43,46],arcs:{39:LSA,40:RSA,43:LSA,46:RSA},pl:{0:{T:'S',arcs:LPA},1:{T:'S',arcs:RPA}}}],
  GCL:[{id:'plus',n:'Plus refit: plasma-S on swivel mounts (R6.3)',pv:16,pl:{0:{T:'S',arcs:LPA},1:{T:'S',arcs:RPA}}},{id:'f',n:'F refit: two Ph-3 and two plasma-F (R6.3)',pv:14,g:[32,33,34,37],arcs:{32:LSA,33:RSA,34:LSA,37:RSA}}],
  GDD:[{id:'plus',n:'Plus refit: stronger shields and a battery (R6.4)',pv:6,g:[0,1,2,3,4,5,16]}],
  CR:[{id:'plus',n:'Plus refit (Y169): the shaded shield boxes are added, six more on #1 and eight on each of the others (R8.2)',pv:8,sh:[6,8,8,8,8,8]},{id:'cloak',n:'Cloak refit (Y155): a cloaking device, cost 10/2 (G15.3, R8.2)',pv:18,clk:[10,2]}]};
-const RFTODO={CR:'OAKDISC (Y127; it only matters for drone or plasma racks in option mounts, which this game does not fit) and the SSD drawing of the extra Plus shield boxes',KR:'sabot (rules are in Module R10)',K5R:'sabot (rules are in Module R10)',GCA:'sabot (Module R10)',GCL:'sabot (Module R10)',GDD:'sabot (Module R10)',WE:'sabot (Module R10)',KCL:'the Y175 type-C racks'};
+const RFTODO={CR:'OAKDISC (Y127; it only matters for drone or plasma racks in option mounts, which this game does not fit) and the SSD drawing of the extra Plus shield boxes',KR:'sabot (rules are in Module R10)',K5R:'sabot (rules are in Module R10)',GCA:'sabot (Module R10)',GCL:'sabot (Module R10)',GDD:'sabot (Module R10)',WE:'sabot (Module R10)'};
 const rfSet=(key,ids)=>{const a=new Set();(REFITS[key]||[]).forEach(r=>{if(r.g&&ids&&ids.includes(r.id))r.g.forEach(g=>a.add(g))});return a};
 const UIMSTD={C8:2,C9:2},DERNEEDB=['D7','C8','C9'];
 function refitDef(key,ids){const base=DEFS[key];ids=ids||[];
@@ -1911,7 +1913,8 @@ function refitDef(key,ids){const base=DEFS[key];ids=ids||[];
   else if(g[0]==='w'&&g[1]==='pl'){const lab=g[2]?g[2][i]:'',own=RL.find(r=>r.g&&r.g.includes(gi)&&ids.includes(r.id)&&r.arcs&&r.arcs[gi]);d.plas.push({T:/Plasma-(\w)/.exec(lab)[1],arcs:own?own.arcs[gi]:['ALL']})}})});
  RL.forEach(r=>{if(!ids.includes(r.id))return;d.pv+=r.pv;if(r.sh)for(let i=0;i<6;i++)d.shields[i]+=r.sh[i]; // [R8.2] Plus refit shield boxes
   if(r.clk)d.clk=r.clk; // [G15.3] Orion cloak refit
-  if(r.awr)d.awr=true;if(r.uim)d.uim+=r.uim;if(r.y175){d.rackAmmo=6;d.addAmmo=12}if(r.ph)for(const i in r.ph)d.phs[i]={...d.phs[i],T:TT[r.ph[i]]};if(r.phArcs)for(const i in r.phArcs)d.phs[i]={...d.phs[i],arcs:r.phArcs[i]};if(r.pl)for(const i in r.pl)d.plas[i]={...d.plas[i],...r.pl[i]};if(r.dmax)d.dis.max=r.dmax;if(r.disArcs)for(const i in r.disArcs)d.dis.each[i]=r.disArcs[i]});
+  if(r.awr)d.awr=true;if(r.uim)d.uim+=r.uim;if(r.y175){d.rackAmmo=6;d.addAmmo=12}if(r.y175k){d.rackKz=true;d.pv+=d.sys.Drone||0} // [R5.R5, FD3.2, FD3.3] Kzinti Y175: the first two type-A racks become type-C (4 spaces, two launches a turn), the rest type-B (6 spaces); one point each
+ if(r.ph)for(const i in r.ph)d.phs[i]={...d.phs[i],T:TT[r.ph[i]]};if(r.phArcs)for(const i in r.phArcs)d.phs[i]={...d.phs[i],arcs:r.phArcs[i]};if(r.pl)for(const i in r.pl)d.plas[i]={...d.plas[i],...r.pl[i]};if(r.dmax)d.dis.max=r.dmax;if(r.disArcs)for(const i in r.disArcs)d.dis.each[i]=r.disArcs[i]});
  d.derf=!!(d.dis&&d.dis.max>=30&&(!DERNEEDB.includes(key)||ids.includes('b')));d.rfIds=ids;if(ids.length)d.n=base.n+' ('+ids.map(i=>(RL.find(r=>r.id===i)||{id:i}).id.toUpperCase()).join(', ')+' refit'+(ids.length>1?'s':'')+')';return d}
 let rfA=[],rfB=[];
 function togRf(who,id,key){const t=curTab(who);if(key&&key!==slotK(who,t))setSlot(who,t,key,[]);let a=slotRf(who,t);a=a.includes(id)?a.filter(x=>x!==id):[...a,id];key=slotK(who,t);
@@ -2325,6 +2328,7 @@ function d22(s,i){const c=s.c0;if(!c||over||s.boom||phase!=='run')return;const P
  const E=Math.max(0,c.total-O-A),req=O+A+Math.max(0,E-lost),rem0=cur+(c.bd||0);let sh0=Math.ceil(req-rem0-1e-9);
  say(`Impulse ${i}: ${s.tag} has lost ${lost} power box${lost===1?'':'es'} this turn (${cur} left). Energy balance: ${fmt(Math.round(req*100)/100)} still needed against ${rem0} available${sh0>0?`, a shortage of ${sh0}`:', so there is no shortage (power already spent is taken to have come from the destroyed boxes)'}.`);
  if(sh0<=0)return;
+ if(c.ls>0&&!s.els&&isCrip(s)){s.els=true;sh0-=c.ls;say(`  ${s.tag} is crippled and goes on emergency life support, which costs no power (D22.431, B3.1).`);if(sh0<=0)return} // [D22.431] step 1
  const u=Math.min(s.bat,sh0);if(u>0){spendBat(s,u);sh0-=u;say(`  ${s.tag} discharges ${u} ${u>1?'batteries':'battery'} as reserve power to cover it.`)}
  if(sh0>0&&s.hetAvail>0){const n=Math.min(s.hetAvail,Math.ceil(sh0/hetC(s)));s.hetAvail-=n;sh0-=hetC(s)*n;say(`  ${n} unused high energy turn${n>1?'s are':' is'} cancelled.`)}
  if(sh0>0&&emA>0){s.emPaid=false;sh0-=emA;say(`  The unused erratic maneuvering is cancelled.`)}

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Star Fleet Battles: Duel</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Michroma&display=swap">
+<style>@@CSS@@</style></head><body><main>
+<h1>Star Fleet Battles: Duel</h1>
+<p class="sub" id="sub">Scenario SG1.0, the Duel.</p>
+<div id="selscr"></div>
+<div id="ctl" class="card" data-l="Controls"></div>
+<div class="layout"><div>
+<div id="act"></div>
+<div class="card" data-l="Tactical map" style="padding:10px"><div id="mapbox"><svg id="map"><g id="grid"></g><g id="dyn"></g></svg>
+<div class="zc"><button onclick="zoomBy(.7)" title="Zoom in">+</button><button onclick="zoomBy(1/.7)" title="Zoom out">−</button><button class="w" onclick="fitShips()">Ships</button><button class="w" onclick="fitMap()">Map</button></div></div>
+<p class="mu" style="margin:6px 0 0">Zoom with the buttons or mouse wheel; drag to pan. Hex numbers appear when zoomed in.</p></div>
+</div><div class="side"><div class="tabs" id="tabs"></div><div id="sidebody"></div></div></div>
+<script>@@JS@@</script></main></body></html>
