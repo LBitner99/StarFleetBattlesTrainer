@@ -164,6 +164,23 @@ a{color:#6fd0ff}
  .ea .stp button{min-width:44px;padding:0;font-size:1.3rem;line-height:1}
  .ea select{max-width:100%}
 }
+
+ /* energy form tabs and collapsible notes (all screen sizes) */
+ .easticky{position:sticky;top:0;z-index:6;background:var(--card,#000);padding:4px 0 2px;margin:0 0 6px}
+ .easticky p{margin:0 0 4px}
+ .eatabs{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0 0}
+ .eatabs button{font:inherit;font-size:.85rem;padding:5px 12px;border-radius:999px;border:2px solid #1b5fa8;background:#02101f;color:#bfe5cf;cursor:pointer}
+ .eatabs button b{color:var(--lv,#ffd84a);margin-left:4px}
+ .eatabs button.on{background:#1b5fa8;color:#fff;border-color:#6fd0ff}
+ .ea tr.gh{display:none!important}
+ .ea td.l{cursor:pointer}
+ .ea td.l::before{content:"\24D8  ";color:#6fd0ff}
+ .ea td.l small{display:none}
+ .ea tr.open td.l small{display:block;margin-top:4px}
+ /* race buttons on the ship picker: one row, shrinking to fit */
+ .lc-tabs{flex-wrap:nowrap;gap:4px;container-type:inline-size}
+ .lc-tabs button{flex:1 1 auto;min-width:0;padding:6px 2px;font-size:clamp(.3rem,1.32cqw,.52rem);letter-spacing:.02em;border-width:2px;white-space:nowrap;text-align:center}
+ @media(max-width:760px){.lc-tabs{flex-wrap:wrap}.lc-tabs button{flex:1 1 auto;font-size:.52rem;padding:6px 8px}.easticky{position:static}.eatabs{gap:4px}.eatabs button{font-size:.72rem;padding:4px 9px;letter-spacing:0}}
 </style></head><body><main>
 <h1>Star Fleet Battles: Duel</h1>
 <p class="sub" id="sub">Scenario SG1.0, the Duel.</p>
@@ -1927,6 +1944,26 @@ function resOv(k,i){const me=sh[0],w=k==='di'?me.di[i]:me.tu[i];if(k==='di'){if(
  L(`${me.tag} uses reserve power to overload ${w.name}${k==='tu'?' (now +'+w.ovl+')':''}.`+RL('H7.54, '+(k==='di'?'E3.55':'E4.45')));draw()}
 function doFire(){try{if(![...document.querySelectorAll('.fs')].some(c=>c.checked)&&humanReady().some(o=>o.st.ok))ST.holds++}catch(e){}nsOn=!!(document.getElementById('ns')&&document.getElementById('ns').checked);lowSel=[...document.querySelectorAll('.lp')].filter(c=>c.checked).map(c=>c.value);fireTgt={};document.querySelectorAll('.ft').forEach(e=>fireTgt[e.dataset.w]=e.value);fireSel=[...document.querySelectorAll('.fs')].filter(c=>c.checked).map(c=>c.value);if(!fireSel.length){holdNow=true}go()}
 /* ----- energy allocation form ----- */
+/* ----- energy allocation: tabs ----- */
+// The energy form has about 25 rows, so they are grouped into tabs: power and shields, weapons and sensors, movement, boarding and special. Each tab shows the energy its rows use. Rule notes sit behind the info mark on each row (click the row name).
+let eaTab='pwr';
+const EAG=[['pwr','Power and shields'],['wpn','Weapons and sensors'],['mov','Movement'],['sp','Boarding and special'],['all','All']];
+function eaGrp(l){const x=l.toLowerCase();
+ if(/^(life support|fire control|batteries|shields|general reinforcement|specific reinforcement|shield repair|double warp)/.test(x))return'pwr';
+ if(/^(electronic|phaser|photon|plasma|disruptor|drone|probe|ecm|sensor|tube|rack|launcher)/.test(x))return'wpn';
+ if(/^(speed|reverse|high energy|warp tactical|sublight|erratic|disengage|planet)/.test(x))return'mov';
+ return'sp'}
+function eaSet(k){eaTab=k;draw()}
+function eaTabify(html){const d=document.createElement('div');d.innerHTML=html;const tb=d.querySelector('table');if(!tb)return html;
+ const tot={},cnt={},rows=[];
+ [...tb.rows].forEach((r,k)=>{if(k===0)return;const l=r.querySelector('td.l');if(!l)return;const f=l.firstChild,lab=(f&&f.nodeType===3?f.textContent:l.textContent).trim(),g=eaGrp(lab);r.dataset.g=g;cnt[g]=(cnt[g]||0)+1;
+  const n=parseFloat(r.cells[2]&&r.cells[2].textContent);if(n>0)tot[g]=(tot[g]||0)+n;if(f&&eaOpen.has(f.textContent))r.classList.add('open');rows.push(r)});
+ if(eaTab!=='all'&&!cnt[eaTab])eaTab='pwr';
+ rows.forEach(r=>{if(eaTab!=='all'&&r.dataset.g!==eaTab)r.classList.add('gh')});
+ const bar=`<div class="eatabs" role="tablist">${EAG.filter(g=>g[0]==='all'||cnt[g[0]]).map(([k,v])=>`<button type="button" role="tab" class="${eaTab===k?'on':''}" onclick="eaSet('${k}')">${v}${k!=='all'&&tot[k]?` <b>${Math.round(tot[k]*100)/100}</b>`:''}</button>`).join('')}</div>`;
+ const chips=[...d.querySelectorAll('p')].find(p=>p.querySelector('.chip')),w=document.createElement('div');w.className='easticky';
+ if(chips){chips.parentNode.insertBefore(w,chips);w.appendChild(chips);w.insertAdjacentHTML('beforeend',bar)}else tb.closest('.scroll').insertAdjacentHTML('beforebegin',bar);
+ return d.innerHTML}
 function eaCard(){const s=sh[0],p=plan0,c=cost(s,p),P=c.P,room=Math.max(0,capMax(s)-s.capCur);
  let t=`<div class="card ea"><h2>Turn ${turn}: energy allocation</h2><p class="mu">Decide how to spend this turn's power. Nothing carries over except phaser charge, batteries, and torpedoes you keep armed (B3.1). The opponent is doing the same in secret.</p>`;
  t+=`<p><span class="chip">Warp <b>${P.warp}</b></span><span class="chip">Impulse <b>${P.imp}</b></span><span class="chip">Total <b>${c.avail}</b></span><span class="chip">Used <b class="${c.errors.length?'bad':'ok'}">${c.total}</b></span><span class="chip">Left over <b>${c.errors.length?'?':c.left}</b></span><span class="chip">Photon + movement need warp: <b class="${c.warpOnly>P.warp?'bad':''}">${c.warpOnly}</b>/${P.warp}</span></p>`;
@@ -1968,7 +2005,7 @@ function eaCard(){const s=sh[0],p=plan0,c=cost(s,p),P=c.P,room=Math.max(0,capMax
  if(optBoom)t+=sdUI();
  t+=`<div class="row"><button onclick="plan0=autoPlan(sh[0],TG(),'normal',true);draw()">Suggest a plan</button><button class="pri" onclick="startTurn()">Lock in and start turn ${turn}</button></div>`;
  t+=`<p class="mu">Speed ${p.spd} gives turn mode ${p.spd>1?tmFor(s.d.cat,p.spd)+(under(s)?1:0):'n/a'} (C3.2${under(s)?', G9.421':''}). Phasers: ${s.ph.filter(w=>w.alive).length} working. Reserve power from batteries is in (H7.0); continuous damage repair (D9.7) is not.</p></div>`;
- return t}
+ return eaTabify(t)}
 function setGd(id,v){plan0.gd=plan0.gd||{};plan0.gd[id]=v?1:0;eaMsg='';draw()}
 function setP(k,v){plan0[k]=v;eaMsg='';draw()}
 function setRev(v){plan0.rev=v?1:0;plan0.brk=brkFull(sh[0]);eaMsg='';draw()}
@@ -2754,7 +2791,7 @@ function mobSync(){try{const on=started&&mq.matches;if(started&&!mWasStarted){ma
   document.querySelectorAll('.ea tr').forEach(r=>{const l=r.querySelector('td.l');if(l&&eaOpen.has(l.firstChild&&l.firstChild.textContent))r.classList.add('open')});
   a.querySelectorAll('input[type=number]').forEach(inp=>{if(inp.closest('.stp'))return;const st=+inp.step||1;inp.inputMode=st%1?'decimal':'numeric';
    const w=document.createElement('span');w.className='stp';inp.parentNode.insertBefore(w,inp);const mk=(t,d)=>{const b=document.createElement('button');b.type='button';b.textContent=t;b.setAttribute('aria-label',d<0?'decrease':'increase');b.onclick=ev=>{ev.preventDefault();let v=(+inp.value||0)+d*st;if(inp.min!=='')v=Math.max(+inp.min,v);if(inp.max!=='')v=Math.min(+inp.max,v);inp.value=v;inp.dispatchEvent(new Event('change',{bubbles:true}))};return b};w.append(mk('−',-1),inp,mk('+',1))})}catch(e){console.error(e)}}
-document.addEventListener('click',e=>{const l=e.target.closest&&e.target.closest('.ea td.l');if(!l||e.target.closest('.rl')||!mq.matches)return;const r=l.parentNode,k=l.firstChild&&l.firstChild.textContent;r.classList.toggle('open');if(r.classList.contains('open'))eaOpen.add(k);else eaOpen.delete(k)});
+document.addEventListener('click',e=>{const l=e.target.closest&&e.target.closest('.ea td.l');if(!l||e.target.closest('.rl'))return;const r=l.parentNode,k=l.firstChild&&l.firstChild.textContent;r.classList.toggle('open');if(r.classList.contains('open'))eaOpen.add(k);else eaOpen.delete(k)});
 {const d0=draw;draw=function(){const r=d0.apply(this,arguments);mobSync();return r}}
 mq.addEventListener&&mq.addEventListener('change',mobSync);mobSync();
 </script></main></body></html>
