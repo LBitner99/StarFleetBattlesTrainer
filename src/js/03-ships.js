@@ -36,7 +36,8 @@ function mkShip(key,c,r,f,col,tag,rf){const d=refitDef(key,rf);
  s.rk=Array.from({length:d.sys.Drone||0},(_,j)=>d.rackKz?({ammo:j<2?4:6,last:-99,turn:0,nT:0,C:j<2}):({ammo:d.rackAmmo||4,last:-99,turn:0,nT:0,C:!!optRackC}));
  s.dn=[];s.tnLeft=0;s.cap={};s.part=0;
  s.pr=Array.from({length:d.sys.Probe||0},(_,i)=>({alive:true,ammo:5,st:0,fired:false,arcs:['ALL'],pr:true,name:'Probe '+(i+1)}));
- s.ad=Array.from({length:d.sys.Add||0},()=>({ammo:d.addAmmo||6}));s.uim=d.uim||0;s.uimWait=0;s.derf=!!d.derf;s.di.forEach(w=>w.derf=s.derf);
+ s.ad=Array.from({length:d.sys.Add||0},()=>({ammo:d.addAmmo||6}));if(d.gad)s.rk.forEach((r,j)=>{r.ammo=0;r.adm=true;s.ad.push({ammo:16,g:j})}); // [FD3.7] a type-G rack loaded with anti-drones (8 in the rack and 8 in the all-ADD reload) fires them like an ADD launcher and launches no drones
+ s.uim=d.uim||0;s.uimWait=0;s.derf=!!d.derf;s.di.forEach(w=>w.derf=s.derf);
  s.capCur=capMax(s);s.p0=pw(s).warp+pw(s).imp+pw(s).apr;return s}
 const DCT=[4,4,2,2,2,0];
 // [D9.2] Damage control rating, from the damage control track on the SSD.

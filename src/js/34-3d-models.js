@@ -353,7 +353,7 @@ function fedCC(o){o=o||{};const wp=o.wp||.65,px0=-1.38-wp/2,px1=-1.38+wp/2; // w
 function civModel(big){const m=new Mesh(),C=['#8b95a1','#a9b3bf','#6f7883'];const w=big?1.5:1.1,L=big?4.2:3.2;m.ext([[L,0],[L-.9,w*.8],[L-1.6,w*.8],[-L,w],[-L,-w],[L-1.6,-w*.8],[L-.9,-w*.8]],-.5,.5,C[0]);m.ext([[L-.4,0],[L-1.2,w*.55],[L-1.2,-w*.55]],.5,.9,C[1]);m.sym(s=>{m.ext([[-L+.3,s*w],[-L+.3,s*(w+.5)],[-L-1.2,s*(w+.5)],[-L-1.2,s*w]],-.25,.25,C[2])});return m}
 function baseModel(){const m=new Mesh(),C=['#8d7fb0','#b9a3e3','#6a5d8a'];const hx=(r)=>[0,1,2,3,4,5].map(i=>[r*Math.cos(i*Math.PI/3),r*Math.sin(i*Math.PI/3)]);m.ext(hx(1.9),-.6,.6,C[0]);m.ext(hx(.9),.6,1.4,C[1]);[0,2,4].forEach(i=>{const a=i*Math.PI/3+Math.PI/6,cx=Math.cos(a)*2.6,cy=Math.sin(a)*2.6;m.ext(hx(.8).map(p=>[p[0]+cx,p[1]+cy]),-.4,.4,C[2])});return m}
 function buildShip(k){const sd=SHIPS[k].side;let m;
- if(DEFS[k].q)m=civModel(/L$/.test(k));else if(sd==='fed')m=(k==='DD'||k==='SC')?fedDD():(k==='DN'||k==='BT')?fedDN():k==='CL'?fedOldCL():k==='CA'?fedCC({wp:.46}):k==='CC'?fedCC({wp:.9}):fedModel(FED[k]||FED.CA);
+ if(DEFS[k].q)m=civModel(/L$/.test(k));else if(sd==='fed')m=(k==='DD'||k==='SC'||k==='TUG')?fedDD():(k==='DN'||k==='BT')?fedDN():k==='BP'?baseModel():k==='CL'?fedOldCL():k==='CA'?fedCC({wp:.46}):k==='CC'?fedCC({wp:.9}):fedModel(FED[k]||FED.CA);
  else if(sd==='kli')m=kliModel(KLI[k]||KLI.D7);
  else if(sd==='rom')m=(k==='WE'||k==='WB')?romModel({w:4.3}):kliModel(k==='KR'?KLI.D6:KLI.F5,ROMG);
  else if(sd==='kzi')m=kzModel({k:(k==='KFF'||k==='EFF')?'ff':(k==='KBC'||k==='KCC'||k==='CV')?'bc':'cl'}) // [S-KZI] CC reference matches the BC hull;
@@ -364,7 +364,7 @@ function buildShip(k){const sd=SHIPS[k].side;let m;
  else m=thoModel({plus:k==='TPP'});
  let sc={KFF:.8,EFF:.8,KCL:.95,KBC:1.1,KCC:1.12,GDD:.82,GDF:.9,GCL:.95}[k]||1;
  let mn=[1e9,1e9,1e9],mx=[-1e9,-1e9,-1e9];m.f.forEach(f=>f.v.forEach(p=>{for(let i=0;i<3;i++){if(p[i]<mn[i])mn[i]=p[i];if(p[i]>mx[i])mx[i]=p[i]}}));
- if(sd==='fed'&&(k==='DD'||k==='SC'))sc=(mx[0]-mn[0])/11.95; // [S-FED] DD drawn at its real length relative to the CA
+ if(sd==='fed'&&(k==='DD'||k==='SC'||k==='TUG'))sc=(mx[0]-mn[0])/11.95; // [S-FED] DD drawn at its real length relative to the CA
  if(sd==='kli'||(sd==='rom'&&k!=='WE'&&k!=='WB'))sc=(mx[0]-mn[0])/KD7(); // [S-KLI] drawn size follows the model's real length
   m.o=[0,1,2].map(i=>(mn[i]+mx[i])/2);m.R=Math.max(mx[0]-mn[0],mx[1]-mn[1],(mx[2]-mn[2])*1.6)/2/sc;m.floor=mn[2];m.Rv=(.8*(mx[1]-mn[1])/2+.6*(mx[2]-mn[2])/2)/sc;return m}
 const V3STARS=Array.from({length:36},(_,i)=>[(i*73%97)/97,(i*41%89)/89,.4+((i*17)%5)/8]);

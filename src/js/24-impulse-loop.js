@@ -42,15 +42,15 @@ function step(){ // returns 'pause' | 'done'
   if(me.stacLeft>0&&i===2&&me.stacAsk!==turn){me.stacAsk=turn;return'pause'}
   if(moves(linkSp(me),i)&&(elig(me)||(slipStop&&slipOk(me)))&&pend===null&&linkSp(me)>0&&!blocked(me,i)){if(!skip)return'pause';if(!skipOK&&turn>1){skipAsk=true;return'pause'}}
   if(i===1)sh.forEach(qrRoll);sh.forEach(s=>applyChg(s,i));
-  const MPRE=minePre();eelMove(i);moveShips(i);sh.forEach(s=>{if(s.sph)s.sph[i]=s.sp});MONS.forEach(m=>withMon(m,()=>mcids(i,false)));moveDrones(i);bhMove(i);gwStep(i);mineStep(i,MPRE);mineAuto(i,MPRE);moonStep(i,MPRE);if(i===32)planetEnd();moonLocks(i);eelEnd(i);nebDrift(i);hazKill(i);zoneImp(i);pulStep(i);webReinforce(i);ckStage(i);edStop(i);pend=null;stage='fire';fireSel=null;holdNow=false;if(edAsk)return'pause'}
+  const MPRE=minePre();eelMove(i);moveShips(i);sh.forEach(s=>{if(s.sph)s.sph[i]=s.sp});MONS.forEach(m=>withMon(m,()=>mcids(i,false)));moveDrones(i);moveFighters(i);bhMove(i);gwStep(i);mineStep(i,MPRE);mineAuto(i,MPRE);moonStep(i,MPRE);if(i===32)planetEnd();moonLocks(i);eelEnd(i);nebDrift(i);hazKill(i);zoneImp(i);pulStep(i);webReinforce(i);ckStage(i);edStop(i);pend=null;stage='fire';fireSel=null;holdNow=false;if(edAsk)return'pause'}
  if(edAsk)return'pause';
  if(stage==='fire'){
   const rd=humanReady().filter(o=>o.st.ok),range=dist(sh[0],TG());statTick(i,rd,range);
-  if(aiLI!==absI(i)){aiLI=absI(i);AIL().forEach(a=>{if(aiBlind(a))return;aiLaunch(a,i);aiPlasma(a,i);aiOpts(a,i)})}
-  if(fireSel===null&&!holdNow&&((rd.length&&range<=pauseAt)||(optSweep&&spdOf(sh[0])===0&&mineNear(sh[0]).length)||droneReady(sh[0]).length||(range<=pauseAt&&noLaunch!==turn&&(launchList(sh[0],i).length||plList(sh[0],i).length))))return'pause';
+  if(aiLI!==absI(i)){aiLI=absI(i);AIL().forEach(a=>{if(aiBlind(a))return;aiLaunch(a,i);aiPlasma(a,i);aiOpts(a,i);ftrAi(a,i)})}
+  if(fireSel===null&&!holdNow&&((rd.length&&range<=pauseAt)||(optSweep&&spdOf(sh[0])===0&&mineNear(sh[0]).length)||droneReady(sh[0]).length||(range<=pauseAt&&noLaunch!==turn&&(launchList(sh[0],i).length||plList(sh[0],i).length||ftrList(sh[0],i)))))return'pause';
   const aiSels=AIL().map(a=>{let fo=foeOf(a);const pt=aiBlind(a)?null:aiPirTarget(a);if(pt)fo=pt;return{s:a,foe:fo,list:aiBlind(a)?[]:aiFire(a,fo,i)}}).filter(a=>a.list.length),hs=(fireSel||[]).map(id=>{const x=weapons(sh[0]).find(z=>z.id===id);if(x){const t=fireTgt[id];x.dt=t&&t!=='S'?DR.find(d=>d.id==+t):null;x.lp=x.kind==='ph'&&x.w.T!==P3&&lowSel.includes(id)&&effRange(sh[0],x.dt||TG())<=15;x.ns=!!nsOn&&optNar&&!x.dt}return x}).filter(x=>x&&wStatus(sh[0],x,x.dt||TG()).ok);
   if(hs.length||aiSels.length)resolveFire(hs,aiSels);
-  addFire(i);resolveImpacts(i);d22All(i);explodeAll();
+  addFire(i);ftrAct(i);resolveImpacts(i);d22All(i);explodeAll();
   stage='mov';fireSel=null;holdNow=false;imp=i;checkEnd();
   if(imp>=32&&!over)endTurn();return'done'}
  return'done'}
@@ -85,7 +85,7 @@ function checkEnd(){sh.forEach((s,k)=>{if(s.out||over||!((power(s)<=0&&!s.merch)
   if(optLeg&&s.leg&&s.leg.st==='ok'&&!s.legTried){s.legTried=true;const e=sh.find(x=>!x.out&&x.tm!==s.tm&&!x.dr&&(x.d.size||9)>=(s.d.size||0)),d2=d6()+d6(),ok=d2===2&&d6()<=3; // [G22.223] when the legendary captain's ship is destroyed: a 1% chance (2 on two dice, then 1 to 3) that he ends up in control of the nearest enemy ship of the same or smaller size class
    if(e){L(`${s.tag} is lost, and its legendary captain tries something legendary (1% chance): ${ok?'it works!':'it fails.'}`+RL('G22.223'));if(ok){e.out=true;e.captured=true;const _t=s.tm===0?`${s.n}'s legendary captain turns up aboard the ${e.n} and takes control of it. You have captured the ship and win!`:`${s.n}'s legendary captain has taken over your ${e.n}. You lose.`;if(s.tm===0){if(!sh.filter(x=>!x.out&&x.tm!==0).length)over={win:true,text:_t}}else if(e===sh[0])over={win:false,text:_t};L(_t+RL('G22.223'));s.out=true;return}}}const friend=k>0&&s.tm===0,w=!friend&&!ENL().filter(x=>x!==s).length;
   const t=s.killTxt?`${s.killTxt} ${k?(w?'You win a decisive victory!':''):'You have been defeated.'}`:s.boom?`${s.n} ${s.selfD?'self-destructs':'takes an excess damage hit with no boxes left and is destroyed'}. ${k?(w?'You win a decisive victory!':''):'You have been defeated.'}`:`${s.n} has lost all power and is dead in space. ${k?(w?'You win a decisive victory!':''):'You have been defeated.'}`;
-  if(k===0)over={win:false,text:t};else{s.out=true;if(!friend&&!ENL().length)over={win:true,text:t}}L(t+RL('simplified victory test'))})}
+  if(k===0)over={win:false,text:t};else{s.out=true;if(!friend&&!ENL().length&&!pendRein())over={win:true,text:t}}L(t+RL('simplified victory test'))})}
 const scnName=()=>scnX?SCX[scnX].name:scn6?'SG6.0, Pursuit into the Asteroids':scn4?'SG4.0, Basic Piracy':(selA&&selB&&(SHIPS[selA].side==='ori'||SHIPS[selB].side==='ori'))?'SG5.0, Duel with a Pirate Raider':'SG1.0, the Duel';
 function dblLoss(){sh.forEach(s=>{if(!s.dbl||!s.d.dbl)return;const lost=[];[['Left W En',0],['Right W En',1]].forEach(([n,i])=>{if(s.dbl[i]&&(s.sys[n]||0)>0){s.sys[n]--;lost.push(n.replace(' W En',' warp'))}});if(s.dbl[2]&&(s.sys.Impulse||0)>0){s.sys.Impulse--;lost.push('impulse')} // [G15.231] size-3 ship: one impulse box is marked off if the impulse engine ran doubled
  if(lost.length)L(`${s.tag} doubled its ${lost.join(' and ')} engine${lost.length>1?'s':''} this turn and loses one box from each (G15.202, G15.212, G15.231).`+RL('G15.2, G15.202, G15.231'));s.dbl=null})}

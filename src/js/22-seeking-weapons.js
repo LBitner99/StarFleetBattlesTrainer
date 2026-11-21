@@ -23,14 +23,14 @@ const ffTargets=()=>sh.filter(x=>x.tm===0&&ffRule(x));
 const TG=()=>{if(ffInv&&ffInv.turn===turn&&!ffInv.s.out)return ffInv.s;const c=sh[tgSel];if(c&&!c.out&&(c.tm===1||c.neu||(c.tm===0&&ffRule(c))))return c;const l=ENL();return l.length?l.reduce((b,s)=>dist(sh[0],s)<dist(sh[0],b)?s:b,l[0]):(sh.find(x=>x.tm===1)||sh[1])}; // the computer ship you are shooting at
 // [D1.5] A computer ship picks the nearest ship of the other side as its foe; it never aims at its own side.
 const foeOf=s=>{if(s===sh[0])return TG();const e=sh.filter(x=>!x.out&&x.tm!==s.tm&&!x.neu);if(!e.length)return s.tm===1?sh[0]:(sh.find(x=>x.tm===1)||sh[1]);return e.reduce((b,x)=>dist(s,x)<dist(s,b)?x:b,e[0])};
-function endFor(k,s,tAI,tHu,rc){const ally=k>0&&s.tm===0;let t=(k===0||ally)?tHu:tAI;if(k===0)over={win:false,text:t};else{s.out=true;if(ally)t='Your ally: '+t;else if(!ENL().length)over={win:true,text:t};else t=t.replace(' You win!','')}L(t+RL(rc))}
+function endFor(k,s,tAI,tHu,rc){const ally=k>0&&s.tm===0;let t=(k===0||ally)?tHu:tAI;if(k===0)over={win:false,text:t};else{s.out=true;if(ally)t='Your ally: '+t;else if(!ENL().length&&!pendRein())over={win:true,text:t};else t=t.replace(' You win!','')}L(t+RL(rc))}
 function setTg(k){tgSel=k;draw();side()}
 function tgBar(){const me=sh[0],inv=ffInv&&ffInv.turn===turn&&!ffInv.s.out,l=inv?[ffInv.s]:sh.filter(x=>x.tm===1||x.neu||ffRule(x)),can=!inv&&me.disPlan&&phase==='run'?sh.filter(x=>x.tm===0&&x!==me&&!x.out&&unableDis(x)):[];
  if(l.length<2&&!can.length&&!inv)return'';
  return`<div class="row" style="margin:0 0 6px"><span class="mu">Your target:</span>${l.map(s=>`<button class="${TG()===s?'on':''}" ${s.out?'disabled':''} title="${s.neu?'Neutral: if you fire on it the opponent takes control of it (S5.2 result 9)':s.tm===0?'Friendly fire allowed: '+ffRule(s)+' (D1.5)':''}" onclick="setTg(${sh.indexOf(s)})">${s.tag}${s.neu?' (neutral)':''}${s.tm===0?' (friendly, '+ffRule(s)+')':''}${s.out?' (out)':''}</button>`).join('')}${can.map(x=>`<button title="D1.522: your other units are disengaging and ${x.tag} cannot. You may fire only at it until it is destroyed, then you must disengage at once." onclick="ffInvoke(${sh.indexOf(x)})">Invoke D1.522 on ${x.tag}</button>`).join('')}${inv?'<span class="mu">D1.522 is in force: fire only at '+ffInv.s.tag+' until it is destroyed, then disengage.</span>':''}</div>`}
 function ffInvoke(k){const a=sh[k];if(!a||a.out||ffInv&&ffInv.turn===turn)return;ffInv={s:a,turn};tgSel=k;L(`Impulse ${imp+1}: you invoke the friendly fire rule for capture prevention: the ${a.tag} cannot disengage while your other units are disengaging. All of your units may fire only at the ${a.tag} until it is destroyed and must then disengage in an expeditious manner.`+RL('D1.522'));draw();side()}
 const rkAlive=(s,k)=>k<(s.sys.Drone||0);
-const ctrlN=s=>DR.filter(d=>d.own===s).length;
+const ctrlN=s=>DR.filter(d=>d.own===s&&!d.ft&&!d.fc).length; // fighters and the drones they launch use their own controls (J4.25)
 const rmDr=d=>{const k=DR.indexOf(d);if(k>=0)DR.splice(k,1)};
 // [F1.0, FD2.0, C10.511] Why a drone launch is not allowed right now.
 function launchWhy(s,k,i){const rk=s.rk[k],foe=foeOf(s);if(s.emOn)return'Erratic maneuvering: no launching (C10.511)';
@@ -182,12 +182,12 @@ function launchVI(s,k,i){const a=s.ad[k],foe=foeOf(s),T=DT.VI;a.ammo--;a.vt=turn
 function dogUI(me,i){if(!optDog||!me.ad||!me.ad.length)return'';let b='',why=[];me.ad.forEach((a,k)=>{if(k>=(me.sys.Add||0))return;const w=dogWhy(me,k,i);if(w)why.push('ADD '+(k+1)+': '+w);b+=`<button ${w?'disabled':''} onclick="launchVI(sh[0],${k},imp+1);draw()">Launch type-VI dogfight drone from ADD ${k+1} (${a.ammo} left)</button>`});
  return b?`<div class="row" style="margin:4px 0">${b}</div>${why.length?`<p class="mu" style="margin:2px 0">${why.join('. ')}.</p>`:''}`:''}
 // [F3.2, F3.4] Why a seeking weapon is no longer controlled by its launcher.
-function ctrlWhy(d){const s=d.own,t=d.tgt;if(power(s)<=0)return'its controller is dead in space';if(s.emOn)return'its controller is using erratic maneuvering and cannot guide it (C10.512)'; if(!fcOk(s))return ckOn(s)?'its controller is cloaked':'its controller has no active fire control';if(s.lock===false)return'its controller has no lock-on';
+function ctrlWhy(d){const s=d.own,t=d.tgt;if(d.fc){if(!DR.includes(d.fc))return'its fighter was destroyed (J4.22)';if(dist(d.fc,d)>35||dist(d,t)>35)return'it is more than 35 hexes from its fighter or target';return''}if(power(s)<=0)return'its controller is dead in space';if(s.emOn)return'its controller is using erratic maneuvering and cannot guide it (C10.512)'; if(!fcOk(s))return ckOn(s)?'its controller is cloaked':'its controller has no active fire control';if(s.lock===false)return'its controller has no lock-on';
  if(effRange(s,t)>35)return'the target is more than 35 hexes from its controller';if(dist(s,d)>35)return'it is more than 35 hexes from its controller';if(dist(d,t)>35)return'it is more than 35 hexes from its target';
  if(plBetween(s,t))return'a planet is between its controller and the target, so the lock-on is lost (P2.322, P2.3222)';if(TER.moon&&sh.includes(t)&&MOONB.has(moonKey(s,t)))return'the moon has broken its controller\'s lock-on (P2.3221, P2.3222)';return''}
 // [F2.1, F2.2, F2.13, FP1.4, F3.0] Drone and plasma movement: control, endurance, turns, high energy turn.
 function moveDrones(i){const A=absI(i),notes=[];
- DR.slice().forEach(d=>{const tg0=d.tgt,w=ctrlWhy(d);
+ DR.slice().forEach(d=>{if(d.ft)return;const tg0=d.tgt,w=ctrlWhy(d);
   if(tg0.ck&&tg0.ck.mode==='on'&&!tg0.ck.lockBy){
    if(d.pl&&!d.ckTry){d.ckTry=true;const net=(tg0.ecm||0)-(3+(d.free?0:(d.own.eccm||0))),ew=net>=0?sqrtShift(net):-sqrtShift(-net),P=6-ew-ckRF(dist(d,tg0))+ckSF(mRate(tg0,A))-4,dd=d6();L(`Plasma torpedo #${d.id} tries for its own lock-on to the cloaked ${tg0.tag}: needs ${P} or less, rolled ${dd}.`+RL('G13.334, FP4.5'));if(dd<=P)d.free=true;else{rmDr(d);L(`It loses the target and is removed from play.`);return}}
    else if(!d.pl||d.ckTry&&!d.free){rmDr(d);L(`${d.pl?'Plasma torpedo':'Drone'} #${d.id} of ${d.own.tag} cannot track the cloaked ${tg0.tag} and is removed from play.`+RL('G13.311, G13.334'));return}}
@@ -196,8 +196,8 @@ function moveDrones(i){const A=absI(i),notes=[];
    else{rmDr(d);L(`Drone #${d.id} of ${d.own.tag} is released and goes inert: ${w}.`+RL('F3.32, F3.41, FD1.7'));return}}
   if(d.pl&&d.free&&TBLK.size&&plBetween(d,tg0)){rmDr(d);L(`Plasma torpedo #${d.id} of ${d.own.tag} loses its target behind the planet, takes the planet as its new target and explodes on it.`+RL('P2.33, P2.322'));return} // [P2.33] a self-guided seeking weapon whose target goes behind a planet hits the planet
   if(A>d.exp){rmDr(d);L(`${d.pl?'Plasma torpedo':'Drone'} #${d.id} of ${d.own.tag} has run out of endurance and is removed.`+RL(d.pl?'FP1.42':'FD1.4, FD1.71'))}});
- sh.forEach(s=>{const m=DR.filter(d=>d.own===s);while(m.filter(z=>!z.pl).length>sensorRate(s)){const d=m.filter(z=>!z.pl).pop();m.splice(m.indexOf(d),1);rmDr(d);L(`${s.tag} has lost control channels: drone #${d.id} goes inert.`+RL('F3.21, F3.41'))}});
- DR.forEach(d=>{if(d.held||!moves(d.spd,i)||d.born>=A)return;if(optWeb&&dWebHold(d,A))return;const tg=d.tgt,a=rel(d,tg);
+ sh.forEach(s=>{const m=DR.filter(d=>d.own===s&&!d.ft&&!d.fc);while(m.filter(z=>!z.pl).length>sensorRate(s)){const d=m.filter(z=>!z.pl).pop();m.splice(m.indexOf(d),1);rmDr(d);L(`${s.tag} has lost control channels: drone #${d.id} goes inert.`+RL('F3.21, F3.41'))}});
+ DR.forEach(d=>{if(d.ft||d.held||!moves(d.spd,i)||d.born>=A)return;if(optWeb&&dWebHold(d,A))return;const tg=d.tgt,a=rel(d,tg);
   if(A-d.hetT>=32&&a!==null&&a>=120&&a<=240){d.f=bestFacing(d,tg);d.st=0;d.hetT=A;if(!d.pl)notes.push(`#${d.id} makes a high-energy turn to ${FL[d.f]}`);else L(`Plasma torpedo #${d.id} makes a high-energy turn to ${FL[d.f]}.`+RL('F2.13'));return}
   const opts=[0];if(d.st>=1)opts.push(-1,1);
   const ev=opts.map(df=>{const nf=(d.f+df+6)%6,[nc,nr]=NB(d.c,d.r,nf);if(nc<1||nc>COLS||nr<1||nr>ROWS)return null;const aa=rel({c:nc,r:nr,f:nf},tg);return{df,nf,nc,nr,dd:dist({c:nc,r:nr},tg),fa:(aa===null||inTok('FA',aa))?0:1,tn:df?1:0}}).filter(Boolean).sort((x,y)=>x.dd-y.dd||x.fa-y.fa||x.tn-y.tn);
@@ -206,13 +206,13 @@ function moveDrones(i){const A=absI(i),notes=[];
  if(notes.length)L(`Impulse ${i}: drones move: ${notes.join('; ')}.`+RL('F2.11, F2.12, F2.13, F2.21, F2.22'))}
 // [E5.2, E5.6] Anti-drone racks fire automatically at drones within three hexes.
 function addFire(i){sh.forEach(s=>{if(!s.ad||!s.ad.length||!fcOk(s)||s.lock===false||power(s)<=0)return;const taken=new Set();
-  s.ad.forEach((rk,k)=>{if(k>=(s.sys.Add||0)||rk.ammo<=0)return;if(rk.vt===turn||absI(i)-(rk.lastVI||-99)<8)return;const t=DR.filter(d=>d.own!==s&&!d.pl&&!taken.has(d)&&dist(s,d)>=1&&dist(s,d)<=3).sort((a,b)=>dist(s,a)-dist(s,b))[0];if(!t)return;taken.add(t);
+  s.ad.forEach((rk,k)=>{if((rk.g!==undefined?rk.g>=(s.sys.Drone||0):k>=(s.sys.Add||0))||rk.ammo<=0)return;if(rk.vt===turn||absI(i)-(rk.lastVI||-99)<8)return;const t=DR.filter(d=>d.own!==s&&!d.pl&&!taken.has(d)&&dist(s,d)>=1&&dist(s,d)<=3).sort((a,b)=>dist(s,a)-dist(s,b))[0];if(!t)return;taken.add(t);
    const rg=dist(s,t),need=rg+1-(s.emOn?1:0),roll=d6(),v=roll+scanAdj(s);rk.ammo--;rk.adT=turn;rk.lastAdd=absI(i);
    if(v<=need){rmDr(t);L(`Impulse ${i}: ${s.tag}'s ADD fires at drone #${t.id} at range ${rg}: rolled ${roll}${scanAdj(s)?` +${scanAdj(s)} scanner`:''} (needs ${need} or less). HIT: the drone is destroyed. ${rk.ammo} anti-drones left.`+RL('E5.21, E5.61'))}
    else L(`Impulse ${i}: ${s.tag}'s ADD fires at drone #${t.id} at range ${rg}: rolled ${roll}${scanAdj(s)?` +${scanAdj(s)} scanner`:''} (needs ${need} or less). Miss. ${rk.ammo} anti-drones left.`+RL('E5.21, E5.61'))})})}
 // [F2.31, FP2.0, D6.36] Drones and plasma reaching their target: proximity roll, damage to the shield facing.
 function resolveImpacts(i){const A=absI(i);
- DR.slice().forEach(d=>{const t=d.tgt;if(d.held||d.born>=A||d.c!==t.c||d.r!==t.r)return;rmDr(d);
+ DR.slice().forEach(d=>{const t=d.tgt;if(d.ft||d.held||d.born>=A||d.c!==t.c||d.r!==t.r)return;rmDr(d);
   if(d.fake){L(`Impulse ${i}: plasma torpedo #${d.id} of ${d.own.tag} reaches ${t.tag} in hex ${hexNo(t.c,t.r)}. It was a pseudo-plasma torpedo: it disintegrates and does no damage.`+RL('FP6.3, FP6.31'));return}
   const wh=d.pl?plStr(d):d.wh;let pct=1,m='';
   if(ckOn(t)){const cf=ckChart(t);pct=cf.f;m=` Cloak: ${cf.txt}.`+RL('G13.35, G13.37')}
@@ -227,17 +227,17 @@ function aiLaunch(s,i){if(s.conceded||!s.rk.length)return;const foe=foeOf(s),r=d
  s.rk.forEach((_,k)=>{if(launchWhy(s,k,i))return;if(level==='easy'&&Math.random()<.5)return;launch(s,k,i)})}
 // [D3.3] Computer reinforcement and defensive choices.
 function aiDefend(s,out){const used=new Set(),lim=level==='easy'?2:level==='normal'?4:6;
- DR.filter(d=>d.own!==s).map(d=>({d,r:dist(s,d)})).filter(o=>o.r<=(o.d.pl?lim+3:lim)).sort((a,b)=>a.r-b.r).forEach(o=>{let e=0;const need=o.d.pl?Math.max(4,Math.round(plStr(o.d)*.6)*2):o.d.hp+(level==='hard'?0:1);
+ DR.filter(d=>d.own!==s&&d.own.tm!==s.tm).map(d=>({d,r:dist(s,d)})).filter(o=>o.r<=(o.d.pl?lim+3:lim)).sort((a,b)=>a.r-b.r).forEach(o=>{let e=0;const need=o.d.pl?Math.max(4,Math.round(plStr(o.d)*.6)*2):o.d.hp+(level==='hard'?0:1);
   weapons(s).forEach(x=>{if(x.kind!=='ph'||used.has(x.id)||e>=need)return;const st=wStatus(s,x,o.d);if(!st.ok)return;x.dt=o.d;used.add(x.id);out.push(x);e+=st.info.exp})});return used}
 function launchUI(me,i){if(!me.rk.length)return'';const T=DT[dtype],why=[];let b='';
  me.rk.forEach((rk,k)=>{const w=launchWhy(me,k,i);if(w)why.push('Rack '+(k+1)+': '+w);b+=`<button ${w?'disabled':''} onclick="doLaunch(${k})">Launch ${T.n} from rack ${k+1} (${rk.ammo} left)</button>`});
  return`<div class="mu" style="margin:6px 0">Drones: control channels used <b>${ctrlN(me)}</b> of ${sensorRate(me)}. Launching is free but needs fire control (FD1.22). ${noLaunch===turn?'':`<button onclick="noLaunch=turn;draw()">No more launches this turn</button>`}</div><div class="row">${b}</div>${why.length?`<p class="mu" style="margin:2px 0">${why.join('. ')}.</p>`:''}`}
 function doLaunch(k){launch(sh[0],k,imp+1);draw()}
-function drSvg(){return DR.map(d=>{const x=cx(d.c),y=cy(d.c,d.r),col=d.own.col,t=d.tgt;
+function drSvg(){return DR.map(d=>{const x=cx(d.c),y=cy(d.c,d.r),col=d.own.col,t=d.tgt;if(d.ft)return ftSvg(d,x,y,col);
  if(d.pl)return`<line x1="${x}" y1="${y}" x2="${cx(t.c)}" y2="${cy(t.c,t.r)}" stroke="${col}" stroke-opacity=".4" stroke-dasharray="3 4"/><g transform="translate(${x+11} ${y+11})"><circle r="10" fill="${col}" fill-opacity=".25" stroke="${col}" stroke-width="2.5"/><text y="4" font-size="11" font-weight="800" text-anchor="middle" fill="${col}">${plStr(d)}</text></g><text x="${x+11}" y="${y+32}" font-size="10" font-weight="700" text-anchor="middle" fill="${col}" stroke="var(--card)" stroke-width="3" paint-order="stroke">P${d.id}</text>`;
  return`<line x1="${x}" y1="${y}" x2="${cx(t.c)}" y2="${cy(t.c,t.r)}" stroke="${col}" stroke-opacity=".4" stroke-dasharray="3 4"/><g transform="translate(${x+11} ${y+11})"><circle r="9" fill="var(--card)" fill-opacity=".92" stroke="${col}" stroke-width="1.5"/><g transform="rotate(${60*d.f})"><polygon points="0,-7 5,5 0,2 -5,5" fill="${col}"/></g></g><text x="${x+11}" y="${y+30}" font-size="10" font-weight="700" text-anchor="middle" fill="${col}" stroke="var(--card)" stroke-width="3" paint-order="stroke">D${d.id}</text>`}).join('')}
 function plCard(s,pm){let h=`<p style="margin:6px 0 2px"><b>Plasma and cloak</b></p>`+s.pl.map(t=>`<span class="chip ${t.alive?'':'bad'}">${t.name}: ${!t.alive?'destroyed':t.rdy?'ready':t.fired?'launched':t.st+' of 3 turns armed'}</span>`).join('');if(s.d.clk)h+=`<span class="chip">Cloak (${s.d.clk[0]}/turn): <b>${{off:'off',on:'ON',out:'fading out',in:'fading in'}[s.ck.mode]}</b></span>`;if(pm.length)h+='<div class="scroll"><table><tr><th>Torpedo</th><th>Hex</th><th>Range</th><th>Warhead</th></tr>'+pm.map(d=>`<tr><td>#${d.id}</td><td>${hexNo(d.c,d.r)}</td><td>${dist(d,d.tgt)}</td><td>${plStr(d)}</td></tr>`).join('')+'</table></div>';return h}
-function seekCard(s){const mine=DR.filter(d=>d.own===s&&!d.pl),pm=DR.filter(d=>d.own===s&&d.pl);if(!s.rk.length&&!mine.length&&!s.pl.length&&!s.d.clk)return'';if(!s.rk.length&&!mine.length)return plCard(s,pm);const T=DT[dtype];
+function seekCard(s){const mine=DR.filter(d=>d.own===s&&!d.pl&&!d.ft),pm=DR.filter(d=>d.own===s&&d.pl);if(!s.rk.length&&!mine.length&&!s.pl.length&&!s.d.clk)return'';if(!s.rk.length&&!mine.length)return plCard(s,pm);const T=DT[dtype];
  let h=`<p style="margin:6px 0 2px"><b>Seeking weapons</b>: ${T.n}s, speed ${T.spd}, ${T.end} turns, warhead ${T.wh}, ${T.hp} damage destroys one</p>`;
  h+=s.rk.map((rk,k)=>`<span class="chip ${rkAlive(s,k)?'':'bad'}">Rack ${k+1}: ${rkAlive(s,k)?rk.ammo+' drones':'destroyed'}</span>`).join('')+`<span class="chip">Controlling <b>${mine.length}</b> of ${sensorRate(s)}</span>`;
  if(mine.length)h+='<div class="scroll"><table><tr><th>Drone</th><th>Hex</th><th>Range to target</th><th>Turns left</th></tr>'+mine.map(d=>`<tr><td>#${d.id}</td><td>${hexNo(d.c,d.r)}</td><td>${dist(d,d.tgt)}</td><td>${fmt(Math.max(0,Math.round((d.exp-absI(imp))/3.2)/10))}</td></tr>`).join('')+'</table></div>';

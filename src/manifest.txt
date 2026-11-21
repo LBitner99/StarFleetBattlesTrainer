@@ -31,6 +31,8 @@ js/26-map-tokens.js
 js/27-ssd-sheet-head.js
 data/ssd-geometry.js
 js/28-refits.js
+js/28b-tugs.js
+js/28c-fighters.js
 js/29-ui.js
 js/30-match-history.js
 js/31-victory-points.js

@@ -7,7 +7,7 @@ function levelOf(a,b){const p=Math.max(1,a)/Math.max(1,b)*100;return LEVELS.find
 function sCat(s){if(s.captured)return[100,'captured'];if(s.boom||s.exitDead)return[100,s.exitDead?'destroyed (left by an unauthorized edge, SG1.41)':'destroyed'];let b=[0,'no internal damage'];if(s.intTot>0)b=[10,'internal damage scored'];
  if(s.fled)b=[25,s.conc?'conceded (scored as a forced disengagement, the nearest rule)':'forced to disengage'];const c=cripWhy(s);if(c.length)b=[50,'crippled ('+c.join('; ')+')'];return b}
 // [S2.2, S2.3] Score the battle by BPV and levels of victory.
-function scoreMatch(){const A=sh[0],AI=sh.filter(x=>x.tm===1),OWN=sh.filter(x=>x.tm===0),pa=OWN.reduce((t,s)=>t+s.d.pv,0),pb=AI.reduce((t,s)=>t+s.d.pv,0),rows=[];let sa=0,sb=0; // [S2.2] with computer allies your side is you and them
+function scoreMatch(){const A=sh[0],AI=sh.filter(x=>x.tm===1),OWN=sh.filter(x=>x.tm===0&&!x.merged),pa=OWN.reduce((t,s)=>t+s.d.pv,0),pb=AI.reduce((t,s)=>t+s.d.pv,0),rows=[];let sa=0,sb=0; // [S2.2] with computer allies your side is you and them
  const loA=pa<pb,loB=pb<pa,d=Math.abs(pa-pb),ok=loA?!OWN.every(s=>s.fled&&s.fled<=2):loB?!AI.every(s=>s.fled&&s.fled<=2):true;
  const mod=!!(scnX&&SCX[scnX].mod);if(mod)rows.push({who:-1,pts:0,t:'Modified Victory Conditions: no points for the starting BPV difference',rc:'S2.201'});else if(loA||loB){rows.push({who:loA?0:1,pts:ok?d:0,t:ok?`BPV difference: ${Math.max(pa,pb)} against ${Math.min(pa,pb)} gives ${loA?'you':'the enemy'} (the smaller side) ${d} points`:`BPV difference of ${d} points lost: the smaller side left by the end of turn 2`,rc:'S2.20 A'});if(ok){if(loA)sa+=d;else sb+=d}}
  else rows.push({who:-1,pts:0,t:`Equal BPV (${pa}): no starting difference`,rc:'S2.20 A'});

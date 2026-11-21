@@ -22,7 +22,9 @@ const REFITS={
  C9:[{id:'b',n:'B-refit: stronger #3/#4/#5 shields, DERFACS (R3.R1)',pv:6,g:[2,3,4]},{id:'k',n:'K-refit: phasers #3 to #6 become Ph-1 (R3.R2)',pv:4,req:'b',ph:{2:'P1',3:'P1',4:'P1',5:'P1'}},{id:'uim1',n:'UIM refit: a third Ubitron interface module (two are standard) (D6.5)',pv:5,uim:1},{id:'uim2',n:'Extra UIM (D6.5)',pv:5,req:'uim1',uim:1},{id:'y175',n:'Y175 refit: type-B drone racks, ADD-12 (R3.R4)',pv:5,y175:1}],
  C8:[{id:'b',n:'B-refit: stronger #3/#4/#5 shields, DERFACS (R3.R1)',pv:7,g:[2,3,4]},{id:'k',n:'K-refit: phasers #3 to #10 become Ph-1 (R3.R2)',pv:8,req:'b',ph:{2:'P1',3:'P1',4:'P1',5:'P1',6:'P1',7:'P1',8:'P1',9:'P1'}},{id:'uim1',n:'UIM refit: a third Ubitron interface module (two are standard) (D6.5)',pv:5,uim:1},{id:'uim2',n:'Extra UIM (D6.5)',pv:5,req:'uim1',uim:1},{id:'y175',n:'Y175 refit: type-B drone racks, ADD-12 (R3.R4)',pv:8,y175:1}],
  WE:[{id:'rear',n:'Rear phaser refit: two Ph-3 (R4.3)',pv:3,g:[26,27],arcs:{26:['L','LR','RR'],27:['R','LR','RR']}}],
- BT:[{id:'y165',n:'Y165 plus refit: extra shield boxes on the tug and the pod (R2.10)',pv:28,g:[0,1,2,3,4,5,24]}],
+ BT:[{id:'y165',n:'Y165 plus refit: two drone racks and four Ph-3 (R2.10)',pv:28,g:[14,15,16,17,19,20],arcs:{14:LSA,15:RSA,16:['ALL'],17:['ALL']}},{id:'gad',n:'Type-G racks carry anti-drones (FD3.7)',pv:0,req:'y165',gad:1}],
+ TUG:[{id:'y165',n:'Y165 plus refit: two Ph-3 and a drone rack (R2.8)',pv:8,g:[10,11,12],arcs:{10:LSA,11:RSA}},{id:'gad',n:'Type-G rack carries anti-drones (FD3.7)',pv:0,req:'y165',gad:1},{id:'cp1',n:'Carries one cargo pod (R2.11, G14)',pv:21,g:[31],wt:1},{id:'cp2',n:'Carries a second cargo pod (R2.11)',pv:21,g:[32],wt:1,req:'cp1'},{id:'sl1',n:'Carries a Starliner pod (R2.9)',pv:48,g:[33,34,35,36,37,38,39,40,41,42,43,44,45],wt:1}],
+ BP:[{id:'y165',n:'Y165 plus refit: two Ph-3 and a drone rack (R2.10)',pv:20,g:[10,11,13],arcs:{10:['ALL'],11:['ALL']}},{id:'gad',n:'Type-G rack carries anti-drones (FD3.7)',pv:0,req:'y165',gad:1}],
  EFF:[{id:'c10',n:'C-10 refit: stronger #3/#4/#5 shields, two ADD, two drone racks and two Ph-3 (R5.8)',pv:9,g:[2,3,4,13,29,35,36],arcs:{35:LSA,36:RSA}}],
  KFF:[{id:'c10',n:'C-10 refit: stronger #3/#4/#5 shields and more drone racks (R5.8)',pv:9,g:[2,3,4,27,28]},{id:'y175',n:'Y175 refit: two type-C racks, the rest type-B (R5.R5)',pv:0,y175k:1}],
  KR:[{id:'b',n:'B-refit: stronger #3/#4/#5 shields, swivelling plasma-S (R4.R1)',pv:17,g:[2,3,4],pl:{0:{T:'S',arcs:LPA},1:{T:'S',arcs:RPA}}}],
@@ -40,7 +42,7 @@ const rfSet=(key,ids)=>{const a=new Set();(REFITS[key]||[]).forEach(r=>{if(r.g&&
 const UIMSTD={C8:2,C9:2},DERNEEDB=['D7','C8','C9'];
 function refitDef(key,ids){const base=DEFS[key];ids=ids||[];
  const d=Object.assign({},base),G=GEO[key],act=rfSet(key,ids),RL=REFITS[key]||[];
- d.sys={...base.sys};d.shields=[...base.shields];d.phs=base.phs.map(p=>({...p}));d.plas=base.plas.map(q=>({...q}));d.dis=base.dis?{...base.dis,each:(base.dis.each||Array.from({length:base.dis.n},()=>base.dis.arcs)).map(a=>[...a])}:null;d.pv=base.pv;d.awr=false;d.uim=UIMSTD[key]||0;d.rackAmmo=4;d.addAmmo=6;
+ d.sys={...base.sys};d.shields=[...base.shields];d.phs=base.phs.map(p=>({...p}));d.plas=base.plas.map(q=>({...q}));d.dis=base.dis?{...base.dis,each:(base.dis.each||Array.from({length:base.dis.n},()=>base.dis.arcs)).map(a=>[...a])}:null;d.pv=base.pv;d.awr=false;d.gad=false;let wt=0;d.uim=UIMSTD[key]||0;d.rackAmmo=4;d.addAmmo=6;
  G.g.forEach((g,gi)=>{if(!act.has(gi))return;if(g[5]==='x'){if(g[0]==='y')d.sys[g[1]]-=g[3].length;return} // a group marked 'x' is removed by the refit (SC+ labs)
   g[3].forEach((b,i)=>{if(!(g[4]||b[2]))return;
   if(g[0]==='s')d.shields[g[1]]++;else if(g[0]==='y')d.sys[g[1]]=(d.sys[g[1]]||0)+1;
@@ -50,8 +52,9 @@ function refitDef(key,ids){const base=DEFS[key];ids=ids||[];
   else if(g[0]==='w'&&g[1]==='pl'){const lab=g[2]?g[2][i]:'',own=RL.find(r=>r.g&&r.g.includes(gi)&&ids.includes(r.id)&&r.arcs&&r.arcs[gi]);d.plas.push({T:/Plasma-(\w)/.exec(lab)[1],arcs:own?own.arcs[gi]:['ALL']})}})});
  RL.forEach(r=>{if(!ids.includes(r.id))return;d.pv+=r.pv;if(r.sh)for(let i=0;i<6;i++)d.shields[i]+=r.sh[i]; // [R8.2] Plus refit shield boxes
   if(r.clk)d.clk=r.clk; // [G15.3] Orion cloak refit
-  if(r.awr)d.awr=true;if(r.uim)d.uim+=r.uim;if(r.y175){d.rackAmmo=6;d.addAmmo=12}if(r.y175k){d.rackKz=true;d.pv+=d.sys.Drone||0} // [R5.R5, FD3.2, FD3.3] Kzinti Y175: the first two type-A racks become type-C (4 spaces, two launches a turn), the rest type-B (6 spaces); one point each
+  if(r.wt)wt+=r.wt;if(r.gad)d.gad=true;if(r.awr)d.awr=true;if(r.uim)d.uim+=r.uim;if(r.y175){d.rackAmmo=6;d.addAmmo=12}if(r.y175k){d.rackKz=true;d.pv+=d.sys.Drone||0} // [R5.R5, FD3.2, FD3.3] Kzinti Y175: the first two type-A racks become type-C (4 spaces, two launches a turn), the rest type-B (6 spaces); one point each
  if(r.ph)for(const i in r.ph)d.phs[i]={...d.phs[i],T:TT[r.ph[i]]};if(r.phArcs)for(const i in r.phArcs)d.phs[i]={...d.phs[i],arcs:r.phArcs[i]};if(r.pl)for(const i in r.pl)d.plas[i]={...d.plas[i],...r.pl[i]};if(r.dmax)d.dis.max=r.dmax;if(r.disArcs)for(const i in r.disArcs)d.dis.each[i]=r.disArcs[i]});
+ if(base.tug&&wt>=2){d.mc=wt>=3?2:1.5;d.cat=wt>=3?'F':'E'} // [G14.21, Annex #3A] two pod weights: movement cost 1.5, turn mode E
  d.derf=!!(d.dis&&d.dis.max>=30&&(!DERNEEDB.includes(key)||ids.includes('b')));d.rfIds=ids;if(ids.length)d.n=base.n+' ('+ids.map(i=>(RL.find(r=>r.id===i)||{id:i}).id.toUpperCase()).join(', ')+' refit'+(ids.length>1?'s':'')+')';return d}
 let rfA=[],rfB=[];
 function togRf(who,id,key){const t=curTab(who);if(key&&key!==slotK(who,t))setSlot(who,t,key,[]);let a=slotRf(who,t);a=a.includes(id)?a.filter(x=>x!==id):[...a,id];key=slotK(who,t);

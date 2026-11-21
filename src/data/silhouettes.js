@@ -6,3 +6,5 @@ SIL.CV=SIL.KCS; // the carrier is drawn on the strike cruiser silhouette
 SIL.EFF=SIL.KFF;
 
 SIL.BT=SIL.DN;
+
+SIL.TUG=SIL.DD;SIL.BP=SIL.DD;

@@ -21,5 +21,47 @@ Object.assign(RSRC,{"R4.2": ["s", "WARBIRD (WB): The Romulan Warbird class is an
 Object.assign(RULES,{"R5.6":["Kzinti Carrier (CV)","A Kzinti command-cruiser-sized hull (BPV 147, fighters not included) with 16 phasers, two disruptors and four drone racks. Its tunnel-deck bay carries 12 AAS fighters; the fighters are an optional extra not yet in the game.",[]],"R5.F4":["Kzinti Escort Frigate (EFF)","A frigate with two Ph-1 at BPV 65; the C-10 refit (+9) adds shield boxes, two ADD, two drone racks and two Ph-3.",[]]});
 Object.assign(RSRC,{"R5.6":["s","Kzinti Carrier (CV): SSD in Basic Set. 12 AAS fighters (R5.F2) are carried in the bay; they are not included in the 147 BPV.",""],"R5.F4":["s","Kzinti Escort Frigate (EFF): SSD in Basic Set; C-10 refit shown by dashed boxes.",""]});
 
-Object.assign(RULES,{"R2.10":["Federation Battle Tug (BT)","The tug with one battle pod attached (BPV 168): 12 phasers, six photon torpedoes, two drone racks, size class 2, movement cost 1.5, turn mode E (two pod weights). The Y165 plus refit (+28) adds the shaded shield boxes. The pod is never dropped in this game, and the type-G racks are played as ordinary four-space racks.",[]]});
-Object.assign(RSRC,{"R2.10":["s","FEDERATION BATTLE TUG (BT): SSD in the Captain's Basic Set SSD book, page 18. Played here as the tug combined with one battle pod; pod separation, other pods and the tug without a pod are not built.",""]});
+Object.assign(RULES,{"R2.10":["Federation Battle Tug (BT)","The tug with one battle pod attached (BPV 168): 12 phasers, six photon torpedoes, two drone racks, size class 2, movement cost 1.5, turn mode E (two pod weights). The Y165 plus refit (+28) adds the shaded shield boxes. The pod can be dropped and picked up again (G14), and the type-G racks are four-space racks that hold 16 drone-weight spaces.",[]]});
+Object.assign(RSRC,{"R2.10":["s","FEDERATION BATTLE TUG (BT): SSD in the Captain's Basic Set SSD book, page 18. Played here as the tug combined with one battle pod; the pod can be released and re-attached, and the tug and pod are separate units after release.",""]});
+
+Object.assign(RULES,{
+"G14.11":["Pod and tug are separate units","A tug and its pod are separate units once the pod is dropped. Each has its own SSD, power, shields and weapons.",[]],
+"G14.21":["Dropping a pod","The pod is dropped during the Movement phase of the turn. Systems, shields and damage are divided between the tug and the pod as the SSDs show. The Basic Set rules the split proportionally.",[]],
+"G14.3":["Picking up a pod","The tug can take a pod back by stopping in the pod's hex with the same facing and using a working tractor box.",[]],
+"G14.31":["Pickup conditions","The tug must be at speed 0, in the same hex and facing as the pod.",[]],
+"G14.32":["Dropping at speed","Dropping a pod above speed 1 causes damage to both units, one internal hit for each point of speed above 1.",[]],
+"G14.34":["Pod controlled by the player","A dropped pod is a separate ship. In this game the computer flies the pod when the player owns the tug.",[]],
+"G14.35":["Merged damage","Damage taken while separate stays with the unit that took it when the pod is re-attached.",[]],
+"G14.4":["Tug without a pod","A tug alone is a small ship (size class 3, movement cost 1) with its own phasers and no torpedoes.",[]],
+"G14.41":["Pod weights and movement","Every pod carried adds to the movement cost and the turn mode of the tug. Two pod weights give cost 1.5 and mode E, three give cost 2 and mode F.",[]]});
+Object.assign(RSRC,{"G14.0":["s","BATTLE TUGS: Captain's Basic Set SSD book (Tug and Battle Pod SSDs); Master Rulebook G14.",""]});
+
+Object.assign(RULES,{
+"SG3.0":["Scenario SG3, Base Defense","An attacking squadron assaults a base station while a defending ship hurries to its aid. Victory is by points (SG3.5).",["SG3.2","SG3.5"]],
+"SG3.2":["Initial set-up (SG3)","The base station is in 2215 at Weapon Status I. The attackers (up to three ships, 225 BPV at most) enter on turn 1 in hexes starting with 42 at speed 10, Weapon Status II. The defending ship (135 BPV at most) enters in a hex starting with 01 at maximum speed and Weapon Status III.",["SG3.45"]],
+"SG3.41":["Fixed map (SG3)","The map does not float. The attackers can disengage only through the 42xx edge; the defending ship through any other edge. A unit that leaves by an unauthorized edge counts as destroyed.",[]],
+"SG3.45":["Reinforcements (SG3)","Kzinti drone counters 1 to 4 are put in a cup, the defender draws one and keeps it secret. The number is the turn the defending ship arrives. Here the computer draws it and you are told when the ship appears.",[]],
+"SG3.5":["Victory conditions (SG3)","Defender points: attacking ship captured 7, destroyed 5, crippled 3, disengaged 0. Defending ship crippled -2, destroyed -4, captured -8. Base crippled -6, destroyed -12, captured -18. A positive total is a defender win, a negative total an attacker win. A ship that disengages crippled counts as crippled.",[]],
+"SG3.61":["Battle station variation (SG3)","The base station becomes a battle station; the attacker gets 100 more BPV and the defender 50 more.",[]],
+"SG3.63":["Suggested forces (SG3)","The table of forces for beginners: for example Federation attackers 1xCA + 1xCL or 1xCC + 1xDD against a defending CA. The forces can be changed within the BPV limits.",[]]});
+Object.assign(RSRC,{"SG3.0":["s","BASE DEFENSE (SG3.0): Captain's Basic Set scenario book.",""]});
+
+Object.assign(RULES,{
+"R5.F2":["Advanced attack shuttle (AAS)","The Kzinti fighter: speed 8, one Ph-3 firing forward (FA arc), two type-I drones, destroyed by 8 damage points, BPV 6. The CV carries 12. It is treated as a shuttle.",["J4.0"]],
+"J4.0":["Fighters","Fighters are shuttles with weapons. The Basic Set has one, the Kzinti AAS (R5.F2). They are an option in this game and the computer flies them.",["R5.F2"]],
+"J4.11":["Fighter tactical maneuvers","Fighters can make tactical maneuvers, at most once every four impulses. Here a fighter beside an enemy ship turns to face it that way.",[]],
+"J4.21":["Fighter drone launch","A fighter needs its target in its FA arc to launch a drone; the target can then be in any arc for guiding it.",[]],
+"J4.24":["Fighter drone rate","A fighter launches one drone a turn and not two within eight impulses.",[]],
+"J4.25":["Fighter drone control","A fighter controls as many drones as it carries (two here). They use no control channel of the carrier.",[]],
+"J4.22":["Guidance of fighter drones","Another unit may take over a fighter's drones. Here the drones simply go inert if the fighter is destroyed.",[]],
+"J4.44":["Fighter phasers","A fighter fires each phaser once a turn. Its Ph-3 is recharged from its own engine.",[]],
+"J1.33":["Crippled shuttle","A shuttle is crippled when half its damage points are gone. A crippled fighter flies home here.",[]],
+"J1.322":["Shuttle destruction points","Each shuttle type has a number of damage points that destroys it (8 for the AAS).",[]],
+"J1.341":["Launch restriction: seeking weapons","A newly launched shuttle cannot launch seeking weapons for half a turn (16 impulses).",[]],
+"J1.342":["Launch restriction: direct fire","A newly launched shuttle cannot fire direct-fire weapons for a quarter turn (8 impulses).",[]],
+"J1.34":["Restrictions on launch","Newly launched shuttles are under restrictions on weapons and systems.",["J1.341","J1.342"]],
+"J1.41":["Shuttle boxes","Each shuttle box on the SSD holds one shuttle or fighter. When boxes are destroyed the craft in them are lost.",[]],
+"J1.50":["Shuttle launch rate","A bay launches or recovers at most one shuttle in an impulse or the one after it (one every two impulses here).",[]],
+"J1.52":["Launch and land sequence","A shuttle launches once a turn and lands once a turn, with a quarter-turn wait between landing and the next launch.",[]],
+"J1.61":["Landing aboard","A shuttle lands under its own power when it is in the carrier's hex and the carrier moves no faster than the shuttle.",[]]});
+Object.assign(RSRC,{"R5.F2":["s","KZINTI ADVANCED ATTACK SHUTTLE: Captain's Basic Set, Kzinti section (R5.F2).",""],"J4.0":["m","FIGHTERS: Captain's Master Rulebook, section J4.",""]});

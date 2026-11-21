@@ -35,6 +35,17 @@ const SCX={
   pick(){sg2Set(0,sg2s[0]);sg2Set(1,sg2s[1]);selTab=[0,0]},
   build(){const place=(list,col,f)=>list.forEach((s,i)=>{const row=15+(i%2?1:-1)*Math.ceil(i/2)*3;s.c=col+(i%3===2?1:0);s.r=row;s.f=f;s.prev=s.sp=10;setWS(s,'II')});
    place(sh.filter(s=>s.tm===0),2,1+0);place(sh.filter(s=>s.tm===1),41,4)}}, // [SG2.2] Force A in 01xx to 04xx, Force B in 39xx to 42xx, speed 10, WS-II
+ sg3:{btn:'Base defense',tip:'Base Defense (SG3): you lead the attackers against a base station; a defending ship arrives on a secret turn',ttl:'Base Defense &middot; Scenario SG3.0',code:'SG3.0',name:'SG3.0, Base Defense',go:'Start the attack',fleet:true,xmax:[2,0],txtFleet:true,float:false,he:['E'],ae:['N','S','W'],
+  opp:()=>`${c3.bats?'Battle Station':'Base Station'} + ${SHIPS[selB].short} (${DEFS[c3.bats?'BATS':'BS'].pv+refitDef(selB,rfB).pv} BPV)`,
+  txt:()=>{const pv=ownList().reduce((t,x)=>t+refitDef(x.k,x.rf).pv,0),lim=225+(c3.bats?100:0),dl=135+(c3.bats?50:0),dp=refitDef(selB,rfB).pv;return `you are the attacker against a ${c3.bats?'battle':'base'} station in hex 2215. <span class="mu">Your force (enters on the 42xx edge): ${sg3Menu(0)} (${pv} BPV, limit ${lim}${pv>lim?', <b>over the limit</b>':''}). The defending ship that rescues the base (computer): ${sg3Menu(1)} (${dp} BPV, limit ${dl}${dp>dl?', <b>over the limit</b>':''}); it arrives on turn 1 to 4, which you are not told (SG3.45). You fly your first ship and the computer flies the others and the defenders. The map is fixed and you may leave only by the 42xx edge (SG3.41). Victory is by points (SG3.5).</span>`},
+  sub:()=>'attacking a base station',
+  log:()=>`Scenario SG3.0, Base Defense: the ${c3.bats?'battle station (SG3.61)':'base station'} is in 2215 at Weapon Status I. Your force (${ownList().map(x=>SHIPS[x.k].short).join(', ')}) enters on the 42xx edge at speed 10, Weapon Status II. A defending ${SHIPS[selB].short} will arrive on the 01xx edge at maximum speed and Weapon Status III on a turn between 1 and 4 that you are not told (SG3.45). The map is fixed; you may leave only by the 42xx edge, and a unit that leaves by any other edge counts as destroyed (SG3.41). Victory is by the points of SG3.5.${c3.T===1?` The drawn arrival turn is 1, so the defending ${SHIPS[selB].short} is already on the map in hex ${hexNo(sh.find(s=>s.rein).c,sh.find(s=>s.rein).r)}.`:''}`+RL('SG3.2, SG3.41, SG3.45, SG3.5'),
+  pick(){sg3Set(0,c3.a);sg3Set(1,c3.d);selTab=[0,0]},
+  build(){c3.T=1+Math.floor(Math.random()*4);const rein=sh.find(s=>s.tm===1),att=sh.filter(s=>s.tm===0);sh=[...att,rein];
+   const bs=mkShip(c3.bats?'BATS':'BS',22,15,0,'var(--d7)',undefined,[]);bs.prev=bs.sp=0;setWS(bs,'I');sh.splice(1,0,bs); // [SG3.2] base in 2215, WS-I
+   att.forEach((s,i)=>{s.c=COLS;s.r=15+(i%2?1:-1)*Math.ceil(i/2)*3;s.f=4;s.prev=s.sp=10;setWS(s,'II')}); // [SG3.2] attackers in 42xx, speed 10, WS-II
+   rein.rein=c3.T;rein.arr=false;setWS(rein,'III');rein.out=true;if(c3.T===1)sg3Arrive(rein,1)}}, // [SG3.45] the arrival turn is secret
+
 };
 // [SH1.45, SH1.451, SH1.452] The sabotaged Federation warp engines: pw() gives no warp power while s.sab is set. Before Energy Allocation on turn 2 and later the player picks a method and rolls once.
 const sabPending=()=>{const s=sh[0];return !!(scnX==='sh1'&&s&&s.sab&&turn>1&&s.sabT!==turn&&phase==='ea'&&!over)};
@@ -44,3 +55,23 @@ function sabDo(mode){const s=sh[0];if(!sabPending())return;s.sabT=turn;const d=d
  plan0=autoPlan(sh[0],TG(),'normal',true);fit(sh[0],plan0);draw()}
 const sabUI=()=>{const s=sh[0];return `<div class="card" style="margin:6px 0"><b>Sabotaged warp engines (SH1.45)</b><p style="margin:4px 0">Your warp engines are still dead (repair total ${s.sabSum} of 13). Choose one method before Energy Allocation and roll once. <button onclick="sabDo('roll')">Roll for repair (add to the total)</button> <button onclick="sabDo('crash')">Crash start (a 1 starts them, otherwise nothing)</button></p></div>`};
 
+
+// [SG3.0] Base Defense. State: c3.bats (SG3.61), c3.a and c3.d (menu picks), c3.T (secret arrival turn, SG3.45).
+const c3={bats:false,a:'fed:0',d:'kli:0',T:1};
+const SG3L={fed:[['1xCA + 1xCL','CA CL'],['1xCC + 1xDD','CC DD']],kli:[['1xD7 + 1xD6','D7 D6'],['1xD6 + 2xF5','D6 F5 F5']],rom:[['3xWB','WB WB WB'],['1xKR + 1xWE','KR WE']],kzi:[['1xCS + 1xCL','KCS KCL'],['1xCV + 1xFF','CV KFF']],gor:[['1xCA + 1xCL','GCA GCL']],ori:[['3xCR','CR CR CR']]}, // [SG3.63] attacking forces
+ SG3D={fed:[['1xCA','CA']],kli:[['1xD6','D6']],rom:[['1xWE','WE'],['1xKR','KR']],kzi:[['1xCS','KCS']],gor:[['1xCA','GCA']]},SG3R={...SG2R,ori:'Orion'}; // [SG3.63] defending ships
+function sg3Set(w,v){const T=w?SG3D:SG3L;if(!v||!T[v.split(':')[0]])v=w?'kli:0':'fed:0';const [r,i]=v.split(':'),ks=T[r][+i][1].split(' ');if(w){c3.d=v;selB=ks[0];rfB=[];XE=[]}else{c3.a=v;selA=ks[0];rfA=[];XF=ks.slice(1).map(k=>({k,rf:[]}))}selTab=[0,0]}
+function sg3Pick(w,v){sg3Set(w,v);drawSel()}
+const sg3Menu=w=>{const T=w?SG3D:SG3L,cur=w?c3.d:c3.a;return `<select onchange="sg3Pick(${w},this.value)" aria-label="${w?'Defending ship':'Attacking force'}">${Object.keys(T).map(r=>`<optgroup label="${SG3R[r]}">${T[r].map((f,i)=>`<option value="${r}:${i}" ${cur===r+':'+i?'selected':''}>${f[0]}</option>`).join('')}</optgroup>`).join('')}</select>`};
+const pendRein=()=>scnX==='sg3'&&sh.some(s=>s.rein&&s.out&&!s.arr); // [SG3.3] a defending ship that has not yet arrived keeps the scenario going
+function sg3Arrive(s,q){const at=sh.filter(x=>x.tm===0&&!x.out),r0=at.length?Math.min(...at.map(x=>x.r)):15,rw=Math.max(3,Math.min(28,at.length?Math.round(at.reduce((t,x)=>t+x.r,0)/at.length):15));s.c=1;s.r=rw;s.out=false;s.arr=true;const bs=sh.find(x=>x.d.base);s.f=bs?bestFacing(s,bs):1;s.prev=s.sp=20;setWS(s,'III');
+ if(!q)L(`Turn ${turn}: the defending ${s.n} arrives in hex ${hexNo(s.c,s.r)} at maximum speed and Weapon Status III (the number drawn for its arrival was ${s.rein}).`+RL('SG3.45'))}
+function sg3Rein(){if(scnX!=='sg3'||over)return;const s=sh.find(x=>x.rein&&x.out&&!x.arr);if(s&&turn>=s.rein)sg3Arrive(s)}
+// [SG3.5] Score: a positive total is a defender win, a negative total an attacker win.
+function sg3End(){if(scnX!=='sg3'||!over||over.sg3)return;over.sg3=1;
+ const st=s=>s.captured?'captured':(s.boom||s.exitDead||(s.out&&!s.fled&&power(s)<=0))?'destroyed':cripWhy(s).length?'crippled':s.fled?'disengaged':'intact';
+ let tot=0;const parts=[];
+ sh.filter(s=>s.tm===0).forEach(s=>{const k=st(s),p=({captured:7,destroyed:5,crippled:3})[k]||0;tot+=p;parts.push(`${s.tag} ${k}: ${p}`)});
+ const bs=sh.find(s=>s.d.base),bk=st(bs),bp=({captured:-18,destroyed:-12,crippled:-6})[bk]||0;tot+=bp;parts.push(`base ${bk}: ${bp}`);
+ const rn=sh.find(s=>s.rein&&s.arr);if(rn){const k=st(rn),p=({captured:-8,destroyed:-4,crippled:-2})[k]||0;tot+=p;parts.push(`${rn.tag} ${k}: ${p}`)}
+ over.win=tot<0;const t=`SG3.5 points (${parts.join('; ')}): total ${tot}. ${tot<0?'A negative total: you, the attacker, win.':tot>0?'A positive total: the defender wins.':'A total of zero: a draw.'} The defending ship was due on turn ${c3.T}.`;over.text+=' '+t;L(t+RL('SG3.5'))}

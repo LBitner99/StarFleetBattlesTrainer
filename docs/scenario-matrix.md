@@ -6,8 +6,8 @@ Every scenario also offers the same extras: a year (Y168 by default) that decide
 | Code | Scenario | Setup | Needs | Status |
 |---|---|---|---|---|
 | SG1 | The Duel | CA v D7, speed 15, WS-II, floating map | Basic rules | Built (any two similar ships) |
-| SG2 | Fleet Action | Two teams of 3 to 5 ships (lists per race), WS-II, speed 10, floating map, Standard victory | Allies and computer fleets, ally AI, fleet lists; SC, WB+ (v171), CV, EFF (v172) and BT (v173) built; the CV carries no fighters yet | Built (v170) |
-| SG3 | Base Defense | Base station in 2215 (WS-I) plus a rescue ship (max 135 BPV) arriving on turn 1 to 4 by a secret draw; up to three attackers (max 225 BPV) from the 42xx edge; fixed map; special points table | Base station (built), reinforcement arrival, ally AI, fleet lists (attackers include 2xPC Tholians) | Planned |
+| SG2 | Fleet Action | Two teams of 3 to 5 ships (lists per race), WS-II, speed 10, floating map, Standard victory | Allies and computer fleets, ally AI, fleet lists; SC, WB+ (v171), CV, EFF (v172) and BT (v173) built; the CV can carry 12 AAS with the fighters option (v174) | Built (v170) |
+| SG3 | Base Defense | Base station in 2215 (WS-I) plus a rescue ship (max 135 BPV) arriving on turn 1 to 4 by a secret draw; up to three attackers (max 225 BPV) from the 42xx edge; fixed map; special points table | Base station and battle station (SG3.61), secret arrival turn 1-4 (SG3.45), SG3.63 force menus, fixed map, edge rules (SG3.41), SG3.5 points. Not built: the Tholian 2xPC lists, the third-player option, SG3.64 modules and minefields. You fly the first attacker; the computer flies the other attackers, the base and the defending ship | Built (v174) |
 | SG4 | Basic Piracy | Orion CR raids a convoy | Freighters, escorts, relief force | Built (SG4.61 to SG4.63 not supplied) |
 | SG5 | Duel with a Pirate Raider | Orion CR in a duel | Orion CR | Built |
 | SG6 | Pursuit into the Asteroids | Navy CA chases a CR to its base station through an asteroid field | Asteroids, base station | Built (SG6.61 needs tactical intelligence, SG6.62 two ships) |
@@ -36,5 +36,5 @@ Every scenario also offers the same extras: a year (Y168 by default) that decide
 | Ally and fleet AI | SG2, SG3, SG8, SG6.62, SG7.71 | Partly built (v170): up to 6 ships a side, ally AI, retreat to the scenario's own edges; SG3 and SG8 still need reinforcements and larger fleets |
 | Orion option mounts (G15.4), OAKDISC (FD4.5) | SG4, SG6, SG7, S5.2 pirate | Planned |
 | Computer plasma shotguns (FP7) | fleet scenarios with Romulans or Gorn | Planned |
-| Fighters and shuttles (J1, J4) | SH5, Kzinti carriers in SG2, SG3, SG8 | Planned block |
+| Fighters and shuttles (J1, J4) | SH5, Kzinti carriers in SG2, SG3, SG8 | Partly built (v174): Kzinti AAS only (optional switch); no rearming or repair aboard (J4.8), no dogfights (J7), no other fighters |
 | Tactical intelligence (D17) | SG1.62, SG2.63, SG6.61 variations | Not built |
