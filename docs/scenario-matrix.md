@@ -29,12 +29,12 @@ Every scenario also offers the same extras: a year (Y168 by default) that decide
 
 | System | Used by | Status |
 |---|---|---|
-| Year selection (which ships and refits exist) | every scenario | Not built (refits are switches) |
+| Year selection (which ships and refits exist) | every scenario | Built v186 (Game year setting; see backlog for gaps) |
 | Commander's Option Items (S3.2) | every scenario | Not built |
 | S3.4 bidding, S8 patrol (buy a fleet by BPV) | Master Rulebook only | Not built |
 | Modified Victory Conditions (S2.201) | SG7, SG8, SH2 | Built (v169) |
 | Ally and fleet AI | SG2, SG3, SG8, SG6.62, SG7.71 | Partly built (v170): up to 6 ships a side, ally AI, retreat to the scenario's own edges; SG3 and SG8 still need reinforcements and larger fleets |
 | Orion option mounts (G15.4), OAKDISC (FD4.5) | SG4, SG6, SG7, S5.2 pirate | Built v176 (Master Rulebook switch; CR only, see backlog) |
-| Computer plasma shotguns (FP7) | fleet scenarios with Romulans or Gorn | Planned |
+| Computer plasma shotguns (FP7) | fleet scenarios with Romulans or Gorn | Built v185 (needs the shotgun option and the computer-uses-options switch) |
 | Fighters and shuttles (J1, J4) | SH5, Kzinti carriers in SG2, SG3, SG8 | Partly built (v174): Kzinti AAS only (optional switch); no rearming or repair aboard (J4.8), no dogfights (J7), no other fighters |
 | Tactical intelligence (D17) | SG1.62, SG2.63, SG6.61 variations | Not built |
