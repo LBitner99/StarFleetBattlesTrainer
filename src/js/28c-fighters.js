@@ -6,15 +6,16 @@ let optFtr=false;
 const AAS={spd:8,hp:8,drn:2,pv:6}; // [R5.F2] speed 8, one Ph-3 (FA arc), two type-I drones, destroyed by 8 damage points, BPV 6
 SHIPS.CV.ftr=12; // [R5.F2] the Kzinti carrier's fighter boxes
 const ftrCap=s=>optFtr&&s&&!s.dr&&SHIPS[s.key]&&SHIPS[s.key].ftr||0;
-function ftInit(){sh.forEach(s=>{s.fb=ftrCap(s)?Array.from({length:SHIPS[s.key].ftr},()=>({hp:AAS.hp,drn:AAS.drn})):[];s.fbLast=-99;s.recall=false})}
+function ftInit(){sh.forEach(s=>{s.fb=ftrCap(s)?Array.from({length:SHIPS[s.key].ftr},()=>({hp:AAS.hp,drn:s.sh5?0:AAS.drn})):[];s.fbLast=-99;s.recall=false})}
 const ftFoe=d=>{const e=sh.filter(x=>!x.out&&!x.boom&&x.tm!==d.own.tm&&!x.neu);return e.length?e.reduce((b,x)=>dist(d,x)<dist(d,b)?x:b,e[0]):null};
 // [J1.50, J1.52, J1.34] Why a fighter cannot launch from this carrier now ('' when it can).
+const ftRdy=(s,f,A)=>f.l!==turn&&A-(f.la===undefined?-99:f.la)>=8&&(!s.sh5||(f.prepT!==undefined&&f.prepT<turn)); // [SH5.45] a fighter must have been prepared on an earlier turn
 function ftWhy(s,i){const A=absI(i);if(!ftrCap(s)||!s.fb||!s.fb.length)return'No fighters aboard';if(s.out||s.boom)return'The carrier is gone';if((s.sys.Shuttle||0)<=0)return'The shuttle bay is destroyed';
  if(A-s.fbLast<2)return'The bay launched or landed a shuttle in the last two impulses (J1.50)';
- if(s.fb.findIndex(f=>f.l!==turn&&A-(f.la===undefined?-99:f.la)>=8)<0)return'No fighter is ready: one launch a turn, and a landed fighter waits a quarter turn (J1.52)';
+ if(s.fb.findIndex(f=>ftRdy(s,f,A))<0)return'No fighter is ready: one launch a turn, and a landed fighter waits a quarter turn (J1.52)';
  const foe=foeOf(s);if(!foe)return'No enemy';return''}
 const ftrList=(s,i)=>ftrCap(s)&&!ftWhy(s,i);
-function ftLaunch(s,i){const A=absI(i),k=s.fb.findIndex(f=>f.l!==turn&&A-(f.la===undefined?-99:f.la)>=8),f=s.fb.splice(k,1)[0],foe=foeOf(s);
+function ftLaunch(s,i){const A=absI(i),k=s.fb.findIndex(f=>ftRdy(s,f,A)),f=s.fb.splice(k,1)[0],foe=foeOf(s);
  DR.push({id:++drN,dr:true,ft:true,own:s,tgt:foe,c:s.c,r:s.r,pc:s.c,pr:s.r,f:bestFacing(s,foe),st:0,hp:f.hp,spd:AAS.spd,born:A,hetT:-99,mv:-1,ecm:0,drn:f.drn,fT:-1,lastDr:-99,tmT:-99});f.l=turn;s.fbLast=A;
  L(`Impulse ${i}: ${s.tag} launches fighter #${drN} (an advanced attack shuttle, speed ${AAS.spd}, ${f.drn} drone${f.drn===1?'':'s'}, ${f.hp} damage points left). ${s.fb.length} fighters remain aboard. It cannot fire or launch drones for a while (J1.341, J1.342).`+RL('R5.F2, J1.50, J1.34'))}
 function ftrDo(){const s=sh[0];if(ftWhy(s,imp+1))return;ftLaunch(s,imp+1);draw()}
@@ -27,7 +28,7 @@ function ftSvg(d,x,y,col){return `<g transform="translate(${x+11} ${y+11})"><cir
 function ftHit(d,n){d.hp-=n;if(d.hp<=0){rmDr(d);L(`Fighter #${d.id} of ${d.own.tag} takes ${n} damage and is destroyed.`+RL('R5.F2, J1.322'))}else L(`Fighter #${d.id} of ${d.own.tag} takes ${n} damage: ${d.hp} of ${AAS.hp} points left${d.hp<=AAS.hp/2?' (crippled: it flies home)':''}.`+RL('R5.F2, J1.33'))}
 // [J1.61] Landing: the fighter and the carrier are in the same hex and the carrier is not moving faster than the fighter.
 function ftLand(d,s,i){const A=absI(i);if(!ftrCap(s)||s.out||s.boom||(s.sys.Shuttle||0)<=0||A-s.fbLast<2||spdOf(s)>AAS.spd)return false;
- rmDr(d);s.fb.push({hp:d.hp,drn:d.drn,l:turn,la:A});s.fbLast=A;L(`Impulse ${i}: fighter #${d.id} lands aboard ${s.tag} (${d.hp} damage points left, ${d.drn} drones).`+RL('J1.61, J1.52'));return true}
+ rmDr(d);s.fb.push({hp:d.hp,drn:d.drn,l:turn,la:A,prepT:0});s.fbLast=A;L(`Impulse ${i}: fighter #${d.id} lands aboard ${s.tag} (${d.hp} damage points left, ${d.drn} drones).`+RL('J1.61, J1.52'));return true}
 // Movement, once per impulse the fighter's speed calls for (J1.2).
 function moveFighters(i){const A=absI(i);DR.filter(d=>d.ft).forEach(d=>{if(d.born>=A||!moves(d.spd,i))return;const home=d.own,foe=ftFoe(d);if(foe)d.tgt=foe;
  const homeOk=ftrCap(home)&&!home.out&&!home.boom,ret=homeOk&&((home===sh[0]&&home.recall)||d.hp<=AAS.hp/2||(d.drn<=0&&d.fT===turn)||!foe),goal=ret?home:foe;if(!goal)return;

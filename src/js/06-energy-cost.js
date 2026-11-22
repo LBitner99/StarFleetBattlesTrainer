@@ -94,7 +94,8 @@ function fit(s,p){for(let g=0;g<300;g++){
  if(p.dis){p.dis=0;continue}
  break}}
 // [B3.1] Automatic energy allocation for the computer ship and the human "Auto" button.
-function autoPlan(s,foe,lv,human){const p={het:0,fc:1,ph:0,tu:s.tu.map(()=> 'none'),di:s.di.map(()=>0),tuo:s.tu.map(()=>0),bd:0,br:0,brw:0,ecm:0,eccm:0,sh:NEB()?1:2,gen:0,spec:[0,0,0,0,0,0],dsh:[0,0,0,0,0,0],spd:0};
+function autoPlan(s,foe,lv,human){const p={het:0,fc:1,ph:0,tu:s.tu.map(()=> 'none'),di:s.di.map(()=>0),tuo:s.tu.map(()=>0),bd:0,br:0,brw:0,ecm:0,eccm:0,sh:NEB()?1:2,gen:0,spec:[0,0,0,0,0,0],dsh:[0,0,0,0,0,0],spd:0,rl:[],rla:[]};if(!human){let st=s.rst?s.rst.dr:0;(s.rk||[]).forEach((r,k)=>{if(r.ammo<=0&&st>0){p.rl[k]=1;st-=2}});let sa=s.rst?s.rst.ad:0;(s.ad||[]).forEach((r,k)=>{if(r.g===undefined&&r.ammo<=Math.floor(r.cap/3)&&sa>0){p.rla[k]=1;sa-=4}})} // the computer reloads emptied racks (FD2.42)
+
  p.pl=s.pl.map(()=> 'none');p.clk=0;
  if(!human&&!s.neu&&s.d.dbl&&(turn<=2||s.retreat)){const a=(s.sys['Left W En']||0)>0?1:0,b=(s.sys['Right W En']||0)>0?1:0;if(a||b){p.dbl=[a,b,optAI2&&(s.sys.Impulse||0)>0?1:0];s.dbl=p.dbl.slice()}} // G15.2: the raider doubles its engines for a first strike or to run
  const range=dist(s,foe),lim=accLim(s);
@@ -108,6 +109,7 @@ function autoPlan(s,foe,lv,human){const p={het:0,fc:1,ph:0,tu:s.tu.map(()=> 'non
  s.tu.forEach((t,i)=>{if(!t.alive)return;p.tu[i]=t.state==='armed'?(engage?'hold':'none'):'arm';if(lv==='hard'&&ovR&&p.tu[i]!=='none')p.tuo[i]=Math.max(0,2-(t.ovl||0))});
  s.di.forEach((d,i)=>{p.di[i]=d.alive&&engage?(ovR?2:1):0});
  s.pl.forEach((t,i)=>{if(!t.alive)return;if(t.st<3)p.pl[i]='arm';else if(t.T==='F')p.pl[i]='none';else if(PLA[t.T].h!==null&&!t.ept&&!t.sg)p.pl[i]='hold'});
+ if(!human&&AIO&&AIO.sg&&optSG&&sh.filter(x=>!x.out&&!x.neu&&x.tm!==s.tm&&dist(s,x)<=15).length>=2){p.sg=s.pl.map(()=>0);s.pl.forEach((t,i)=>{if(t.alive&&t.st===2&&p.pl[i]==='arm'&&plEff(t)!=='F'&&!t.ept)p.sg[i]=1})} // [FP7] the computer finishes a torpedo as a shotgun on its last arming turn when two or more enemy ships are within 15 hexes (the decision cannot be changed later, FP7.31, and a shotgun cannot be held, FP7.41) (only with the computer-uses-options switch and the shotgun option on)
  p.ph=Math.max(0,capMax(s)-s.capCur);
  if(!human&&lv!=='easy'&&s.sp>=0&&!s.retreat){const rg=range;if(lv==='hard')p.het=rg<=15?2:rg<=30?1:0;else p.het=rg<=25?1:0}
  if(s.d.clk){if(human)p.clk=(s.ck.mode==='on'||s.ck.mode==='out')?1:0;else p.clk=0}
@@ -132,6 +134,7 @@ function lockIn(s,p){if(optLeg&&s.leg&&s.leg.t==='captain'&&p.lm&&p.lm!==s.leg.m
  s.dbl=(s.d.dbl&&p.dbl&&(p.dbl[0]||p.dbl[1]||p.dbl[2]))?[p.dbl[0]?1:0,p.dbl[1]?1:0,p.dbl[2]?1:0]:null; // [G15.21, G15.23] each engine doubles individually, impulse included
 s.dir0=s.dir||0;s.dirSet=turn;s.dir=wantDir(s,p);s.qr=null;if(needBrk(s,p)){const full=brkFull(s),paid=brkPaid(s,p);s.brakeNote=`${s.tag} reverses direction and pays ${paid} of ${full} braking energy`;if(paid<full)s.qr={short:Math.ceil((full-paid)/s.d.mc-1e-9)}}else s.brakeNote=null;s.plotSp=p.spd;s.sph=[];s.usedChg=false;s.plan=JSON.parse(JSON.stringify(p));s.fc=!!p.fc;if(optD22){try{s.c0=cost(s,p)}catch(e){s.c0=null}s.pw0=power(s);s.d22seen=0}s.capCur+=p.ph;
  s.tu.forEach((t,i)=>{if(!t.alive)return;const a=p.tu[i];t.fired=false;const x=(p.tuo&&p.tuo[i])||0;if(a==='arm')t.state=t.state==='empty'?'half':'armed';else if(a==='hold'){}else{t.state='empty';t.ovl=0}if(a==='arm'||a==='hold')t.ovl=(t.ovl||0)+x;t.px=!!(optProx&&p.px&&p.px[i]&&t.state==='armed'&&!(t.ovl>0))});
+ s.rk.forEach((r,k)=>{r.rlT=(p.rl&&p.rl[k]&&r.ammo<r.cap&&s.rst.dr>0&&rkAlive(s,k))?turn:0});s.ad.forEach((r,k)=>{r.rlT=(r.g===undefined&&p.rla&&p.rla[k]&&r.ammo<r.cap&&s.rst.ad>0&&k<(s.sys.Add||0))?turn:0}); // [FD2.42, FD2.421, E5.74] reloads are plotted in advance and the rack cannot fire that turn
  s.di.forEach((d,i)=>{d.fired=false;d.armed=!!(p.di[i]&&d.alive);d.ovl=p.di[i]===2&&d.alive});s.ph.forEach(w=>w.fired=false);
  s.pl.forEach((t,i)=>{if(!t.alive)return;t.fired=false;const a=(p.pl||[])[i];const was=t.st,ef=a==='arm'?plDL(t,p,i):plEff(t);t.n1=t.n2=t.n3=t.hl=false;t.noHold=false;t.rolled=false;if(a==='arm'){t.st=Math.min(3,t.st+1);t.A=ef!==t.T?ef:undefined;t.n1=was===0;t.n2=was===1&&t.st===2;t.n3=was===2&&t.st===3;if(optPF&&p.rd&&p.rd[i]&&was===2){t.st=2;t.n3=false;t.rolled=true;t.rdD=PLA[ef].c[2]-(ef==='F'?1:2)}}/* [FP1.221] rolling delay: first turn's energy lost, turns two and three restart the cycle, so the torpedo stays at two turns armed */else if(a==='hold'){t.hl=was===3}else if(!(t.T==='F'&&t.st===3)){t.st=0;t.A=undefined}t.ept=!!(optEPT&&a==='arm'&&was===2&&t.st===3&&p.ept&&p.ept[i]);t.sg=!!(optSG&&a==='arm'&&was===2&&t.st===3&&p.sg&&p.sg[i]&&!t.ept);t.rdy=t.st===3});
  s.tnLeft=optBoard?Math.min(s.sys.Trans||0,5*Math.max(0,p.trn|0)):0;s.guard={};if(optBoard&&p.gd){let k=0;for(const id of Object.keys(p.gd)){if(p.gd[id]&&k<gCap(s)&&guardAlive(s,id)){s.guard[id]=1;k++}}if(k)L(`${s.tag} posts ${k} boarding part${k===1?'y':'ies'} as guards (D7.83).`+RL('D7.83'))}s.bpBusy=0;s.dn=(s.dn||[]).map(v=>v>absI(1)?v:0);

@@ -23,7 +23,7 @@ const ffTargets=()=>sh.filter(x=>x.tm===0&&ffRule(x));
 const TG=()=>{if(ffInv&&ffInv.turn===turn&&!ffInv.s.out)return ffInv.s;const c=sh[tgSel];if(c&&!c.out&&(c.tm===1||c.neu||(c.tm===0&&ffRule(c))))return c;const l=ENL();return l.length?l.reduce((b,s)=>dist(sh[0],s)<dist(sh[0],b)?s:b,l[0]):(sh.find(x=>x.tm===1)||sh[1])}; // the computer ship you are shooting at
 // [D1.5] A computer ship picks the nearest ship of the other side as its foe; it never aims at its own side.
 const foeOf=s=>{if(s===sh[0])return TG();const e=sh.filter(x=>!x.out&&x.tm!==s.tm&&!x.neu);if(!e.length)return s.tm===1?sh[0]:(sh.find(x=>x.tm===1)||sh[1]);return e.reduce((b,x)=>dist(s,x)<dist(s,b)?x:b,e[0])};
-function endFor(k,s,tAI,tHu,rc){const ally=k>0&&s.tm===0;let t=(k===0||ally)?tHu:tAI;if(k===0)over={win:false,text:t};else{s.out=true;if(ally)t='Your ally: '+t;else if(!ENL().length&&!pendRein())over={win:true,text:t};else t=t.replace(' You win!','')}L(t+RL(rc))}
+function endFor(k,s,tAI,tHu,rc){if(sh5Dis(k,s))return;const ally=k>0&&s.tm===0;let t=(k===0||ally)?tHu:tAI;if(k===0)over={win:false,text:t};else{s.out=true;if(ally)t='Your ally: '+t;else if(!ENL().length&&!pendRein())over={win:true,text:t};else t=t.replace(' You win!','')}L(t+RL(rc))}
 function setTg(k){tgSel=k;draw();side()}
 function tgBar(){const me=sh[0],inv=ffInv&&ffInv.turn===turn&&!ffInv.s.out,l=inv?[ffInv.s]:sh.filter(x=>x.tm===1||x.neu||ffRule(x)),can=!inv&&me.disPlan&&phase==='run'?sh.filter(x=>x.tm===0&&x!==me&&!x.out&&unableDis(x)):[];
  if(l.length<2&&!can.length&&!inv)return'';
@@ -35,7 +35,7 @@ const rmDr=d=>{const k=DR.indexOf(d);if(k>=0)DR.splice(k,1)};
 // [F1.0, FD2.0, C10.511] Why a drone launch is not allowed right now.
 function launchWhy(s,k,i){const rk=s.rk[k],foe=foeOf(s);if(s.emOn)return'Erratic maneuvering: no launching (C10.511)';
  if(!rkAlive(s,k))return'Rack destroyed';if(rk.ammo<=0)return'Rack empty';if(!fcOk(s))return ckOn(s)?'Cloaked (G13.512)':'No active fire control (FD1.22)';if(s.lock===false)return'No lock-on (F3.31)';if(ckOn(foe)&&foe.ck.mode==='on'&&!foe.ck.lockBy)return'No lock-on to the cloaked ship (G13.311)';
- if(absI(i)<=s.noFire)return'Post-breakdown: no weapons (C6.5471)';if(rk.turn===turn&&(!rk.C||rk.nT>=2))return rk.C?'Type-C rack: two launches a turn at most (FD3.3)':'Already launched this turn (FD4.2)';if(absI(i)-rk.last<(rk.C?12:8))return rk.C?'Type-C rack must wait 12 impulses (FD3.3)':'Rack must wait 8 impulses (FD3.1)';
+ if(absI(i)<=s.noFire)return'Post-breakdown: no weapons (C6.5471)';if(rk.rlT===turn)return'Plotted for reload this turn (FD2.421)';if(rk.turn===turn&&(!rk.C||rk.nT>=2))return rk.C?'Type-C rack: two launches a turn at most (FD3.3)':'Already launched this turn (FD4.2)';if(absI(i)-rk.last<(rk.C?12:8))return rk.C?'Type-C rack must wait 12 impulses (FD3.3)':'Rack must wait 8 impulses (FD3.1)';
  if(ctrlN(s)>=ctlMax(s))return'No free control channel (F3.21)';if(effRange(s,foe)>35)return'Target beyond 35 hexes (F3.31)';return''}
 const launchList=(s,i)=>s.rk.map((_,k)=>k).filter(k=>!launchWhy(s,k,i));
 // [FD2.0, FD3.0] Launch a drone from a rack: type, speed, endurance and facing.
@@ -171,7 +171,7 @@ function boardResolve(){if(!BRD||BRD.n<=0){BRD=null;return}const a=BRD.by,d=BRD.
  if(remaining===0&&!over){const _o={win:a===sh[0],text:a===sh[0]?`Your boarding parties have captured every control room of the ${d.n}. You have captured the ship and win a decisive victory!`:`${d.n}'s crew has captured your ship.`};if(a===sh[0]){d.out=true;d.captured=true;if(!ENL().length)over=_o}else over=_o;L(_o.text+RL('D7.50, D7.36'))}
  else if(BRD.n<=0){BRD=null}}
 // [FD2.5] Why a dogfight (type VI) drone cannot be launched.
-function dogWhy(s,k,i){const a=s.ad[k],foe=foeOf(s);if(!optDog)return'off';if(NEB())return'Dogfight drones do not work in a nebula (P6.6)';if(k>=(s.sys.Add||0))return'ADD destroyed';if(a.ammo<=0)return'Rack empty';if(s.emOn)return'Erratic maneuvering: no type-VI launch (E5.43)';
+function dogWhy(s,k,i){const a=s.ad[k],foe=foeOf(s);if(!optDog)return'off';if(NEB())return'Dogfight drones do not work in a nebula (P6.6)';if(k>=(s.sys.Add||0))return'ADD destroyed';if(a.ammo<=0)return'Rack empty';if(a.rlT===turn)return'Plotted for reload (E5.74)';if(s.emOn)return'Erratic maneuvering: no type-VI launch (E5.43)';
  if(!fcOk(s))return ckOn(s)?'Cloaked (G13.512)':'No active fire control';if(s.lock===false)return'No lock-on (F3.31)';if(ckOn(foe)&&foe.ck.mode==='on'&&!foe.ck.lockBy)return'No lock-on to the cloaked ship (G13.311)';
  if(absI(i)<=s.noFire)return'Post-breakdown: no weapons (C6.5471)';if(a.vt===turn)return'One type-VI a turn from each ADD (E5.42)';if(a.adT===turn)return'This ADD fired anti-drones this turn (E5.42)';if(absI(i)-(a.lastAdd||-99)<8)return'Eight-impulse delay after switching modes (E5.42)';
  if(ctrlN(s)>=ctlMax(s))return'No free control channel (F3.21)';if(effRange(s,foe)>6)return'Target must be within six hexes (E5.41)';return''}
@@ -206,7 +206,8 @@ function moveDrones(i){const A=absI(i),notes=[];
  if(notes.length)L(`Impulse ${i}: drones move: ${notes.join('; ')}.`+RL('F2.11, F2.12, F2.13, F2.21, F2.22'))}
 // [E5.2, E5.6] Anti-drone racks fire automatically at drones within three hexes.
 function addFire(i){sh.forEach(s=>{if(!s.ad||!s.ad.length||!fcOk(s)||s.lock===false||power(s)<=0)return;const taken=new Set();
-  s.ad.forEach((rk,k)=>{if((rk.g!==undefined?rk.g>=(s.sys.Drone||0):k>=(s.sys.Add||0))||rk.ammo<=0)return;if(rk.vt===turn||absI(i)-(rk.lastVI||-99)<8)return;const t=DR.filter(d=>d.own!==s&&!d.pl&&!taken.has(d)&&dist(s,d)>=1&&dist(s,d)<=3).sort((a,b)=>dist(s,a)-dist(s,b))[0];if(!t)return;taken.add(t);
+  s.ad.forEach((rk,k)=>{if((rk.g!==undefined?rk.g>=(s.sys.Drone||0):k>=(s.sys.Add||0))||rk.ammo<=0)return;if(rk.rlT===turn||rk.vt===turn||absI(i)-(rk.lastVI||-99)<8)return; // [E5.74] a plotted ADD reload means no firing
+   const t=DR.filter(d=>d.own!==s&&!d.pl&&!taken.has(d)&&dist(s,d)>=1&&dist(s,d)<=3).sort((a,b)=>dist(s,a)-dist(s,b))[0];if(!t)return;taken.add(t);
    const rg=dist(s,t),need=rg+1-(s.emOn?1:0),roll=d6(),v=roll+scanAdj(s);rk.ammo--;rk.adT=turn;rk.lastAdd=absI(i);
    if(v<=need){rmDr(t);L(`Impulse ${i}: ${s.tag}'s ADD fires at drone #${t.id} at range ${rg}: rolled ${roll}${scanAdj(s)?` +${scanAdj(s)} scanner`:''} (needs ${need} or less). HIT: the drone is destroyed. ${rk.ammo} anti-drones left.`+RL('E5.21, E5.61'))}
    else L(`Impulse ${i}: ${s.tag}'s ADD fires at drone #${t.id} at range ${rg}: rolled ${roll}${scanAdj(s)?` +${scanAdj(s)} scanner`:''} (needs ${need} or less). Miss. ${rk.ammo} anti-drones left.`+RL('E5.21, E5.61'))})})}

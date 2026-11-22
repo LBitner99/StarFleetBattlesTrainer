@@ -1,0 +1,36 @@
+// ---------- SG9 A Very Special Ally (Captain's Basic Set, SG9.0) ----------
+// Two cruisers (you and the computer) compete for a wandering monster (here the Space Amoeba or the Cosmic Cloud, the two monsters the game lets a lab study).
+// Each ship keeps its own research points (SG9.45); at 200 a shared hidden solution is drawn (SG9.46); from then on a ship may roll to communicate (SG9.47);
+// the ship that succeeds controls the monster (SG9.48): in this game the monster is then flown at the controller's enemy for you.
+const sg9On=()=>scnX==='sg9';
+const SG9T=['a suicide shuttle would destroy it (not modelled in this game, so it cannot be used)','a tractor beam would destroy it (not modelled in this game)','200 points of damage from any weapons destroy it','a probe would destroy it (not modelled in this game)','need more information: another 100 points and a new draw','the monster cannot be destroyed']; // [S6.1 as changed by SG9.46: result 6]
+function sg9Info(x,pts){EEL.inf=EEL.inf||{};EEL.th=EEL.th||{};const was=EEL.inf[x.tag]||0,th=EEL.th[x.tag]||200;EEL.inf[x.tag]=was+pts;
+ L(`${x.tag}'s labs gather ${pts} points of information on the ${EEL.name} (${EEL.inf[x.tag]} so far; ${th} needed).`+RL('SG9.45, G4.12'));
+ if(was<th&&EEL.inf[x.tag]>=th)sg9Solve(x)}
+function sg9Solve(x){ // [SG9.46] one counter is drawn from six: the first ship to reach the level picks, the other sees the same answer later
+ if(EEL.sol===undefined||(EEL.sol===5&&EEL.solBy===x.tag)){const first=EEL.sol===undefined;EEL.sol=d6();EEL.solBy=x.tag;EEL.solSeen=false;
+  L(`${x.tag} has reached the information level and draws the monster counter: ${SG9T[EEL.sol-1]}.`+RL('SG9.46, S6.1'));
+  if(EEL.sol===5)EEL.th[x.tag]=(EEL.th[x.tag]||200)+100;if(EEL.sol===3)EEL.kill200=true}
+ else if(!EEL.solSeen&&x.tag!==EEL.solBy){EEL.solSeen=true;if(EEL.sol===5){EEL.sol=d6();EEL.solBy=x.tag;EEL.th[x.tag]=200;L(`${x.tag} finds the "need more information" counter, so all six are reshuffled and it draws again: ${SG9T[EEL.sol-1]}.`+RL('SG9.46'));if(EEL.sol===5)EEL.th[x.tag]=300;if(EEL.sol===3)EEL.kill200=true}
+  else L(`${x.tag} reaches the information level and sees the same answer: ${SG9T[EEL.sol-1]}.`+RL('SG9.46'))}
+ else L(`${x.tag} has reached the information level (200 points) and may now try to communicate (SG9.47).`+RL('SG9.47'))}
+// [SG9.48] steer the controlled monster: one hex toward the enemy, but keep away from its own ship if there is a choice
+function sg9Dir(q,me,foe,dflt){let best=dflt,bs=1e9;for(let k=0;k<6;k++){const[c,r]=NB(q.c,q.r,k);if(c<1||c>COLS||r<1||r>ROWS||terBlk(c,r))continue;const n={c,r},dm=dist(n,me),s=dist(n,foe)+(dm<8?(8-dm)*4:0);if(s<bs){bs=s;best=k}}return best}
+function sg9Turn(){if(!sg9On()||!EEL||EEL.s.out||over||EEL.commT===turn)return;EEL.commT=turn;
+ if(EEL.ctl&&(EEL.ctl.out||EEL.ctl.boom)){L(`${EEL.ctl.tag} is lost: the ${EEL.name} goes back to wandering at random (SG9.46).`+RL('SG9.46'));EEL.ctl=null}
+ if(!EEL.ctl&&turn>1){const ok=[];sh.filter(x=>!x.neu&&!x.out&&!x.boom&&!x.dr&&((EEL.inf||{})[x.tag]||0)>=200).forEach(x=>{ // [SG9.47]
+   const inf=EEL.inf[x.tag],dm=Math.ceil(((EEL.dmgBy||{})[x.tag]||0)/20),d=d6(),adj=d+dm-Math.floor((inf-200)/25);
+   L(`${x.tag} tries to communicate with the ${EEL.name}: rolled ${d}${dm?` +${dm} for ${(EEL.dmgBy||{})[x.tag]} damage scored on it`:''}${inf>200?` -${Math.floor((inf-200)/25)} for extra information`:''} = ${adj} (needs 1 or less).`+RL('SG9.47'));if(adj<=1)ok.push(x)});
+  if(ok.length===1){EEL.ctl=ok[0];L(`${ok[0].tag} has communication: it controls the ${EEL.name}, which now moves toward ${foeOf(ok[0]).tag}${ok[0]===sh[0]?' (the game flies it for you)':''} and cannot be controlled by the other ship (SG9.48).`+RL('SG9.48'))}
+  else if(ok.length>1)L('Both ships established communication in the same turn, so neither has it; they roll again next turn (SG9.47).'+RL('SG9.47'))}
+ sh.forEach(a=>{if(a===sh[0]||a.neu||a.out||a.dr||a.tm!==1)return;const have=((EEL.inf||{})[a.tag]||0)>=275,d=dist(a,EEL.s); // the computer ship stays about 3 hexes from the monster until it has 275 points (each 25 over 200 lowers its SG9.47 roll by one), and then goes after the enemy
+  if(have||EEL.ctl===a||EEL.ctl||d<=3||EEL.friendly)a.goal=null;else{a.goal={c:EEL.s.c,r:EEL.s.r};a.spcap=d>10?10:4}})}
+Object.assign(SCX,{sg9:{btn:'Special ally',tip:'A Very Special Ally (SG9): two cruisers race to gain the confidence of a wandering monster',ttl:'A Very Special Ally &middot; Scenario SG9.0',code:'SG9.0',name:'SG9.0, A Very Special Ally',go:'Find the monster',he:['W','N'],ae:['E','S'],
+  opp:()=>'an enemy cruiser (computer) and a monster',
+  txt:()=>`your cruiser and an enemy cruiser each want to study the same new monster. <span class="mu">Your labs gather research points as the monster passes; at 200 points you may try to communicate with it (SG9.47), and the ship that succeeds controls it (SG9.48). Neither side scores for killing the monster (SG9.5). You leave only by the west or north edge (SG9.41). The monster is a Space Amoeba or a Cosmic Cloud (the two the game lets a lab study); here the game flies a monster you control for you.</span> <span class="mu">Tactics (SG9.8, G4.1, SG9.47): the closer you pass the monster, the more information you gain, but the monster hurts you with the same die roll (the amoeba does twice the chart number to the facing shield, ignoring reinforcement; the cloud drains crew, double unless your shields are at full). Damage you score on the monster makes your communication roll worse (+1 per 20 points) and every 25 points of information over 200 makes it better (-1), so do not shoot the monster if you want it. You may instead keep away and shoot the enemy as he closes on it.</span>`,
+  sub:()=>'racing an enemy cruiser to win over a monster',
+  log:()=>`Scenario SG9.0, A Very Special Ally: your ${sh[0].tag} is in 0101 heading C at maximum speed, the enemy ${sh[1].tag} in 4030 heading F, both at Weapon Status II. A ${EEL?EEL.name:'monster'} wanders between you. The map floats. You may leave only by the 01xx or xx01 edge, the enemy only by the 42xx or xx30 edge; a unit leaving by an unauthorized edge counts as destroyed (SG9.41). Both ships gather research points on the monster (SG9.45); neither scores for killing it (SG9.5).`+RL('SG9.0'),
+  pick(){selA='CA';selB='CA';rfA=[];rfB=[];XE=[];XF=[];selTab=[0,0]},
+  build(){const a=DEFS[selA],t1=a.tag+(selA===selB?'-1':''),t2=DEFS[selB].tag+(selA===selB?'-2':''),
+   p=mkShip(selA,1,1,2,'var(--ca)',t1,rfA),e=mkShip(selB,COLS,ROWS,5,'var(--d7)',t2,rfB); // [SG9.2] A in 0101 heading C, B in 4030 heading F
+   p.prev=p.sp=31;e.prev=e.sp=31;p.tm=0;e.tm=1;setWS(p,'II');setWS(e,'II');sh=[p,e];TER.eel=true;TER.mon=Math.random()<.5?'amoeba':'cloud';eelBuild()}}});

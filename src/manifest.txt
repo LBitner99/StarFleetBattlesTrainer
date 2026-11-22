@@ -22,6 +22,8 @@ js/18-pirate.js
 js/19-monsters.js
 js/19b-scenarios.js
 js/19c-scenarios2.js
+js/19d-sh5.js
+js/19e-sg9.js
 js/20-movement.js
 js/21-firing.js
 js/22-seeking-weapons.js
