@@ -176,3 +176,7 @@ a{color:#6fd0ff}
  .lc-tabs{flex-wrap:nowrap;gap:4px;container-type:inline-size}
  .lc-tabs button{flex:1 1 auto;min-width:0;padding:6px 2px;font-size:clamp(.3rem,1.32cqw,.52rem);letter-spacing:.02em;border-width:2px;white-space:nowrap;text-align:center}
  @media(max-width:760px){.lc-mis{grid-template-columns:1fr}.lc-desc{height:20rem}.lc-right{justify-content:space-between}.lc-tabs{flex-wrap:wrap}.lc-tabs button{flex:1 1 auto;font-size:.52rem;padding:6px 8px}.easticky{position:static}.eatabs{gap:4px}.eatabs button{font-size:.72rem;padding:4px 9px;letter-spacing:0}}
+
+.shgrp{margin:0 0 8px;border:1px solid var(--c,#8884);border-radius:10px;padding:0 6px 2px}.shgrp>summary{cursor:pointer;padding:8px 4px;font-weight:700;font-size:.85rem;list-style:none}.shgrp>summary::-webkit-details-marker{display:none}.shgrp>summary::before{content:'\25B8  ';color:var(--c)}.shgrp[open]>summary::before{content:'\25BE  '}.shgrp>summary .mu{font-weight:400;font-size:.74rem}
+/* ships not selected inside a group show a compact card: name and BPV only */
+.shgrp .shrow .opt:not(.on) .lc-st,.shgrp .shrow .opt:not(.on)>small{display:none}.shgrp .shrow .opt:not(.on){padding-top:7px;padding-bottom:7px}
