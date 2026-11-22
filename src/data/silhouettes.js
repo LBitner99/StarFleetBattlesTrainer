@@ -4,6 +4,7 @@ SIL.WB=SIL.WE; // the Warbird is drawn like its War Eagle refit (R4.3)
 SIL.CV=SIL.KCS; // the carrier is drawn on the strike cruiser silhouette
 
 SIL.EFF=SIL.KFF;
+SIL.NCL=SIL.CL; // the new light cruiser uses the old light cruiser's token for now
 
 SIL.BT=SIL.DN;
 

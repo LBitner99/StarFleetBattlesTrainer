@@ -13,6 +13,7 @@ const REFITS={
  DN:[{id:'awr',n:'AWR: the APRs become warp reactors (R2.R3)',pv:2,awr:1}],
  DD:[{id:'plus',n:'DD+: two Ph-3 (R2.R1)',pv:6,g:[28,29],arcs:{28:LSA,29:RSA}}],
  SC:[{id:'plus',n:'SC+: two Ph-3 and four of the labs become APRs (R2.7)',pv:4,g:[15,27,28,29],arcs:{27:LSA,28:RSA}}],
+ NCL:[{id:'plus',n:'NCL+: stronger #1 shield and two Ph-3 (R2.18)',pv:4,g:[0,31,32],arcs:{31:LSA,32:RSA}},{id:'awr',n:'AWR: the APRs become warp reactors (R2.18)',pv:4,awr:1},{id:'y175',n:'Y175 refit: type-B drone rack (R2.18)',pv:0,y175:1}],
  CL:[{id:'plus',n:'CL+: stronger shields, a drone rack, two Ph-3 (R2.R1)',pv:13,g:[0,1,2,3,4,5,30,36],arcs:{36:['ALL']}},
   {id:'awr',n:'AWR: the APRs become warp reactors (R2.R3)',pv:2,awr:1},{id:'y175',n:'Y175 refit: type-B drone rack (R2.R4)',pv:0,req:'plus',y175:1}],
  D7:[{id:'b',n:'B-refit: stronger #3/#4/#5 shields, an ADD rack, DERFACS (R3.R1)',pv:7,g:[2,3,4,33]},{id:'k',n:'K-refit: phasers #1 to #3 become Ph-1 (R3.R2)',pv:3,req:'b',ph:{0:'P1',1:'P1',2:'P1'}},{id:'uim1',n:'UIM refit: one Ubitron interface module (D6.5)',pv:5,uim:1},{id:'uim2',n:'A second UIM (D6.5)',pv:5,req:'uim1',uim:1},{id:'y175',n:'Y175 refit: type-B drone racks, ADD-12 (R3.R4)',pv:4,y175:1}],
