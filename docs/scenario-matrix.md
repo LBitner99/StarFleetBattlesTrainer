@@ -30,7 +30,7 @@ Every scenario also offers the same extras: a year (Y168 by default) that decide
 | System | Used by | Status |
 |---|---|---|
 | Year selection (which ships and refits exist) | every scenario | Built v186 (Game year setting; see backlog for gaps) |
-| Commander's Option Items (S3.2) | every scenario | Not built |
+| Commander's Option Items (S3.2) | every scenario | Built v188 for boarding parties, type-I drones, ADD rounds; other items in backlog |
 | S3.4 bidding, S8 patrol (buy a fleet by BPV) | Master Rulebook only | Not built |
 | Modified Victory Conditions (S2.201) | SG7, SG8, SH2 | Built (v169) |
 | Ally and fleet AI | SG2, SG3, SG8, SG6.62, SG7.71 | Partly built (v170): up to 6 ships a side, ally AI, retreat to the scenario's own edges; SG3 and SG8 still need reinforcements and larger fleets |
