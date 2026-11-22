@@ -2,6 +2,8 @@ let TRK={};
 /* ===== refits ===== */
 ['CC','DN'].forEach(k=>{SHIPS[k].sys.APR=2;GEO[k].g.forEach(g=>{if(g[0]==='y'&&g[1]==='APR'){g[4]=0;g[3].forEach(b=>{b.length=2})}})});
 ['GCA','GCL'].forEach(k=>GEO[k].g.forEach(g=>{if(g[0]==='s'&&(g[1]===1||g[1]===2)){const n=[];g[3].forEach(b=>{n.push(b);n.push([b[0]+32,b[1]].concat(b.slice(2)))});g[3]=n}}));
+GEO.AFF=JSON.parse(JSON.stringify(GEO.EFF));GEO.AFF.g.forEach(g=>{if(g[4]===1)g.splice(4,1);g[3].forEach(b=>{if(b.length>2)b.length=2})}); // [R5.20A] the aegis frigate has the C-10 refit built in
+GEO.GBC=JSON.parse(JSON.stringify(GEO.GCA));GEO.GBC.g.forEach(g=>g[3].forEach(b=>{if(b.length>2)b.length=2})); // [R6.19] the battlecruiser has the plus and F boxes built in (unshaded)
 SHIPS.GCA.shields.splice(0,6,30,24,24,24,24,24);SHIPS.GCL.shields.splice(0,6,24,18,16,16,16,18);
 const LSA=['LF','L','LR'],RSA=['RF','R','RR'],LPA=['L','LF','RF'],RPA=['LF','RF','R'];
 const REFITS={
@@ -32,13 +34,16 @@ const REFITS={
  K5R:[{id:'b',n:'B-refit: stronger #3/#4/#5 shields, swivelling plasma-F (R4.R1)',pv:6,g:[2,3,4],pl:{0:{arcs:LPA},1:{arcs:RPA}}}],
  KCL:[{id:'c12',n:'C-12 refit: 2 more APR, drone racks, disruptors C and D, range 30 (R5.5)',pv:12,g:[19,28,29,37,38],arcs:{37:['LF','RF','L'],38:['LF','RF','R']},dmax:30,disArcs:{0:['LF','RF','L'],1:['LF','RF','R']},phArcs:{0:['LF','RF','L'],1:['LF','RF','R']}},{id:'uim1',n:'UIM refit: one Ubitron interface module (D6.5)',pv:5,uim:1},{id:'uim2',n:'A second UIM (D6.5)',pv:5,req:'uim1',uim:1},{id:'y175',n:'Y175 refit: two type-C racks, the rest type-B (R5.R5)',pv:0,y175k:1}],
  KCS:[{id:'uim1',n:'UIM refit: one Ubitron interface module (D6.5)',pv:5,uim:1},{id:'uim2',n:'A second UIM (D6.5)',pv:5,req:'uim1',uim:1},{id:'y175',n:'Y175 refit: two type-C racks, the rest type-B (R5.R5)',pv:0,y175k:1}],
+ AXC:[{id:'y175',n:'Y175 refit: ADD rounds 6 to 12 (R1.13)',pv:3,y175:1}],
+ CVS:[{id:'y175',n:'Y175 refit: two type-B and two type-C drone racks, ADD-12 (R5.7)',pv:2,y175k:1}],
  KBC:[{id:'y175',n:'Y175 refit: two type-C racks, the rest type-B (R5.R5)',pv:0,y175k:1}],
  KCC:[{id:'y175',n:'Y175 refit: two type-C racks, the rest type-B (R5.R5)',pv:0,y175k:1}],
- GCA:[{id:'plus',n:'Plus refit: plasma-S on swivel mounts, two Ph-3, two plasma-F (R6.2)',pv:26,g:[39,40,43,46],arcs:{39:LSA,40:RSA,43:LSA,46:RSA},pl:{0:{T:'S',arcs:LPA},1:{T:'S',arcs:RPA}}}],
+ GCA:[{id:'plus',n:'Plus refit: plasma-S on swivel mounts (R6.2)',pv:26,pl:{0:{T:'S',arcs:LPA},1:{T:'S',arcs:RPA}}}], // [R6.2, R6.19] the shaded boxes (two Ph-3, two plasma-F) are not on the heavy cruiser; they come only with the battlecruiser
+
  GCL:[{id:'plus',n:'Plus refit: plasma-S on swivel mounts (R6.3)',pv:16,pl:{0:{T:'S',arcs:LPA},1:{T:'S',arcs:RPA}}},{id:'f',n:'F refit: two Ph-3 and two plasma-F (R6.3)',pv:14,g:[32,33,34,37],arcs:{32:LSA,33:RSA,34:LSA,37:RSA}}],
  GDD:[{id:'plus',n:'Plus refit: stronger shields and a battery (R6.4)',pv:6,g:[0,1,2,3,4,5,16]}],
  CR:[{id:'plus',n:'Plus refit (Y169): the shaded shield boxes are added, six more on #1 and eight on each of the others (R8.2)',pv:8,sh:[6,8,8,8,8,8]},{id:'cloak',n:'Cloak refit (Y155): a cloaking device, cost 10/2 (G15.3, R8.2)',pv:18,clk:[10,2]},{id:'oak',n:'OAKDISC (Y127): seeking-weapon control doubled, every rack can fire at its full rate (FD4.5)',pv:5,oak:1}]};
-const RFTODO={CR:'the SSD drawing of the extra Plus shield boxes',KR:'sabot (rules are in Module R10)',K5R:'sabot (rules are in Module R10)',GCA:'sabot (Module R10)',GCL:'sabot (Module R10)',GDD:'sabot (Module R10)',WE:'sabot (Module R10)'};
+const RFTODO={CR:'the SSD drawing of the extra Plus shield boxes',KR:'sabot (rules are in Module R10)',K5R:'sabot (rules are in Module R10)',GCA:'sabot (Module R10)',GBC:'sabot (Module R10)',GCL:'sabot (Module R10)',GDD:'sabot (Module R10)',WE:'sabot (Module R10)'};
 const rfSet=(key,ids)=>{const a=new Set();(REFITS[key]||[]).forEach(r=>{if(r.g&&ids&&ids.includes(r.id))r.g.forEach(g=>a.add(g))});return a};
 const UIMSTD={C8:2,C9:2},DERNEEDB=['D7','C8','C9'];
 function refitDef(key,ids){const base=DEFS[key];ids=ids||[];

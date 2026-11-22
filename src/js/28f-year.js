@@ -3,8 +3,8 @@
 let optYear=0;
 const SCYR={sh1:161,sh2:173,sh3:160,sh4:158,sh5:166}; // the year printed in each scenario's title
 const SHIPYR={NCL:170,QFS:130,QFL:130,DD:130,SC:130,TUG:135,CL:120,CA:130,CC:143,BT:145,DN:148, // Master Ship Chart, Year in Service column (Basic Set, page 248)
- QKS:130,QKL:130,E4:121,F5:135,D6:122,D7:135,C8:167,C9:167, WB:140,K5R:160,WE:162,KR:160, QGS:130,QGL:130,GDD:120,GDF:175,GCL:121,GCA:121,
- KFF:122,EFF:168,KCL:122,KCS:125,CV:166,KBC:160,KCC:147, TPC:83,TPP:98, CR:127, FS:120,FL:120, SBF:140,SBK:140,SBZ:140,SBG:140,SBR:140,BATS:130,BS:120};
+ QKS:130,QKL:130,E4:121,F5:135,D6:122,D7:135,C8:167,C9:167, WB:140,K5R:160,WE:162,KR:160, QGS:130,QGL:130,GDD:120,GDF:175,GCL:121,GCA:121,GBC:175,
+ KFF:122,EFF:168,AFF:175,KCL:122,KCS:125,CV:166,CVS:170,AXC:170,KBC:160,KCC:147, TPC:83,TPP:98, CR:127, FS:120,FL:120, SBF:140,SBK:140,SBZ:140,SBG:140,SBR:140,BATS:130,BS:120};
 // refit first-available years by race, from the R-section refit rules (R2.R1 to R8.R6); a refit with no year listed here has no limit
 const RFYR={fed:{car:160,plus:165,awr:170,y175:175,y165:165},kli:{b:165,k:169,uim1:165,uim2:165,y175:175},rom:{b:168,rear:171},kzi:{c10:166,c12:166,uim1:166,uim2:166,y175:175},gor:{plus:170,f:175},ori:{plus:169,cloak:155,oak:127},bas:{y170:170,y175:175}};
 const effYear=()=>optYear===-1?(SCYR[scnX]||0):optYear;

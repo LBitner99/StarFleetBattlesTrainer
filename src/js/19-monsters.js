@@ -203,7 +203,8 @@ function spdPlot(p){const a=[],ch=(optChg&&p.chg||[]).slice().sort((x,y)=>x.e-y.
 // [C12.1] Hexes moved in a turn under the plotted speed changes (what movement energy pays for).
 function plotHexes(p){if(!(optChg&&p.chg||[]).length)return p.spd;const a=spdPlot(p);let n=0;for(let i=1;i<=32;i++)if(moves(a[i],i))n++;return n}
 const accLim=(s,p)=>{const b0=fwBase(s),b=(!optFly&&s.lowPrev!==undefined)?Math.min(b0,s.lowPrev):b0;let l=Math.min(s.d.dbl?30:31,b+Math.max(b,10));if(s.d.base)l=0; // C3.7: a base does not move
- if(s.d.acc)l=Math.min(l,b+s.d.acc);if(s.d.q)l=Math.min(l,Math.max(b+5,b*2)); // R1.7C: a Q-ship gains five movement points a turn or doubles its speed, whichever is greater
+ if(s.d.acc)l=Math.min(l,b+s.d.acc);if(s.d.ax)l=Math.min(l,Math.max(b+5,b*2)); // [R1.13] the small auxiliary carrier gains at most five movement points a turn or doubles its speed
+ if(s.d.q)l=Math.min(l,Math.max(b+5,b*2)); // R1.7C: a Q-ship gains five movement points a turn or doubles its speed, whichever is greater
   // R1.5/R1.6: a freighter gains only 3 (small) or 4 (large) movement points a turn
   // G15.26: an Orion cannot generate more than 30 movement points
  if(p&&needBrk(s,p))l=10;if(hasCrit(s,'man'))l=Math.min(l,8);if(hasCrit(s,'warp'))l=Math.min(l,1);return l};

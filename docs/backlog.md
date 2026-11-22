@@ -28,9 +28,66 @@ Known problems and loose ends that are not being worked on right now. Newest fir
   - SH2 The Surprise Reversed: "WB+" is flown as a plain WB (no WB refit exists in this game). The Neutral Zone is a straight dashed line approximating hexes 0126 to 4205. Not enforced: half boarding parties, fire control that cannot be turned off, tractors and transporters while surprised (only the energy allocation is restricted). The "fired" trigger counts any Federation shot (not a launched drone that has not hit yet). The CC's special drones (SH2.432) and the optional MRS shuttles are not offered.
   - SH3 The Coming of the Meteor: the meteor cannot be shot at, so SH3.47 (400 points of damage break it into fragments, and the fragment victory results) is not built; the Klingon withdrawal declaration (SH3.48) is not built either (the computer never makes it). The meteor is a marker, not a moon hex: ships can fly through it only by being destroyed (SH3.45). Towing needs the tractor option switched on, which the scenario does for you.
   - SH4 Cruise Drones: the second-player option (SH4.1) and the F5's special drones (SH4.431, SH4.432) are not built. The freighter counts as lost if it is dead in space as well as destroyed. The freighter is flown straight at the 42xx column and never dodges.
-- Fighters (v174) are the Kzinti AAS only: no rearming or repair aboard (J4.8), no dogfights (J7), fighters fire only at ships, the computer flies all fighters, and a computer carrier never slows to recover them. Other fighters and carriers (CVS, AFF, auxiliary carrier for SH5) are not built.
+- Fighters (v174) are the Kzinti AAS only: no rearming or repair aboard (J4.8), no dogfights (J7), fighters fire only at ships, the computer flies all fighters, and a computer carrier never slows to recover them. The strike carrier (CVS) and the small auxiliary carrier (AxCVL) are built (v191) but use the AAS: the Basic Set rules tell you to ignore Module J and use the AAS in place of the TAAS/TADSC printed on the CVS SSD. The SH5 scenario itself (deck crews, J4.8 preparing fighters) is not built.
 - SG3 (v174): the Tholian 2xPC lists, the third-player option and SG3.64 modules/minefields are not built.
 - Not yet tested in a long game: the type-G rack anti-drone firing against real drone attacks (v174 tug block).
 - Commander's Option Items (S3.2) built v188 for extra boarding parties, type-I drones and ADD rounds. Not built: transporter bombs (M3.1), NSM, web-anchor asteroids, extra UIM purchase (use the UIM refits), 2-seat fighters, EW pods, extra deck crews, drone type replacements and speed/range upgrades (the game has one global drone type), the 30% limit with D%, fighters counted in the 20% base, and the computer buying options. Extra drones are spread over the racks as reloads.
 - Ally and fleet AI: SG8 fleets of 10 to 11 ships run (v180); SG8 is the largest fleet in the game. Reinforcement arrival was built for SG3 in v174 (`sg3Rein`).
 - See `docs/scenario-matrix.md` and `docs/rules-coverage-audit.md` for the full lists.
+
+## Ships in the Advanced Missions SSD book (2014) that are not in the game
+
+Not planned yet; this is the inventory (taken from the book's table of contents, v190). The book page is the printed page number; the PDF page is one higher. Only the Federation (New) Light Cruiser (R2.18, page 36) is built. Ships in other books that are also missing (Gorn Battlecruiser R6.19, Kzinti Strike Carrier CVS R5.7, Kzinti Aegis Frigate AFF R5.20A, Small Auxiliary Carrier AxCVL R1.13) are listed under the scenario items above. "Needs" names the rules or systems that must exist before the ship is worth adding; ships with no entry need only the SSD to be read.
+
+**General units**
+- R1.8 Armed Priority Transport (p2), R1.9 Free Trader (p3), R1.10 Fleet Repair Dock (p4; needs docking, C13, and repair rules), R1.11 Federation Express (p5), R1.23 Large Ore Carrier (p8).
+- R1.12A Small and R1.12B Large Mine-laying Freighter (p6, p7; need mine laying M9).
+- R1.14 Ground Based Phaser-4 and Fusion Beam (p9) and the planetary defense systems R1.14+15: Disruptor (p10), Plasma (p11), Drone (p12), Phaser-2 (p13), Plasma-F (p14), Photon (p15), Hydran (p16); need ground installations on planets and fusion beams (E8).
+- R1.20 Small Drone-, Phaser-, Plasma- and Disruptor-Armed Freighters (p17 to p20) and R1.21 Large Drone-, Phaser-, Plasma- and Disruptor-Armed Freighters (p21 to p24).
+- R1.22 Monitor (p25) and its Tables and Pallets (p26).
+- R1.7 Kzinti Large (p27) and Small (p28), Romulan Large (p29) and Small (p30), Tholian Large (p31) and Small (p32) Q-ships. The game uses the Federation, Klingon and Gorn Q-ships for these races (R1.7A); the real SSDs are here.
+
+**Federation**
+- R2.12 Police Cutter (p33), R2.16 Galactic Survey Cruiser (p34), R2.17 Improved Dreadnought (p35), R2.19 New Scout Cruiser (p37), R2.20 New Escort Cruiser (p38), R2.21 Minesweeper (p39) and R2.30 New Minesweeper (p48; need mine sweeping with ships, M8.3), R2.31 Commando Cruiser (p40), R2.25 Frigate (p43), R2.26 Improved Frigate (p44), R2.27 Destroyer Leader (p45), R2.28 Guided Weapons Destroyer (p46), R2.41 Escort Frigate (p49).
+- R2.29 Strike Carrier (p47), R2.22 Tug with Heavy Carrier Pod (p41) and Carrier Pod, independent (p42); need more fighters (J) and carrier operations.
+- R2.8 and R2.9 Tug with Starliner Pod (p50): the tug and the Starliner pod already exist (G14); this page is the combined SSD.
+
+**Klingon**
+- R3.8 D7A Stasis Battlecruiser (p51) and R3.24 D5A Stasis Cruiser (p64): need the stasis field generator.
+- R3.17 B10 Battleship (p61), R3.23 D5 War Cruiser (p63), R3.31 D7C Command Cruiser (p68), R3.18 E3 Escort (p59), R3.19 G2 Police Gunboat (p60), R3.20 F5S Scout (p62), R3.34 F5C Frigate Leader (p71), R3.27 F5M Minehunter (p67; mines).
+- R3.21 D6V Carrier (p65), R3.26 E3E Carrier Escort (p66), R3.16 Carrier-Tug (p58); need Klingon fighters and carrier operations.
+- R3.32 D6D Drone Cruiser (p69), R3.35 F5D Drone Frigate (p72); need more drone racks and drone types.
+- R3.33 D6M Mauler Cruiser (p70); needs the mauler (E7).
+- R3.9 Fleet Tug (p53), R3.10 Transport Tug (p54), R3.12 Transport Tug with Power Boost Pods (p55), R3.13 Fleet Tug with P-T3 Troop Pods (p56), R3.14 Battle Tug (p57), R3.11 to R3.15 Pods (p52); tugs and pods exist for the Federation only (G14).
+
+**Romulan**
+- R4.6 Condor Dreadnought (p73), R4.40 K9R Dreadnought (p97), R4.35 K7R Battlecruiser (p91), R4.32 KRC Command Cruiser (p89), R4.39 King Eagle Command Cruiser (p96), R4.37 KillerHawk-K Super-Heavy Cruiser (p93), R4.38 FireHawk-A (p94) and FireHawk-K (p95) Heavy Cruisers, R4.14 SparrowHawk-A Light Cruiser (p79), R4.21 SkyHawk-A Destroyer (p83), R4.10 K4R Escort (p76); the SparrowHawk, SkyHawk, FireHawk and KillerHawk ships are sublight or need the later Romulan power systems (check each SSD).
+- R4.41 Snipe-S+ Improved Sublight Frigate (p98), R4.42 Snipe-A Frigate (p99), R4.43 Snipe-B Battle Frigate (p100).
+- Scouts: R4.11 K5S (p77), R4.12 Scout Eagle (p78), R4.16 SparrowHawk-C Owl (p80), R4.26 SkyHawk-F (p85); need scout functions (G24).
+- Minesweepers and maulers: R4.8 Pelican (p74), R4.17 SparrowHawk-D (p81), R4.24 SkyHawk-D (p84), R4.9 Falcon Mauler (p75), R4.19 SparrowHawk-F Mauler (p82), R4.36 KRM Mauler Cruiser (p92); need mines and the mauler.
+- Transports: R4.28 SkyHawk-H Cargo Transport (p86), R4.30 Freight Eagle (p87), R4.31 SparrowHawk-H Cargo Transport (p88), R4.33 KRT Transport (p90).
+
+**Kzinti**
+- R5.9 Light Carrier (p101), R5.10 Escort Carrier (p102), R5.14 Transport Tug with Carrier Pods (p105); need fighters and carrier operations (the CV exists).
+- R5.19 Medium Cruiser (p108), R5.28 Medium Escort Cruiser (p111), R5.23 Drone Frigate (p110), R5.18 Scout Frigate (p107; scout functions), R5.21 Small Minesweeper (p109; mines).
+- R5.12 Transport Tug (p103), R5.12 and R5.16 Transport Tug with Self-Defense Pods (p106), R5.13 to R5.17 Pods (p104).
+- R5.F Kzinti Fighters (p112): the AAS is built; the other fighter types on this page are not.
+
+**Gorn**
+- R6.11 Dreadnought (p117), R6.12 Heavy Destroyer (p118), R6.17 Battle Destroyer (p121), R6.18 Command Cruiser (p122), R6.13 Scout (p119) and R6.10 Large Scout (p116; scout functions), R6.15 Minesweeper (p120; mines).
+- R6.5 Fleet Tug (p113), R6.5 and R6.8 Fleet Tug with Battle Pod (p115), R6.5 and R6.7 with Troop Pod (p123), R6.5 and R6.9 with Starliner Pod (p124), R6.6 to R6.9 Pods (p114).
+
+**Tholian**
+- R7.4 Destroyer (p125), R7.5 Dreadnought (p126), R7.6 Cruiser (p127), R7.15 Command Cruiser (p132), R7.17 TK5 Destroyer (p134), R7.19 War Cruiser (p136), R7.20 Heavy Cruiser (p137), R7.11 Cargo Patrol Corvette (p129), R7.16 Disruptor-Armed Patrol Corvette (p133), C14.211 Patrol Corvette Pinwheel (p138; needs the pinwheel maneuver, C14).
+- R7.10 Web Tender (p128; web, G10, with the tender's extra generators), R7.12 Scout (p130; scout functions), R7.13 Minesweeper (p131; mines), R7.18 Repair Ship (p135; repair and docking rules).
+
+**Orion**
+- R8.3 Heavy Cruiser (p139), R8.4 Salvage Cruiser (p140), R8.5 Slaver (p141), R8.7 Light Raider (p142), R8.12 Free Trader (p143), R8.13 Battle Raider (p144). All use the Orion option-mount system (G15.4), which is built for the Raider Cruiser only.
+
+**Rules that several of these ships wait on:** scout functions (G24), mines and minesweeping with ships (M8.3, M9), the mauler and other direct-fire weapons (E7 and up), the stasis field generator, fighters and carrier operations (J4.8 rearming, deck crews), docking (C13) and repair ships, more tugs and pods, and the pinwheel (C14).
+
+## v191 Basic Set ship gaps
+- Aegis (D13) is not modelled on the Kzinti aegis frigate (AFF, R5.20A) or the limited aegis of the EFF: the D13 body text is in Module J, which is not supplied. The AFF flies as a frigate with its two type-C racks, ADD-12 (three ADD boxes) and extra Ph-3 and Ph-1 groups. Its two deck crews are not modelled.
+- Gorn battlecruiser (R6.19): the sabot refit (RFTODO) is not built. The Gorn CA 'plus' refit was corrected in v191 (swivel plasma-S only; the earlier build wrongly added Ph-3 and plasma-F boxes).
+- Kzinti strike carrier (CVS, R5.7): flies the 12 AAS (Basic Set tells you to use the AAS in place of the TAAS-E / TADSC printed on the SSD). Real TAAS-E / TADSC stats (2 x Ph-3 FA, speed 15, BPV 11/12) are not used. Drone racks are four type-A until the Y175 refit (two B, two C, ADD 12).
+- Small auxiliary carrier (AxCVL, R1.13): only the Kzinti weapon fit is built (two Ph-1 360 degrees, two ADD). The 100 spaces of drone storage are not modelled; BPV is 75 with fighters (the fighters switch on) and 50 without. Other empires' weapon fits are not built. Fighters controlling seeking weapons (twice sensor rating) are not modelled for it.

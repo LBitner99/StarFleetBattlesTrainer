@@ -356,13 +356,13 @@ function buildShip(k){const sd=SHIPS[k].side;let m;
  if(DEFS[k].q)m=civModel(/L$/.test(k));else if(sd==='fed')m=(k==='DD'||k==='SC'||k==='TUG')?fedDD():(k==='DN'||k==='BT')?fedDN():k==='BP'?baseModel():k==='CL'?fedOldCL():k==='NCL'?fedNewCL():k==='CA'?fedCC({wp:.46}):k==='CC'?fedCC({wp:.9}):fedModel(FED[k]||FED.CA);
  else if(sd==='kli')m=kliModel(KLI[k]||KLI.D7);
  else if(sd==='rom')m=(k==='WE'||k==='WB')?romModel({w:4.3}):kliModel(k==='KR'?KLI.D6:KLI.F5,ROMG);
- else if(sd==='kzi')m=kzModel({k:(k==='KFF'||k==='EFF')?'ff':(k==='KBC'||k==='KCC'||k==='CV')?'bc':'cl'}) // [S-KZI] CC reference matches the BC hull;
- else if(sd==='gor')m=k==='GCA'?gorCA():gorModel({cl:k==='GCL'});
+ else if(sd==='kzi')m=kzModel({k:(k==='KFF'||k==='EFF'||k==='AFF'||k==='AXC')?'ff':(k==='KBC'||k==='KCC'||k==='CV'||k==='CVS')?'bc':'cl'}) // [S-KZI] CC reference matches the BC hull;
+ else if(sd==='gor')m=(k==='GCA'||k==='GBC')?gorCA():gorModel({cl:k==='GCL'});
  else if(sd==='ori')m=oriModel();
  else if(sd==='civ')m=civModel(k==='FL');
  else if(sd==='bas')m=baseModel();
  else m=thoModel({plus:k==='TPP'});
- let sc={KFF:.8,EFF:.8,KCL:.95,KBC:1.1,KCC:1.12,GDD:.82,GDF:.9,GCL:.95}[k]||1;
+ let sc={KFF:.8,EFF:.8,AFF:.8,AXC:.8,KCL:.95,KBC:1.1,KCC:1.12,GDD:.82,GDF:.9,GCL:.95}[k]||1;
  let mn=[1e9,1e9,1e9],mx=[-1e9,-1e9,-1e9];m.f.forEach(f=>f.v.forEach(p=>{for(let i=0;i<3;i++){if(p[i]<mn[i])mn[i]=p[i];if(p[i]>mx[i])mx[i]=p[i]}}));
  if(sd==='fed'&&(k==='DD'||k==='SC'||k==='TUG'))sc=(mx[0]-mn[0])/11.95; // [S-FED] DD drawn at its real length relative to the CA
  if(sd==='kli'||(sd==='rom'&&k!=='WE'&&k!=='WB'))sc=(mx[0]-mn[0])/KD7(); // [S-KLI] drawn size follows the model's real length

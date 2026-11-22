@@ -7,6 +7,9 @@ const isCO=i=>/^co:/.test(i);
 function coGet(ids){const c={bp:0,dr:0,ad:0};(ids||[]).forEach(i=>{const m=/^co:(bp|dr|ad):(\d+)$/.exec(i);if(m)c[m[1]]=+m[2]});return c}
 const coCost=c=>c.bp*0.5+c.dr*1.0+c.ad*0.25;
 function coAvail(key,k){const b=DEFS[key];if(k==='dr')return(b.sys.Drone||0)>0&&!(b.gad);if(k==='ad')return(b.sys.Add||0)>0;return !b.sb&&!b.fighter}
+const _rdCVS=refitDef;refitDef=function(key,ids){const d=_rdCVS(key,ids);if(key==='CVS'){d.rackT=d.rackKz?['B','B','C','C']:['A','A','A','A'];d.rackKz=false;d.addT=[d.rackT[0]==='B'?12:6]}return d}; // [R5.7] CVS racks: four type-A until the Y175 refit (ADD 6), then two B and two C (ADD 12)
+const _rdAXC=refitDef;refitDef=function(key,ids){const d=_rdAXC(key,ids);if(key==='AXC'&&!optFtr)d.pv-=25;return d}; // [R1.13] BPV 75 with its 12 fighters, 50 without (fighters are the optional rule)
+const _rdAFF=refitDef;refitDef=function(key,ids){const d=_rdAFF(key,ids);if(key==='AFF'){d.rackT=['C','C'];d.addT=[12,12,12]}return d}; // [R5.20A] the aegis frigate's racks are type-C and its ADD holds 12 rounds
 const _rdCO=refitDef;
 refitDef=function(key,ids){const d=_rdCO(key,ids);if(!optCO||!(ids||[]).some(isCO))return d;const c=coGet(ids);d.coC={...c};d.coPv=coCost(c);d.pv+=d.coPv;return d};
 const _mkCO=mkShip;
