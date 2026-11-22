@@ -351,3 +351,7 @@ v190: Federation (New) Light Cruiser (R2.18, NCL) from the Advanced Missions SSD
 v191: the four remaining ships of the Captain's Basic Set SSD book: Gorn Battlecruiser (R6.19, book p41), Kzinti Strike Carrier (R5.7, p38), Kzinti Aegis Frigate (R5.20A, p40) and Small Auxiliary Carrier (R1.13, p2, Kzinti weapon fit). SSD boxes were found on the book pages. CVS carries the 12 AAS (Basic Set rule R5.F2). AxCVL accelerates at most 5 or double speed (R1.13). Corrected the Gorn CA plus refit (swivel plasma-S only). Aegis (D13) not modelled (Module J text not supplied).
 
 v192: Interface only. The ship picker groups each race's ships by hull class (frigates and escorts, destroyers, light cruisers, heavy cruisers and battlecruisers, command cruisers and capital ships, carriers, Q-ships/tugs/scouts) in collapsible headings; the group holding the chosen ship stays open and other ships in an open group show as one line.
+
+v193: 3D model only. The new light cruiser's saucer is now the same smooth sloped lens as the other Federation saucers (it was built from stepped layers).
+
+v194: 3D model only. The new light cruiser's nacelles now have the same red front bubble and thin ring as the other Federation nacelles, moved back so the bubble stands clear of the saucer.

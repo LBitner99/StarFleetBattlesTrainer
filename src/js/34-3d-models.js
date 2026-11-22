@@ -322,18 +322,18 @@ function fedCC(o){o=o||{};const wp=o.wp||.65,px0=-1.38-wp/2,px1=-1.38+wp/2; // w
  function fedNewCL(){ // [S-FED] Federation "new" light cruiser from the user's references: no secondary hull; broad saucer with a stepped central tower, nacelles on boxy mounts at the saucer's rear edge with their domes over the rear deck. x fwd, y lateral, z up.
  const m=new Mesh(),H='#d9deee',D='#8c94b3',N='#c9cfe2',L='#eef0f8',cx=2.3,R=2.5,ny=1.2,nz=.66;
  const circ=r=>{const p=[];for(let i=0;i<32;i++){const t=i/32*Math.PI*2;p.push([cx+r*Math.cos(t),r*Math.sin(t)])}return p};
- [[1,-.13,.1,H],[.97,.1,.15,H],[.85,.15,.2,N],[.9,-.22,-.13,D],[.65,-.3,-.22,D],[.4,-.34,-.3,N]].forEach(l=>m.ext(circ(R*l[0]),l[1],l[2],l[3])); // saucer: rim, shallow top, stepped underside
- m.ext(circ(.94),.2,.3,H);m.ext(circ(.55),.3,.5,N);m.ell([cx,0,.5],[.25,.25,.22],L,0,12,6);m.ell([cx,0,.62],[.1,.1,.08],D,0,8,4); // central tower: two tiers, dome, cap
- for(let i=0;i<10;i++){const t=i/10*Math.PI*2;m.ell([cx+R*.93*Math.cos(t),R*.93*Math.sin(t),.14],[.07,.07,.07],D,0,6,4)} // rim lights
+ m.disc(cx,R,[[0,.34,-.38],[.22,.31,-.36],[.45,.25,-.3],[.7,.17,-.23],[.9,.1,-.17],[.98,.06,-.14],[1,.035,-.12]],H,D); // saucer sloping smoothly out to the rim, like the other Federation saucers (no stepped layers)
+ m.ext(circ(.5),.3,.46,N);m.ell([cx,0,.5],[.25,.25,.22],L,0,12,6);m.ell([cx,0,.62],[.1,.1,.08],D,0,8,4); // central tower: two tiers, dome, cap
+ for(let i=0;i<10;i++){const t=i/10*Math.PI*2;m.ell([cx+R*.93*Math.cos(t),R*.93*Math.sin(t),.08],[.06,.06,.06],D,0,6,4)} // rim lights
  m.cyl([cx,0,-.34],[cx,0,-.5],.08,.08,D,8);m.cyl([cx-.04,0,-.55],[cx+.06,0,-.55],.2,.2,L,16,D); // small deflector disc under the saucer
  // rear deck, nacelle mounts and nacelles
  m.ext([[cx-1.2,-.9],[cx-1.2,.9],[-.9,1.7],[-.9,-1.7]],.12,.22,N);
  m.extY([[1.1,.2],[-.9,.2],[-.9,.5],[.2,.32]],-.45,.45,H);
- m.sym(sd=>{m.box([-.1,sd*ny,.27],[1.1,.8,.3],D);m.box([-.1,sd*ny,.27],[1.0,.72,.34],N); // nacelle mount box
-  m.ell([1.0-.3,sd*ny,nz],[.16,.31,.31],GL.red,1,14,8);m.cyl([.7,sd*ny,nz],[.62,sd*ny,nz],.36,.36,D,16); // red front dome and ring
-  m.cyl([.7,sd*ny,nz],[-3.6,sd*ny,nz],.3,.3,H,16,H);m.cyl([-3.6,sd*ny,nz],[-3.75,sd*ny,nz],.35,.35,D,16);
-  m.cyl([-3.75,sd*ny,nz],[-4.1,sd*ny,nz],.3,.17,N,12,GL.blue,2); // tapered rear, blue exhaust
-  m.box([-2.0,sd*ny,nz+.3],[1.0,.2,.05],D)});
+ m.sym(sd=>{m.box([-.4,sd*ny,.27],[1.1,.8,.3],D);m.box([-.4,sd*ny,.27],[1.0,.72,.34],N); // nacelle mount box
+  m.ell([.25,sd*ny,nz],[.2,.32,.32],GL.red,1,14,8);m.cyl([-.1,sd*ny,nz],[-.25,sd*ny,nz],.33,.33,D,16); // red front dome and a thin ring behind it, as on the other Federation nacelles
+  m.cyl([.25,sd*ny,nz],[-4.05,sd*ny,nz],.3,.3,H,16,H);m.cyl([-4.05,sd*ny,nz],[-4.2,sd*ny,nz],.35,.35,D,16);
+  m.cyl([-4.2,sd*ny,nz],[-4.55,sd*ny,nz],.3,.17,N,12,GL.blue,2); // tapered rear, blue exhaust
+  m.box([-2.3,sd*ny,nz+.3],[1.0,.2,.05],D)});
  return m}
  function fedDN(){ // [S-FED] Federation DN from the user's references: conical saucer, slanted neck, secondary hull, one dorsal nacelle on a short pylon and two nacelles on flat horizontal pylons at the secondary hull's sides.
  const m=new Mesh(),H='#d9deee',D='#8c94b3',N='#c9cfe2',L='#eef0f8',cx=3.75,R=2.25,zH=-1.4;
