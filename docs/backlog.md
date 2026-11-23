@@ -145,3 +145,9 @@ Not planned yet; this is the inventory (taken from the book's table of contents,
 - v203: proximity box moved below the overload entry and greyed when unavailable; enhancements shown on the ship sheet weapon table (user request).
 - v204: energy allocation weapon rows with a set state open by default (user request).
 - v205: weapon rows open by default only when enhanced (overload, proximity, enveloping, shotgun, downloaded), not for plain armed state (user correction).
+
+
+## v206 additions
+- Built: D9.7 continuous damage repair (core rule; see rules-coverage-audit section 16).
+- New backlog items from the Standard-Game audit (rules the rulebook counts as core that the game lacks): shuttlecraft operations (J1, J2, suicide shuttles F4.23, ADD at shuttles E5.31, D7.6), Klingon mutiny (G6.2 to G6.6), rolling weapon status (S4.2), mine laying (M2.1) and transporter bombs (M3), ballistic targeting (F4.1 to F4.3). Shuttles are the biggest. Not started: the owner asked to hold new features during play testing; these need a go-ahead and order.
+- To confirm: planet landing (P2.4, P2.8) is unmarked in the text but default off.

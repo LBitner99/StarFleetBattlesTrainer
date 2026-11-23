@@ -41,6 +41,7 @@ js/28d-orion-mounts.js
 js/28e-starbase.js
 js/28f-year.js
 js/28g-commander.js
+js/28h-repair.js
 js/29-ui.js
 js/30-match-history.js
 js/31-victory-points.js
