@@ -400,3 +400,10 @@ Corrections made by this re-check: the Rules status box lists SG9 and reloads as
 
 ## 12. v202 (from play testing)
 - Asteroid warning (P3.2, P3.21), interface only: when a turn, sideslip or straight choice would enter an asteroid hex, its button turns red (tooltip gives the worst damage at the current speed and the shield hit) and, while you hover it, the preview arrow turns red and the hex is marked red. No pop-up, so play stays fluid. Prompted by a game where a CA at speed 15 took 35 damage on shield #1 crossing four asteroid hexes; the collision table and shield choice were re-read against P3.2 and P3.21 and match. Test: warning present ahead, absent behind, rp4 0 missing, soak clean.
+
+## 13. v203 (from play testing, interface only)
+- Energy allocation: the proximity-fuse box (E4.3) now always sits below the overload entry (E4.4) for each photon tube that is being armed or held, and is greyed out (with a tooltip) when it cannot be chosen: overload plotted or carried, or the torpedo is not finishing its arming this turn. A ticked box can always be unticked, and the overload entry is greyed while proximity is ticked, so the row no longer changes height.
+- Ship sheet: the weapon table now shows what was added to a weapon: photon overload and proximity fuse, disruptor overload, plasma enveloping, shotgun, downloaded type and rolling delay.
+
+## 14. v204 (interface only)
+- Energy allocation: a weapon row (photon tube, disruptor, plasma launcher) that has a state set (armed or half armed, overloaded, held, or plotted this turn) now opens its status note by default on every turn, so the overload and fuse state beside the weapon name is visible. Empty or unplotted weapons stay collapsed. A row you close by hand stays closed (and one you open stays open); the choice is remembered for the session.

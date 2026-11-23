@@ -142,3 +142,5 @@ Not planned yet; this is the inventory (taken from the book's table of contents,
 - SG9 hand steering built (see above).
 - Federation Frigate (R2.25) added from the Advanced Missions book page 43: BPV 71, Y127, turn mode B, breakdown 5-6, shield cost 1/2+1/2, life support 1/2, six shields of 18, two photons (forward arc), three Ph-1 (FH, left side, right side), two Ph-3 (left side, right side), 12 warp boxes, 3 impulse, 16 crew units, 6 boarding parties, 5 probes, explosion 8. It has no refits in the book. The 3D model and silhouette reuse the destroyer's. Box counts match the ship's system totals.
 - v202: asteroid warning on the turn buttons and preview arrow (user request after play test). The shading and rules text were left as they are.
+- v203: proximity box moved below the overload entry and greyed when unavailable; enhancements shown on the ship sheet weapon table (user request).
+- v204: energy allocation weapon rows with a set state open by default (user request).
