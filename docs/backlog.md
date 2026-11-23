@@ -31,12 +31,12 @@ Every item below was reviewed. **Built** = done in this pass or earlier; **Close
 - NCL: map silhouette (the 3D model is the new one), the all-anti-drone reload set, transporter bombs, the SSD header entries and the admin shuttles' hit points.
 - Commander's Option Items: transporter bombs, NSM, web anchors, extra UIM purchase, 2-seat fighters, EW pods, extra deck crews, drone type replacements and speed/range upgrades (one global drone type), the 30% limit, fighters in the 20% base, the computer buying options.
 - Reloads: crew units doing the loading, unloading racks, mixed drone types, scatter-pack and fighter reloads.
-- SG9: you cannot steer the monster yourself (the game flies it), S6.1 results with no means in the game, amoeba division in this scenario, SG9.6 variations and SG9.7 balance, the Moray Eel and Planet Crusher as the monster (no lab research for them).
+- SG9: (you can steer a monster you control since v201), S6.1 results with no means in the game, amoeba division in this scenario, SG9.6 variations and SG9.7 balance, the Moray Eel and Planet Crusher as the monster (no lab research for them).
 
 **Open on purpose (not blocked, not done)**
 - Test the type-G rack against real drone attacks in a long game (v174 tug block).
-- A player-steered monster in SG9 (direction and attack choices, SG9.48), if you want to play the monster side by hand.
-- Ship picks from the Advanced Missions book, one at a time, when you ask.
+- ~~A player-steered monster in SG9~~ built in v201: the controlling player picks automatic, straight at the enemy, away from his ship, or a fixed facing A to F (SG9.48). Not built: the Moray Eel and Planet Crusher firing and moving as ships (they are not offered in SG9).
+- Ship picks from the Advanced Missions book, one at a time, when you ask. Built so far: Federation (New) Light Cruiser (v190) and Federation Frigate (R2.25, v201).
 - Rules re-check (next): the full audit against both rulebooks and the Rules status box.
 
 ## Reference detail (older entries)
@@ -76,7 +76,7 @@ Every item below was reviewed. **Built** = done in this pass or earlier; **Close
 
 ## Ships in the Advanced Missions SSD book (2014) that are not in the game
 
-Not planned yet; this is the inventory (taken from the book's table of contents, v190). The book page is the printed page number; the PDF page is one higher. Only the Federation (New) Light Cruiser (R2.18, page 36) is built. Ships in other books that are also missing (Gorn Battlecruiser R6.19, Kzinti Strike Carrier CVS R5.7, Kzinti Aegis Frigate AFF R5.20A, Small Auxiliary Carrier AxCVL R1.13) are listed under the scenario items above. "Needs" names the rules or systems that must exist before the ship is worth adding; ships with no entry need only the SSD to be read.
+Not planned yet; this is the inventory (taken from the book's table of contents, v190). The book page is the printed page number; the PDF page is one higher. Built: the Federation (New) Light Cruiser (R2.18, page 36) and the Federation Frigate (R2.25, page 43, v201). Ships in other books that are also missing (Gorn Battlecruiser R6.19, Kzinti Strike Carrier CVS R5.7, Kzinti Aegis Frigate AFF R5.20A, Small Auxiliary Carrier AxCVL R1.13) are listed under the scenario items above. "Needs" names the rules or systems that must exist before the ship is worth adding; ships with no entry need only the SSD to be read.
 
 **General units**
 - R1.8 Armed Priority Transport (p2), R1.9 Free Trader (p3), R1.10 Fleet Repair Dock (p4; needs docking, C13, and repair rules), R1.11 Federation Express (p5), R1.23 Large Ore Carrier (p8).
@@ -87,7 +87,7 @@ Not planned yet; this is the inventory (taken from the book's table of contents,
 - R1.7 Kzinti Large (p27) and Small (p28), Romulan Large (p29) and Small (p30), Tholian Large (p31) and Small (p32) Q-ships. The game uses the Federation, Klingon and Gorn Q-ships for these races (R1.7A); the real SSDs are here.
 
 **Federation**
-- R2.12 Police Cutter (p33), R2.16 Galactic Survey Cruiser (p34), R2.17 Improved Dreadnought (p35), R2.19 New Scout Cruiser (p37), R2.20 New Escort Cruiser (p38), R2.21 Minesweeper (p39) and R2.30 New Minesweeper (p48; need mine sweeping with ships, M8.3), R2.31 Commando Cruiser (p40), R2.25 Frigate (p43), R2.26 Improved Frigate (p44), R2.27 Destroyer Leader (p45), R2.28 Guided Weapons Destroyer (p46), R2.41 Escort Frigate (p49).
+- R2.12 Police Cutter (p33), R2.16 Galactic Survey Cruiser (p34), R2.17 Improved Dreadnought (p35), R2.19 New Scout Cruiser (p37), R2.20 New Escort Cruiser (p38), R2.21 Minesweeper (p39) and R2.30 New Minesweeper (p48; need mine sweeping with ships, M8.3), R2.31 Commando Cruiser (p40), R2.26 Improved Frigate (p44), R2.27 Destroyer Leader (p45), R2.28 Guided Weapons Destroyer (p46), R2.41 Escort Frigate (p49).
 - R2.29 Strike Carrier (p47), R2.22 Tug with Heavy Carrier Pod (p41) and Carrier Pod, independent (p42); need more fighters (J) and carrier operations.
 - R2.8 and R2.9 Tug with Starliner Pod (p50): the tug and the Starliner pod already exist (G14); this page is the combined SSD.
 
@@ -136,3 +136,8 @@ Not planned yet; this is the inventory (taken from the book's table of contents,
 - Fighters never disengage (SH5.41 allows separation); if the carrier leaves the map the scenario goes on until the F5 leaves, is destroyed, or turn 10 ends. Fighters aboard a destroyed carrier count as destroyed; fighters aboard a carrier that disengages count as saved.
 - Commander's Option Items for the F5 (SH5.431, SH5.432: special drones), the SH5.6 and SH5.7 variations (D6/D7 and CV, E4, Q-ship, R3.R1 refit) and the Y166 year setting are not offered; the setup menu lets you change ships, but the scenario text and victory conditions assume the F5 and the AxCVL.
 - "Crippling the Klingon and forcing him to disengage" is judged by the S2.41 crippled test at the moment the F5 leaves. The carrier's capture (amazing victory) is judged by the existing capture code.
+
+## v201 results
+- Type-G rack (FD3.7) long-game test: BT, BP and TUG with the gad refit against a Kzinti strike cruiser and a Klingon D7, 4 to 53 turns, no script errors, no negative ammo; the 16 anti-drones in each rack are used up and the rack then stays empty (no further reloads, as the rule says). Closed.
+- SG9 hand steering built (see above).
+- Federation Frigate (R2.25) added from the Advanced Missions book page 43: BPV 71, Y127, turn mode B, breakdown 5-6, shield cost 1/2+1/2, life support 1/2, six shields of 18, two photons (forward arc), three Ph-1 (FH, left side, right side), two Ph-3 (left side, right side), 12 warp boxes, 3 impulse, 16 crew units, 6 boarding parties, 5 probes, explosion 8. It has no refits in the book. The 3D model and silhouette reuse the destroyer's. Box counts match the ship's system totals.

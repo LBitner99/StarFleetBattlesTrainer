@@ -353,7 +353,7 @@ function fedCC(o){o=o||{};const wp=o.wp||.65,px0=-1.38-wp/2,px1=-1.38+wp/2; // w
 function civModel(big){const m=new Mesh(),C=['#8b95a1','#a9b3bf','#6f7883'];const w=big?1.5:1.1,L=big?4.2:3.2;m.ext([[L,0],[L-.9,w*.8],[L-1.6,w*.8],[-L,w],[-L,-w],[L-1.6,-w*.8],[L-.9,-w*.8]],-.5,.5,C[0]);m.ext([[L-.4,0],[L-1.2,w*.55],[L-1.2,-w*.55]],.5,.9,C[1]);m.sym(s=>{m.ext([[-L+.3,s*w],[-L+.3,s*(w+.5)],[-L-1.2,s*(w+.5)],[-L-1.2,s*w]],-.25,.25,C[2])});return m}
 function baseModel(){const m=new Mesh(),C=['#8d7fb0','#b9a3e3','#6a5d8a'];const hx=(r)=>[0,1,2,3,4,5].map(i=>[r*Math.cos(i*Math.PI/3),r*Math.sin(i*Math.PI/3)]);m.ext(hx(1.9),-.6,.6,C[0]);m.ext(hx(.9),.6,1.4,C[1]);[0,2,4].forEach(i=>{const a=i*Math.PI/3+Math.PI/6,cx=Math.cos(a)*2.6,cy=Math.sin(a)*2.6;m.ext(hx(.8).map(p=>[p[0]+cx,p[1]+cy]),-.4,.4,C[2])});return m}
 function buildShip(k){const sd=SHIPS[k].side;let m;
- if(DEFS[k].q)m=civModel(/L$/.test(k));else if(sd==='fed')m=(k==='DD'||k==='SC'||k==='TUG')?fedDD():(k==='DN'||k==='BT')?fedDN():k==='BP'?baseModel():k==='CL'?fedOldCL():k==='NCL'?fedNewCL():k==='CA'?fedCC({wp:.46}):k==='CC'?fedCC({wp:.9}):fedModel(FED[k]||FED.CA);
+ if(DEFS[k].q)m=civModel(/L$/.test(k));else if(sd==='fed')m=(k==='DD'||k==='FF'||k==='SC'||k==='TUG')?fedDD():(k==='DN'||k==='BT')?fedDN():k==='BP'?baseModel():k==='CL'?fedOldCL():k==='NCL'?fedNewCL():k==='CA'?fedCC({wp:.46}):k==='CC'?fedCC({wp:.9}):fedModel(FED[k]||FED.CA);
  else if(sd==='kli')m=kliModel(KLI[k]||KLI.D7);
  else if(sd==='rom')m=(k==='WE'||k==='WB')?romModel({w:4.3}):kliModel(k==='KR'?KLI.D6:KLI.F5,ROMG);
  else if(sd==='kzi')m=kzModel({k:(k==='KFF'||k==='EFF'||k==='AFF'||k==='AXC')?'ff':(k==='KBC'||k==='KCC'||k==='CV'||k==='CVS')?'bc':'cl'}) // [S-KZI] CC reference matches the BC hull;

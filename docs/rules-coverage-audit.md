@@ -392,3 +392,8 @@ Superseded statements in the older sections (so nobody trusts them): section 4 a
 
 Corrections made by this re-check: the Rules status box lists SG9 and reloads as built and now names the other unbuilt families (D12, D15, D16, D19, C13, C14, G12, G16, G17, G18, G23, K, J3, FD7, P8, P12, P16, S8, T, U, the later empires) and the rules whose text is not supplied. No code defects were found in the spot checks.
 
+
+## 11. v201 additions
+- SG9.48 hand steering: a controlling human ship gets a panel (automatic, straight at the enemy, away from your ship, fixed facing A to F). The amoeba and cloud still attack by their nature, so the choice only moves them (SG9.48 exception). The computer's monster is still steered by the game.
+- FD3.7 type-G racks: long-game test clean (see backlog, v201 results).
+- R2.25 Federation Frigate (Advanced Missions SSD book page 43), second ship from that book. Test: SSD sheet screenshot, box counts equal system totals (no mismatches), four test games with no script errors, rp4 0 missing, soak clean.

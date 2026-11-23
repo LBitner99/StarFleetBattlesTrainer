@@ -38,3 +38,5 @@ Every scenario also offers the same extras: a year (Y168 by default) that decide
 | Computer plasma shotguns (FP7) | fleet scenarios with Romulans or Gorn | Built v185 (needs the shotgun option and the computer-uses-options switch) |
 | Fighters and shuttles (J1, J4) | SH5, Kzinti carriers in SG2, SG3, SG8 | Partly built (v174): Kzinti AAS only (optional switch); no rearming or repair aboard (J4.8), no dogfights (J7), no other fighters |
 | Tactical intelligence (D17) | SG1.62, SG2.63, SG6.61 variations | Not built |
+
+v201: SG9 - a human controller can steer the monster by hand (direction choice only).
