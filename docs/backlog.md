@@ -144,3 +144,4 @@ Not planned yet; this is the inventory (taken from the book's table of contents,
 - v202: asteroid warning on the turn buttons and preview arrow (user request after play test). The shading and rules text were left as they are.
 - v203: proximity box moved below the overload entry and greyed when unavailable; enhancements shown on the ship sheet weapon table (user request).
 - v204: energy allocation weapon rows with a set state open by default (user request).
+- v205: weapon rows open by default only when enhanced (overload, proximity, enveloping, shotgun, downloaded), not for plain armed state (user correction).

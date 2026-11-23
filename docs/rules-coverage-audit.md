@@ -407,3 +407,6 @@ Corrections made by this re-check: the Rules status box lists SG9 and reloads as
 
 ## 14. v204 (interface only)
 - Energy allocation: a weapon row (photon tube, disruptor, plasma launcher) that has a state set (armed or half armed, overloaded, held, or plotted this turn) now opens its status note by default on every turn, so the overload and fuse state beside the weapon name is visible. Empty or unplotted weapons stay collapsed. A row you close by hand stays closed (and one you open stays open); the choice is remembered for the session.
+
+## 15. v205 (interface only)
+- Correction to v204: a weapon row in the energy allocation opens by default only when the weapon has been enhanced, not merely armed. Opens for: a photon overload or proximity fuse (carried from earlier turns or plotted now), a disruptor overload, and plasma that is enveloping, shotgun, downloaded or on rolling delay. Plain armed, half-armed and held weapons stay collapsed. Rows you open or close by hand keep that choice.
