@@ -397,3 +397,6 @@ Corrections made by this re-check: the Rules status box lists SG9 and reloads as
 - SG9.48 hand steering: a controlling human ship gets a panel (automatic, straight at the enemy, away from your ship, fixed facing A to F). The amoeba and cloud still attack by their nature, so the choice only moves them (SG9.48 exception). The computer's monster is still steered by the game.
 - FD3.7 type-G racks: long-game test clean (see backlog, v201 results).
 - R2.25 Federation Frigate (Advanced Missions SSD book page 43), second ship from that book. Test: SSD sheet screenshot, box counts equal system totals (no mismatches), four test games with no script errors, rp4 0 missing, soak clean.
+
+## 12. v202 (from play testing)
+- Asteroid warning (P3.2, P3.21), interface only: when a turn, sideslip or straight choice would enter an asteroid hex, its button turns red (tooltip gives the worst damage at the current speed and the shield hit) and, while you hover it, the preview arrow turns red and the hex is marked red. No pop-up, so play stays fluid. Prompted by a game where a CA at speed 15 took 35 damage on shield #1 crossing four asteroid hexes; the collision table and shield choice were re-read against P3.2 and P3.21 and match. Test: warning present ahead, absent behind, rp4 0 missing, soak clean.

@@ -11,6 +11,8 @@ function ringsSvg(s,foe,showNums){ // shield status around a ship: green, yellow
   if(showNums){const q=pol(36,k*60);g+=`<text x="${q[0]}" y="${(+q[1]+3).toFixed(1)}" font-size="9" font-weight="700" text-anchor="middle" fill="${col}" stroke="var(--card)" stroke-width="2.5" paint-order="stroke" transform="rotate(${-60*s.f} ${q[0]} ${q[1]})">${k+1}</text>`}}
  return`<g transform="translate(${x} ${y}) rotate(${60*s.f})"${s.shOn===0?' opacity=".5"':''}>${g}</g>`}
 function setPrev(kind,d){prevArr=kind?{kind,d}:null;if(started&&!over&&optPrev)drawMap()}
+const hexPts=(c,r)=>[0,1,2,3,4,5].map(i=>(cx(c)+R*Math.cos(i*Math.PI/3)).toFixed(1)+','+(cy(c,r)+R*Math.sin(i*Math.PI/3)).toFixed(1)).join(' ');
+function astBtn(kind,d){const me=sh[0];if(!optAst)return'';const f=me.f,dir=kind==='turn'?(f+d+6)%6:kind==='slip'?(f+Math.sign(d)+6)%6:f,aw=astWarn(me,dir);return aw?` style="border-color:#e5484d;color:#e5484d" title="Asteroid hex ahead: up to ${aw.mx} damage on shield #${aw.k} at speed ${aw.sp} (P3.2)"`:''} // red button when that choice enters an asteroid hex
 function prevSvg(){if(!optPrev||!prevArr||over)return'';const me=sh[0],foe=TG(),x=cx(me.c),y=cy(me.c,me.r),pa=prevArr;
  let nf=me.f,txt='',dirF=me.f,col='var(--tx)';
  if(pa.kind==='turn'){nf=(me.f+pa.d+6)%6;dirF=nf;txt=`${pa.d<0?'Turn left':'Turn right'}: new facing ${FL[nf]}`}
@@ -18,10 +20,10 @@ function prevSvg(){if(!optPrev||!prevArr||over)return'';const me=sh[0],foe=TG(),
  else if(pa.kind==='face'){nf=pa.d;dirF=nf;txt=`Turn to facing ${FL[nf]}`}
  else txt=`Straight ahead (facing ${FL[me.f]})`;
  const old=me.f;me.f=nf;const k=shieldFor(me,foe).k;me.f=old;
- const lab=`${txt}. Your shield #${k+1} would face the enemy.`;
+ const aw=astWarn(me,dirF),lab=`${txt}. Your shield #${k+1} would face the enemy.${aw?` ASTEROID HEX: at speed ${aw.sp} up to ${aw.mx} damage on shield #${aw.k} (P3.2).`:''}`;if(aw)col='#e5484d'; // a move that ends in an asteroid hex turns the arrow red and marks the hex
  const a=60*dirF,tip=pol(64,a),b0=pol(24,a),h1=pol(52,a-9),h2=pol(52,a+9);
  const cur=60*me.f,ctip=pol(50,cur),cb=pol(24,cur);
- return`<g transform="translate(${x} ${y})" pointer-events="none"><line x1="${cb[0]}" y1="${cb[1]}" x2="${ctip[0]}" y2="${ctip[1]}" stroke="var(--mu)" stroke-width="3" stroke-dasharray="4 4" stroke-opacity=".8"/><line x1="${b0[0]}" y1="${b0[1]}" x2="${tip[0]}" y2="${tip[1]}" stroke="${col}" stroke-width="5" stroke-linecap="round" stroke-opacity=".9"/><polygon points="${tip[0]},${tip[1]} ${h1[0]},${h1[1]} ${h2[0]},${h2[1]}" fill="${col}"/></g><text x="${x}" y="${y-48}" font-size="12" font-weight="700" text-anchor="middle" fill="var(--tx)" stroke="var(--bg)" stroke-width="4" paint-order="stroke" pointer-events="none">${lab}</text>`}
+ return(aw?`<polygon points="${hexPts(aw.c,aw.r)}" fill="#e5484d" fill-opacity=".35" stroke="#e5484d" stroke-width="3" pointer-events="none"/>`:'')+`<g transform="translate(${x} ${y})" pointer-events="none"><line x1="${cb[0]}" y1="${cb[1]}" x2="${ctip[0]}" y2="${ctip[1]}" stroke="var(--mu)" stroke-width="3" stroke-dasharray="4 4" stroke-opacity=".8"/><line x1="${b0[0]}" y1="${b0[1]}" x2="${tip[0]}" y2="${tip[1]}" stroke="${col}" stroke-width="5" stroke-linecap="round" stroke-opacity=".9"/><polygon points="${tip[0]},${tip[1]} ${h1[0]},${h1[1]} ${h2[0]},${h2[1]}" fill="${col}"/></g><text x="${x}" y="${y-48}" font-size="12" font-weight="700" text-anchor="middle" fill="var(--tx)" stroke="var(--bg)" stroke-width="4" paint-order="stroke" pointer-events="none">${lab}</text>`}
 function drawMap(){const a=sh[0],b=TG(),dsh=(sh[0].col);
  const lines=sh.filter(s=>!ckHid(s)).map(s=>`<polyline points="${s.path.map(p=>cx(p[0])+','+cy(p[0],p[1])).join(' ')}" fill="none" stroke="${s.col}" stroke-width="2" stroke-opacity=".35"/>`).join('');
  const mx=(cx(a.c)+cx(b.c))/2,my=(cy(a.c,a.r)+cy(b.c,b.r))/2;
