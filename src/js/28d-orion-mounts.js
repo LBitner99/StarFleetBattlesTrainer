@@ -23,6 +23,7 @@ function omApply(d,ids){const m=omGet(ids);d.dis=null;let ds=[],P=0;d.rackT=[];d
   else if(w.k==='rk'){d.sys.Drone=(d.sys.Drone||0)+1;d.rackT.push(w.rt)}else if(w.k==='ad'){d.sys.Add=(d.sys.Add||0)+1;d.addT.push(w.am)}else if(w.k==='y')d.sys[w.sy]=(d.sys[w.sy]||0)+1});
  if(ds.length)d.dis={n:ds.length,arcs:ds[0].a,max:22,each:ds.map(x=>x.a),maxs:ds.map(x=>x.mx)};
  if(torp.length)d.torp={n:torp.length,arcs:['LF','RF']};
+ {const nA=d.rackT.filter(r=>r==='A').length;if(nA&&typeof effYear==='function'&&effYear()>=175){d.rackT=d.rackT.map(r=>r==='A'?'C':r);d.pv+=nA;d.rackKz=true} } // [R8.R2] from Y175 every type-A rack on an Orion ship is a type-C rack (1 point each) and the ship has double drone reloads
  d.pv+=P;d.derf=!!(d.dis&&d.dis.maxs.some(x=>x>=30)); // [SSD note] a CR with a disruptor of range 30 or more has DERFACS at no cost (Y168)
  d.omName=m.map((c,k)=>OMNAME[k].split(' ')[0]+' '+OMW[c].n.replace(' (standard)','')).join(', ')}
 function omCost(ids){return omGet(ids).reduce((t,c)=>t+OMW[c].pv,0)}

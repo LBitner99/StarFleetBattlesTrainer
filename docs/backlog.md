@@ -1,6 +1,45 @@
 # Backlog
 
-Known problems and loose ends that are not being worked on right now. Newest first.
+Known problems and loose ends. The first section (v199) is the result of the backlog resolution pass: every item was either built or closed with a reason. The sections after it are the older detail, kept for reference.
+
+## Backlog resolution (v199)
+
+Every item below was reviewed. **Built** = done in this pass or earlier; **Closed** = will not be built, with the reason; **Open** = kept on purpose. "Text not supplied" means the rules live in a module or book that is not in the files supplied (Module J, Module R10, Module B and similar), so they cannot be built without guessing.
+
+**Built or finished**
+- Debrief audit (bug list, v183/v184): every suggestion in the debrief was re-read against the rules in force. All use Basic Set features only, except the ones already gated on HET, sideslip, high energy turns and overloads. The rules-in-force line in the log now also lists the Master Rulebook and scenario options (fighters, Orion mounts, landing, legendary officers, mine detection, shotgun, plasma-F downloads, reserve impulse, hidden movement, extended tractor range, web, wounded crew, floating map, computer options).
+- Orion Y175 drone rack refit (R8.R2): from game year 175 every type-A rack on an Orion ship is a type-C rack (1 BPV each) with double reloads.
+- SG8: the attacker now chooses the entry edge and the speed (SG8.2). Two adjacent edges at once are not offered.
+- SH5 variations: D6, D7 or E4 instead of the F5 (SH5.62, SH5.71), a CV instead of the auxiliary carrier (SH5.62), the B refit for the F5 (SH5.73). Not offered: the Q-ship swap (SH5.72) and the Advanced Missions frigate and AuxCVL pairs (SH5.61), because the victory test counts the 12 fighters.
+- Year selection for SG8 and the other scenarios: the Game year picker (v186) covers it; choose "Scenario year" in the Mission box. It is not applied automatically on purpose, so a game stays unlimited until you pick a year.
+- Reloads (v197) and SG9 (v198): see the audit.
+
+**Closed: will not be built (reason)**
+- Gorn battlecruiser sabot refit, plasma sabot, plasma carronade: text not supplied (Module R10; only a one-paragraph blurb FP11.0).
+- Aegis (D13) on the AFF and the EFF's limited aegis, the AFF's two deck crews: text not supplied (Module J); deck crews have no effect without fighters on that ship.
+- Fighter servicing and the other fighter rules (J4.8 rearming and repair, J7 dogfights, other fighter types, fighters controlling seeking weapons, fighters on the NCL/bases): Module J text not supplied. The CV, CVS and AxCVL fly the AAS as the Basic Set says. CVS TAAS-E / TADSC stats and the AxCVL's 100 spaces of drone storage and other empires' weapon fits: not needed for a solo trainer.
+- Advanced Missions SSD book ships (the inventory further down): not planned. Each ship needs its own SSD read, many need systems that are not built (scout functions G24, mines M9, the mauler, stasis, docking). Any single ship can be added on request.
+- Starbase extras: docking and docked warships (C13), augmentation modules and docked pods, special sensors and scout functions (G24), UIM and security stations, the Federation Y181 fighter bay and the base's fighters and PFs, the Romulan cloak option, the rack-by-module drone rack loss, the owner's choice on phaser hits, the Plasma-D and Ph-G stand-ins, type-H magazine details: none changes a solo assault result enough to justify the work, or the text is not supplied.
+- SG8: rotation rate choice (C3.71), flagship command limit, drone speed and refit agreement, two-race alliance (SG8.63), balance options SG8.71 to SG8.73: balance and multi-player options, not needed solo.
+- SG3: Tholian 2xPC list (the table gives the Tholians a pair of defenders and no attackers, which this game's single rescue ship cannot play), the third-player option, SG3.64 modules and minefields.
+- SH2: WB+ is flown as a plain WB (the WB refit is Module Y1, text not supplied); half boarding parties, fire control that cannot be turned off, tractors and transporters while surprised, the CC's special drones and MRS shuttles: no effect on a solo result.
+- SH3: meteor break-up and fragments (SH3.47) and the Klingon withdrawal declaration (SH3.48): the meteor cannot be shot in this game and the computer never withdraws.
+- SH4: second-player option and the F5's special drones.
+- SH5: special drones (SH5.431, SH5.432), fighter separation (SH5.41), the admin shuttles as fighters (SH5.42), the second-player options.
+- Orion mounts: Phaser-G and Plasma-G/S (the CR has no two adjacent centreline mounts and Phaser-G is not in the game), Disruptor-40 (range table stops at 30), Aux/AWR/Repair/barracks/rack E and G options, FA instead of wing arcs for disruptors, the swivel plasma mount, the cartel tables and tactical intelligence (D17 not in the game).
+- Game year: the computer's fixed fleets are only warned, not filtered; refit years for pods, the type-G rack and the Kzinti C-8/C-14 refits (no year in the text or ship not in the game).
+- NCL: map silhouette (the 3D model is the new one), the all-anti-drone reload set, transporter bombs, the SSD header entries and the admin shuttles' hit points.
+- Commander's Option Items: transporter bombs, NSM, web anchors, extra UIM purchase, 2-seat fighters, EW pods, extra deck crews, drone type replacements and speed/range upgrades (one global drone type), the 30% limit, fighters in the 20% base, the computer buying options.
+- Reloads: crew units doing the loading, unloading racks, mixed drone types, scatter-pack and fighter reloads.
+- SG9: you cannot steer the monster yourself (the game flies it), S6.1 results with no means in the game, amoeba division in this scenario, SG9.6 variations and SG9.7 balance, the Moray Eel and Planet Crusher as the monster (no lab research for them).
+
+**Open on purpose (not blocked, not done)**
+- Test the type-G rack against real drone attacks in a long game (v174 tug block).
+- A player-steered monster in SG9 (direction and attack choices, SG9.48), if you want to play the monster side by hand.
+- Ship picks from the Advanced Missions book, one at a time, when you ask.
+- Rules re-check (next): the full audit against both rulebooks and the Rules status box.
+
+## Reference detail (older entries)
 
 ## Bugs
 
