@@ -45,6 +45,13 @@ js/28h-repair.js
 js/28i-shuttles.js
 js/28j-wildweasels.js
 js/28k-marked-rules.js
+js/28l-mutiny.js
+js/28m-docking.js
+js/28n-pinwheel.js
+js/28o-wsroll.js
+js/28p-ballistic.js
+js/28q-stalemate.js
+js/28r-cadet.js
 js/29-ui.js
 js/30-match-history.js
 js/31-victory-points.js
@@ -57,3 +64,4 @@ data/rules-source-text.js
 data/rules-additions.js
 js/35-rule-popups.js
 js/36-phone-layout.js
+js/37-tutorial-hook.js

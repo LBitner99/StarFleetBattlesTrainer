@@ -159,9 +159,33 @@ Not planned yet; this is the inventory (taken from the book's table of contents,
 ## v208 (wild weasels, marked-rules audit)
 - Built: J3 wild weasels as an Advanced switch (off by default). See rules-coverage-audit section 18 for what is simplified or not built.
 - Open (marked rules, not built): G6 mutiny, C13 docking, C14 pinwheel, D6.4 non-violent combat, G4.2 labs, G7.8, D7.6, D7.7, C6.55 tumbling, C1.32 pre-plotted movement, C3.8 directed turns.
-- Open (standard, older): S4.2 weapon status roll, M2.1 mine laying / M3 transporter bombs, F4 ballistic targeting, planet landing default (P2.4/P2.8) to confirm.
+- Open (standard, older): M2.1 mine laying / M3 transporter bombs (not Basic scenario play; wait for mine-laying ships). S4.2, F4 and P2.4/P2.8 were closed in v211.
 
 ## v209 (seven marked rules)
 - Built as switches (off by default): C6.55 tumbling, D6.4 non-violent combat, D7.7 preventing self-destruction, G4.2 labs identify seeking weapons, D7.6/G7.8 capturing shuttles, C3.8 directed turn modes, C1.32 pre-plotted movement (basic). Detail and omissions in rules-coverage-audit section 19.
 - Open from these: pursuit/evasion/station-keeping plots (C1.322), half-turn and segmented plotting, plot levels other than C1; J1.62 tractor landing of your own shuttles, J1.63-J1.65 enemy landing and crash landing; C3.89; G22.74 weapons officer on NVC; tumbling into an atmosphere without a surface (C6.556).
 - Still the last three marked rules: G6 mutiny, C13 docking, C14 pinwheel (v210).
+
+## v210 (G6, C13, C14 built as switches)
+- Built: G6 Klingon security stations and mutiny, C13 docking (external to bases and ships), C14 Tholian pinwheel. See rules-coverage-audit section 20 for what each does and what is not built.
+- Open from these: G6.5 recapture of a mutinous ship, G6.42 boom separation (needs G12), G6.25 owner option; C13 internal docking (starbase modules, repair docks), power and crew transfers, forced docking, docked-ship movement, cloak, D21 escape; C14 impulse movement, the two-turn forming procedure, pooled energy and tracks, the PF pinwheel, computer forming.
+- Next: second full coverage pass of the Captain's Basic Set (task: S4.2 weapon status roll, M2.1 mine laying / M3 transporter bombs, F4 ballistic targeting, P2.4/P2.8 default, and the open items of v207 to v210).
+
+## v211 (second coverage pass)
+- Built: S4.2 weapons status roll (optional switch), F4 ballistic targeting for drones and plasma (standard), S2.274 stalemate (standard); P2.4/P2.8 planet landing now on by default. See rules-coverage-audit section 21.
+- Open from these: S4.32 free photon overloads at WS-III, S4.2 war-zone and scout modifiers; F4.22 ground targets, F4.3 type-IIIXX drones, F4.4 scatter-packs, F4.5 dragged off course, computer ballistic launches; S2.272/S2.273 as true disengagement and retreat (scored as a stalemate now); S5.4 advanced local conditions charts A to C; S6.3/S6.4 incomplete and repeat engagements; F3.5 control transfers; Cadet's Game (built in v212).
+- Next: ask the user which of these to build, or move to the Advanced Missions ship inventory.
+
+## v212 (the Cadet's Game)
+- Built: A4.1 to A4.3 as seven selectable steps of the Duel (see rules-coverage-audit section 22). A4.4 is the ordinary game.
+- Open: none of the Cadet steps is scored differently (Standard victory conditions, as the Duel); the computer plays each step with its normal AI.
+
+## v213 (Cadet's Tutorial)
+- Built: the guided Cadet's Tutorial (menu, call-outs, end-of-section card). See rules-coverage-audit section 23.
+- Open: more call-outs (for example one per rule the A4 reading lists name, as a checklist), pausing a move to show a call-out, a tutorial for the Standard game rules after A4.4.
+
+## v214
+- Interface: Mission box spacing (description height now automatic).
+
+## v215
+- Interface: Cadet's Tutorial button beside Start, always visible.

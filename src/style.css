@@ -24,7 +24,7 @@ button{cursor:pointer}button.pri{background:var(--ac);color:#fff;border-color:va
 #mapbox.drag{cursor:grabbing}#map{width:100%;height:100%;display:block;color:var(--tx)}
 .zc{position:absolute;right:8px;top:8px;display:flex;flex-direction:column;gap:6px}.zc button{width:38px;padding:6px 0;font-weight:700;background:var(--card)}
 .zc button.w{width:auto;padding:6px 8px;font-size:.78rem;font-weight:600}
-.cols{display:grid;grid-template-columns:1fr 1fr;gap:14px}@media(max-width:760px){.lc-mis{grid-template-columns:1fr}.lc-desc{height:20rem}.lc-right{justify-content:space-between}.cols{grid-template-columns:1fr}}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:14px}@media(max-width:760px){.lc-mis{grid-template-columns:1fr}.lc-right{justify-content:space-between}.cols{grid-template-columns:1fr}}
 .shb{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin:6px 0}.shb div{border:1px solid var(--bd);border-radius:8px;padding:4px;text-align:center;font-size:.8rem}
 .shb i{display:block;height:6px;border-radius:3px;background:var(--bd);margin-top:3px;overflow:hidden}.shb i b{display:block;height:100%;background:var(--ac)}
 #lg div{padding:1px 0;font-size:.9rem}details summary{cursor:pointer;color:var(--mu);font-size:.9rem}
@@ -59,7 +59,7 @@ details.omenu{margin-bottom:10px}details.omenu summary{cursor:pointer;padding:2p
 @keyframes lcp{50%{background:#5dff95}}@media(prefers-reduced-motion:reduce){.lc-big{animation:none}.lc .fade{animation:none!important}}
 .lc-go{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-top:10px}
 .lc-scn{display:flex;flex-direction:column;gap:5px}.lc-sh{font-family:var(--f);font-weight:700;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--mu)}.lc-sb{display:flex;gap:6px;flex-wrap:wrap}.lc-sh{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.lc-rr{color:var(--mu)}.lc-sh .rl{font-size:.7rem;font-weight:700;padding:3px 7px;border:1px solid var(--sk);border-radius:6px;text-decoration:none}.lc-sel{font:inherit;font-size:.62rem;letter-spacing:.04em;text-transform:none;font-weight:700;padding:5px 8px;border-radius:6px;border:1px solid var(--gr);background:var(--card);color:var(--tx);max-width:100%}
-.lc-mis{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:start}.lc-left{min-width:0}.lc-desc{height:9.5rem;overflow:hidden;font-size:1.05rem;line-height:1.35}.lc-right{display:flex;gap:16px;align-items:center;justify-content:flex-end;align-self:stretch}.lc-ring{flex:none}
+.lc-mis{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:start}.lc-left{min-width:0}.lc-desc{margin-bottom:4px;font-size:1.05rem;line-height:1.35}.lc-right{display:flex;gap:16px;align-items:center;justify-content:flex-end;align-self:stretch}.lc-ring{flex:none}
 .lc-bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:4px 0}
 .lc-chip{display:inline-block;border:3px solid var(--pu);color:var(--pu);border-radius:8px;padding:1px 10px;font-family:var(--f);font-weight:700;font-size:.5rem;text-transform:uppercase;letter-spacing:.08em}
 .lc-tabs{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}.lc-tabs button{--c:#fff;background:#000;color:var(--c);border:3px solid var(--c);border-radius:8px;padding:6px 10px;font-family:var(--f);font-weight:700;font-size:.52rem;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}.lc-tabs button.on{background:var(--c);color:#000}
@@ -76,7 +76,7 @@ details.omenu{margin-bottom:10px}details.omenu summary{cursor:pointer;padding:2p
 .lc-rl{display:flex;flex-wrap:wrap;gap:6px 20px;font-family:var(--f);font-weight:700;font-size:.52rem;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}.lc-rl span::before{content:"";display:inline-block;width:18px;height:14px;border-radius:3px;background:var(--k);margin-right:8px;vertical-align:-2px}
 .lc details.rsd summary{color:var(--c);font-family:var(--f);font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:.58rem;margin-top:8px}.lc details.rsd p{margin:4px 0 6px 14px;font-size:.82rem;color:#bfe5cf}
 .lc details summary{color:var(--pu);font-family:var(--f);font-weight:700;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase}.lc .omb{color:var(--pe)}.lc .omb select{background:#000;color:var(--pe);border:2px solid #1b5fa8;border-radius:8px}
-@media(max-width:760px){.lc-mis{grid-template-columns:1fr}.lc-desc{height:20rem}.lc-right{justify-content:space-between}.lc-head{grid-template-columns:1fr;gap:12px}.lc-info{min-width:0}.lc-fr{display:none}.lc-big{padding:16px 18px;font-size:.95rem;width:100%}.lc{padding:12px 8px 8px}.lc-p{margin:18px 2px 38px;padding:14px 12px 28px}.lc-n{font-size:1.4rem}}
+@media(max-width:760px){.lc-mis{grid-template-columns:1fr}.lc-right{justify-content:space-between}.lc-head{grid-template-columns:1fr;gap:12px}.lc-info{min-width:0}.lc-fr{display:none}.lc-big{padding:16px 18px;font-size:.95rem;width:100%}.lc{padding:12px 8px 8px}.lc-p{margin:18px 2px 38px;padding:14px 12px 28px}.lc-n{font-size:1.4rem}}
 
 /* ===== film-era console theme for the whole game (v61) ===== */
 :root:root:root{--bg:#000;--card:#000;--tx:#d7efe0;--mu:#7fb596;--ac:#1e90ff;--ok:#2bff6a;--bad:#ff4a3a;--bd:#1b5fa8;--hi:#06162b;--hx:#0f3358;--ca:#4aa8ff;--d7:#ff4a3a;--warn:#ffd84a;--lv:#b4a0ff;--gr:#1fd35f;--f:Michroma,"Microgramma D Extended",Eurostile,Syncopate,"DejaVu Sans",sans-serif;color-scheme:dark}
@@ -114,7 +114,7 @@ a{color:#6fd0ff}
 
 /* ===== phone layout (max-width 760px); desktop is unchanged ===== */
 #mtab{display:none}
-@media(max-width:760px){.lc-mis{grid-template-columns:1fr}.lc-desc{height:20rem}.lc-right{justify-content:space-between}
+@media(max-width:760px){.lc-mis{grid-template-columns:1fr}.lc-right{justify-content:space-between}
  main{padding:8px 8px}
  button,select{min-height:44px}
  input[type=number]{min-height:44px;font-size:16px}
@@ -175,7 +175,7 @@ a{color:#6fd0ff}
  /* race buttons on the ship picker: one row, shrinking to fit */
  .lc-tabs{flex-wrap:nowrap;gap:4px;container-type:inline-size}
  .lc-tabs button{flex:1 1 auto;min-width:0;padding:6px 2px;font-size:clamp(.3rem,1.32cqw,.52rem);letter-spacing:.02em;border-width:2px;white-space:nowrap;text-align:center}
- @media(max-width:760px){.lc-mis{grid-template-columns:1fr}.lc-desc{height:20rem}.lc-right{justify-content:space-between}.lc-tabs{flex-wrap:wrap}.lc-tabs button{flex:1 1 auto;font-size:.52rem;padding:6px 8px}.easticky{position:static}.eatabs{gap:4px}.eatabs button{font-size:.72rem;padding:4px 9px;letter-spacing:0}}
+ @media(max-width:760px){.lc-mis{grid-template-columns:1fr}.lc-right{justify-content:space-between}.lc-tabs{flex-wrap:wrap}.lc-tabs button{flex:1 1 auto;font-size:.52rem;padding:6px 8px}.easticky{position:static}.eatabs{gap:4px}.eatabs button{font-size:.72rem;padding:4px 9px;letter-spacing:0}}
 
 .shgrp{margin:0 0 8px;border:1px solid var(--c,#8884);border-radius:10px;padding:0 6px 2px}.shgrp>summary{cursor:pointer;padding:8px 4px;font-weight:700;font-size:.85rem;list-style:none}.shgrp>summary::-webkit-details-marker{display:none}.shgrp>summary::before{content:'\25B8  ';color:var(--c)}.shgrp[open]>summary::before{content:'\25BE  '}.shgrp>summary .mu{font-weight:400;font-size:.74rem}
 /* ships not selected inside a group show a compact card: name and BPV only */

@@ -35,7 +35,7 @@ function ckReverse(){const s=sh[0],k=s.ck,i=imp+1,A=absI(i);if(!s.d.clk||k.fadeR
  k.fadeRev=true;k.onT=k.offT=turn;draw()}
 function ckToggle(){const s=sh[0],k=s.ck,i=imp+1;if(k.mode==='off'&&s.ckPaid&&k.onT!==turn)ckStart(s,'out',i);else if(k.mode==='on'&&k.offT!==turn)ckStart(s,'in',i);draw()}
 // [FP1.0, FP2.0, FP4.2, C10.511] Why a plasma torpedo cannot be launched right now.
-function plWhy(s,i,t,fake,foe0){const foe=foe0||foeOf(s);if(s.emOn)return'Erratic maneuvering: no plasma launches (C10.511)';
+function plWhy(s,i,t,fake,foe0){const foe=foe0||foeOf(s);{const cw=cadLaunchWhy(i,1);if(cw)return cw}if(s.emOn)return'Erratic maneuvering: no plasma launches (C10.511)';
  if(!t.alive)return'Destroyed';if(!mannedW(s,t))return'Undermanned: no crew unit free to operate it (G9.422)';if(fake){if(t.pptUsed)return'This launcher has already used its pseudo-plasma torpedo (FP6.21)';if(t.fi===absI(i))return'A real torpedo left this launcher this impulse (FP6.22)'}else{if(t.fired)return'Launched this turn';{const o=s.pl.find(u=>u!==t&&u.fi===absI(i));if(o&&(t.sg||o.sgFi===absI(i)))return'A plasma launcher cannot fire in the same impulse as a shotgun (FP7.23)'}if(!t.rdy)return t.st<3?'Not fully armed ('+t.st+' of 3 turns)':'Not ready'}
  if(!fcOk(s))return ckOn(s)?'Cloaked (G13.512)':'No active fire control (FP4.1)';if(s.lock===false)return'No lock-on (FP4.1)';
  if(absI(i)<=s.noFire)return'Post-breakdown: no weapons (C6.5471)';
@@ -54,6 +54,7 @@ function aiPlasma(s,i){if(s.conceded||!s.pl.length)return;const foe=foeOf(s),r=d
   if(r<=lim||(late&&PLA[t.T].h===null&&r<=22))launchPl(s,k,i)})}
 function plUI(me,i){if(!me.pl.length)return'';let b='',why=[];const foe=foeOf(me);
  me.pl.forEach((t,k)=>{const w=plWhy(me,i,t);if(!t.alive)return;if(w&&t.rdy)why.push(t.name+': '+w);const row=PLA[plEff(t)].t;b+=plResBtns(me,k,t);
+  if(t.rdy&&!w&&!balWhy(me))b+=`<button onclick="balLaunch(${k},1)" title="Fire at the hex typed under the drone racks (F4.0)">Ballistic ${t.name}</button>`;
   if(optPPT){const wf=plWhy(me,i,t,true);b+=`<button ${wf?'disabled':''} title="${wf}" onclick="doLaunchPl(${k},1)">Launch pseudo-plasma ${t.T} (fake, free, one per game)</button>`}
   if(t.sg&&(t.rdy||t.st===3)){const tg=sgTargets(me,i,t);b+=`<button ${tg.length?'':'disabled'} onclick="doShotgun(${k})">Fire ${t.name} as a shotgun: ${Math.min(SGN[plEff(t)],tg.length)} type-F at ${tg.map(x=>x.tag).join(', ')||'no target'}</button>`}else if(t.rdy||t.st===3)b+=`<button ${w?'disabled':''} title="${w}" onclick="doLaunchPl(${k})">Launch ${t.name} (warhead ${row[0]} out to range 5, ${row[1]} to 10, ${row[4]} to 15)</button>`});
  return b?`<div class="mu" style="margin:6px 0">Plasma torpedoes steer themselves, travel 32 hexes a turn and get weaker the farther they go. Only phasers can shoot them down (FP1.61).</div><div class="row">${b}</div>${why.length?`<p class="mu" style="margin:2px 0">${why.join('. ')}.</p>`:''}`:''}

@@ -98,7 +98,7 @@ function moveShips(i){const t=sh.map((s,k)=>k===0?(pend===null?0:pend):(s.out?0:
  const pairOn=pairMode(),pairHet={}; // [G7.36] when both linked ships move, the pair is resolved together after any high energy turns
  sh.forEach((s,k)=>{let het=false;
   if(k&&s.out)return;if(LNK&&LNK.on===s&&!pairOn)return;
-  if(s.d.base){if(!s.out&&({4:[4,12,20,28],3:[7,17,28],2:[12,28],1:[28]}[s.d.rot||2]).includes(i)){s.f=(s.f+1)%6;L(`Impulse ${i}: ${s.tag} rotates 60° to facing ${FL[s.f]}.`+RL('C3.7, C3.71, C3.72'))}return} // C3.7: the computer base rotates twice a turn
+  if(s.d.base){if(!s.out&&({4:[4,12,20,28],3:[7,17,28],2:[12,28],1:[28]}[s.d.rot||2]).includes(i)){s.f=(s.f+1)%6;L(`Impulse ${i}: ${s.tag} rotates 60° to facing ${FL[s.f]}.`+RL('C3.7, C3.71, C3.72'));dockRot(s)}return} // C3.7: the computer base rotates twice a turn
 
   if(hf[k]!==undefined&&canHet(s,i)){doHet(s,hf[k],i);het=true}
   if(s.tum&&tumbleMove(s,i))return;
