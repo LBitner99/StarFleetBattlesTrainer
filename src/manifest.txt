@@ -42,6 +42,9 @@ js/28e-starbase.js
 js/28f-year.js
 js/28g-commander.js
 js/28h-repair.js
+js/28i-shuttles.js
+js/28j-wildweasels.js
+js/28k-marked-rules.js
 js/29-ui.js
 js/30-match-history.js
 js/31-victory-points.js

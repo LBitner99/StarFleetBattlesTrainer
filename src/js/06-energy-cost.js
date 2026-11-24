@@ -21,6 +21,9 @@ if(!optHet)p.het=0;if(!optTac){p.tac=0;p.stac=0}if(!optOvl){p.tuo=(p.tuo||[]).ma
  const gen=p.gen,spec=p.spec.reduce((a,b)=>a+b,0),dsb=p.dsh.reduce((a,b)=>a+b,0),dcE=2*dsb,rate=dcRating(s);
  if(dcE>rate)e.push(`Damage control can take at most ${rate} energy (your rating, D9.21); you allocated ${dcE}`);
  rpCheck(s,p,e); // [D9.7] continuous damage repair jobs
+ const ssE=ssCheck(s,p,e); // [J2.2211] suicide shuttle arming (warp energy)
+ const wwE=wwCheck(s,p,e); // [J3.12] wild weasel charge (one energy)
+ plotCheck(s,p,e); // [C1.32] pre-plotted movement
  p.dsh.forEach((v,k)=>{if(v>missing(s,k))e.push(`Shield #${k+1} has only ${missing(s,k)} destroyed box${missing(s,k)===1?'':'es'} to repair (D9.22: only boxes lost in earlier turns)`)});
  if((gen>0||spec>0)&&p.sh<1)e.push('Reinforcement needs the shields turned on (D3.34)');
  p.spec.forEach((v,k)=>{if(v>0&&s.sh[k]<=0)e.push(`Shield #${k+1} is down and cannot be reinforced (D3.343)`)});
@@ -58,7 +61,7 @@ if(!optHet)p.het=0;if(!optTac){p.tac=0;p.stac=0}if(!optOvl){p.tuo=(p.tuo||[]).ma
  if(stac){if(p.spd>0)e.push('A sublight tactical maneuver is for a ship that stays in its hex: set the speed to 0 (C5.11)');if(P.imp<1)e.push('A sublight tactical maneuver costs one point of impulse power (C5.12)')}
  if(!optProbe)p.prb=[];let prE=0;s.pr.forEach((w,i)=>{if(i>=(s.sys.Probe||0)||!(p.prb&&p.prb[i]))return;if(!probeOK(s)){e.push('Probes can only be armed as weapons by a crippled ship (G5.3)');return}if(w.ammo<=0){e.push(`${w.name} has no probes left`);return}prE+=2});
  const trnE=optBoard?Math.max(0,Math.min(p.trn|0,Math.ceil((s.sys.Trans||0)/5))):0;
- const warpOnly=tuW+tuX+wm+hetE+brw+tacE+prE,other=ls+fc+p.ph+tuO+dis+sh+gen+spec+dcE+br+ew+plE+clkE+emE+stE+trE+trnE+wbE+bri+grE;
+ const warpOnly=tuW+tuX+wm+hetE+brw+tacE+prE+ssE,other=ls+fc+p.ph+tuO+dis+sh+gen+spec+dcE+br+ew+plE+clkE+emE+stE+trE+trnE+wbE+bri+grE+wwE;
  if(bri>0&&imp>0)e.push('Reserve impulse power exists only if no impulse power is used for movement: tick "pay all movement with warp" (C5.531, H7.47)');else if(bri>0&&bri>Math.max(0,P.imp-imp))e.push(`Reserve impulse power can only come from the impulse engines: ${Math.max(0,P.imp-imp)} point${P.imp-imp===1?'':'s'} left after movement (H7.47)`);
  if(s.awr&&wm+hetE+tacE>P.warp)e.push(`Movement and HETs need ${wm+hetE+tacE} warp power but only ${P.warp} remains (H4.3: power from warp reactors cannot be used for movement or HETs)`);
  else if(warpOnly>P.warp+(s.awr?P.apr:0))e.push(`Warp-only uses (movement, HETs and photon arming) need ${warpOnly} but only ${P.warp} warp power remains`);
@@ -117,7 +120,10 @@ function autoPlan(s,foe,lv,human){const p={het:0,fc:1,ph:0,tu:s.tu.map(()=> 'non
  fit(s,p);
  if(s.d.clk&&!human&&lv!=='easy')aiCloak(s,foe,lv,p);
  if(s.d.clk&&!human&&s.ckEnter&&turn===1&&s.ck.mode==='on'&&!p.clk){const q=JSON.parse(JSON.stringify(p));q.clk=1;fit(s,q);if(q.clk&&!cost(s,q).errors.length)Object.assign(p,q)} // [G13.63] a ship that starts cloaked pays for it on turn 1 or it would fade in at once (G13.116)
- if(!human&&lv!=='easy')p.rpj=aiRepair(s); // [D9.7] the computer repairs its most useful destroyed boxes
+ if(!human&&lv!=='easy')p.rpj=aiRepair(s);
+ // [D9.7] the computer repairs its most useful destroyed boxes
+ if(!human&&lv==='hard')aiSuicide(s,p); // [J2.22] the computer may arm a suicide shuttle
+ if(!human)aiWW(s,p,foe); // [J3] the computer may use a wild weasel (Advanced option, computer-options switch)
  if(lv!=='easy'){let c=cost(s,p);if(c.left>=2&&c.rate>=2){let cap=Math.floor(c.rate/2),lf=Math.floor(c.left/2);const ord=[0,1,2,3,4,5].filter(k=>missing(s,k)>0).sort((a,b)=>missing(s,b)-missing(s,a));for(const k of ord){const n=Math.min(cap,lf,missing(s,k));p.dsh[k]+=n;cap-=n;lf-=n}}}
  if(lv!=='easy'){const c=cost(s,p),rt=sensorRate(s),n=Math.min(Math.max(0,Math.floor(c.left)),lv==='hard'?4:2,rt);if(n>0&&!c.errors.length){p.ecm=lv==='hard'?Math.ceil(n/2):n;p.eccm=n-p.ecm;fit(s,p)}}
  if(lv!=='easy'){const c=cost(s,p),cb=s.sys.Battery||0;if(c.left>0&&s.bat<cb&&!c.errors.length){p.br=Math.min(c.left,cb-s.bat,3);fit(s,p)}}
@@ -146,7 +152,7 @@ s.dir0=s.dir||0;s.dirSet=turn;s.dir=wantDir(s,p);s.qr=null;if(needBrk(s,p)){cons
  s.shOn=p.sh;s.gen=Math.floor(p.gen/2);s.spec=p.spec.slice();if(p.sh<1){s.gen=0;s.spec=[0,0,0,0,0,0]}
  const bri0=optRI?Math.max(0,p.bri|0):0;s.bat=Math.max(0,s.bat-(p.bd||0))+Math.max(0,p.br||0)+Math.max(0,p.brw||0)+bri0;s.bw=Math.max(0,p.brw||0);s.bi=bri0;s.impMove=!(optRI&&p.ifree)&&(p.spd>0||!!p.stac); // [H7.47, C2.111] reserve impulse exists only if the ship did not use impulse power for movement
  s.ecm=p.ecm||0;s.eccm=s.pfc?0:(p.eccm||0);crewEW(s);s.legSn=0;s.legSc=0;if(hasRole(s,'weapons')&&!s.pfc&&s.d.trk&&s.d.trk.Sensor&&(trkVal(s,'Sensor')<s.d.trk.Sensor[0]&&(s.ecm||0)+(s.eccm||0)>=trkVal(s,'Sensor'))){s.legSn=1;L(`${s.tag}'s legendary weapons officer adds a point to the damaged sensor (rating ${sensorRate(s)}), so the ship can use its EW.`+RL('G22.71'))}else if(hasRole(s,'weapons')&&!s.pfc&&s.d.trk&&trkVal(s,'Scanner')>0){s.legSc=1;L(`${s.tag}'s legendary weapons officer takes a point off the damaged scanner (penalty ${scanAdj(s)}).`+RL('G22.71, G22.712'))}else if(hasRole(s,'weapons')&&!s.pfc){if((s.eccm||0)>=(s.ecm||0)&&(s.eccm||0)>0){s.eccm++;L(`${s.tag}'s legendary weapons officer adds one point of ECCM (now ${s.eccm}), outside the six-point limits.`+RL('G22.71, G22.711'))}else{s.ecm++;L(`${s.tag}'s legendary weapons officer adds one point of ECM (now ${s.ecm}), outside the six-point limits.`+RL('G22.71, G22.711'))}} // [G22.71, G22.711] one extra natural EW point; the computer picks the side that is already stronger (the sensor and scanner choices are not offered)
- if(hasCrit(s,'bat')){s.bat=0;s.bw=0;s.bi=0}s.pact=(optLand&&s.pst)?(p.pact||defAct(s)):undefined;s.hetAvail=p.het||0;s.sp=p.spd;s.tacLeft=p.tac||0;s.tacReady=false;s.edHalt=0;s.rtacN=0;s.rtacUsed=0;s.stacRUsed=false;s.freeTac=optTac&&p.spd===0&&!(p.tac>0)&&!p.stac;s.stacLeft=p.stac?1:0;s.emPaid=!!(p.em&&optEM);s.emOn=s.emPaid&&!!s.emCarry;s.emBegun=s.emOn;s.exitEdge=null;s.tacAt=s.stacAt=-1;s.disPlan=!!p.dis;s.disOk=!!p.dis;s.rep=(p.dsh||[0,0,0,0,0,0]).slice();s.rpj=rpStart(s,p)}
+ if(hasCrit(s,'bat')){s.bat=0;s.bw=0;s.bi=0}s.pact=(optLand&&s.pst)?(p.pact||defAct(s)):undefined;s.hetAvail=p.het||0;s.sp=p.spd;s.tacLeft=p.tac||0;s.tacReady=false;s.edHalt=0;s.rtacN=0;s.rtacUsed=0;s.stacRUsed=false;s.freeTac=optTac&&p.spd===0&&!(p.tac>0)&&!p.stac;s.stacLeft=p.stac?1:0;s.emPaid=!!(p.em&&optEM);s.emOn=s.emPaid&&!!s.emCarry;s.emBegun=s.emOn;s.exitEdge=null;s.tacAt=s.stacAt=-1;s.disPlan=!!p.dis;s.disOk=!!p.dis;s.rep=(p.dsh||[0,0,0,0,0,0]).slice();s.rpj=rpStart(s,p);ssStart(s,p);wwStart(s,p);plotStart(s,p)}
 function planText(s,p){const bits=[`speed ${p.spd}${(optChg&&p.chg||[]).slice().sort((a,b)=>a.e-b.e).map(c=>', then '+c.v+' from impulse '+c.e).join('')}${s.dir||p.rev?' (in reverse)':''}`,p.sh===2?'full shields':p.sh===1?'minimum shields':'shields off'];
  if(p.rpj&&p.rpj.length)bits.push('repair points on '+p.rpj.map(j=>j.lab).join(', '));
  if(p.ph)bits.push(`${p.ph} to phasers`);{const pa=(p.pl||[]).filter(a=>a==='arm').length,ph2=(p.pl||[]).filter(a=>a==='hold').length;if(pa)bits.push(`${pa} plasma torpedo${pa>1?'es':''} arming`);if(ph2)bits.push(`${ph2} plasma held`);if(p.clk)bits.push('cloak paid for')}const arm=p.tu.filter(a=>a==='arm').length,hold=p.tu.filter(a=>a==='hold').length;if(arm)bits.push(`${arm} photon${arm>1?'s':''} arming`);if(hold)bits.push(`${hold} held`);

@@ -27,7 +27,7 @@ const effRange=(s,foe)=>{const r=dist(s,foe);let e=(s.lock===false||s.pfc)?2*r:r
  if(ckOn(foe)){if(foe.ck.mode==='on'){if(!foe.ck.lockBy&&s.lock!==false)e=2*r;if(!(LNK&&LNK.by===s&&LNK.on===foe))e+=ckTrk(s,foe)}else e+=ckPen(foe,absI(imp+1))} // [G13.302, G13.43, G13.62] +5 hexes (more with the tracking-experience option); none for a ship that holds the cloaked one in its tractor beam
  return e+scanAdj(s)};
 const smallNat=(s,foe,k)=>{if(foe.dr||!nimble(foe)||k==='pl')return 0;const r=effRange(s,foe);return r>=30?4:r>=15?2:0}; // E1.7: nimble ships count as small targets for direct fire
-const ecmOf=s=>(s.ecm||0)+((s.d&&s.d.ecmB&&!(s.dbl&&(s.dbl[0]||s.dbl[1])))?s.d.ecmB:0); // G15.8: Orion stealth bonus, lost while a warp engine is doubled (G15.82)
+const ecmOf=s=>(s.ecm||0)+(s.tum?4:0)+(typeof wwBenefit==='function'&&wwBenefit(s)?6:0)+((s.d&&s.d.ecmB&&!(s.dbl&&(s.dbl[0]||s.dbl[1])))?s.d.ecmB:0); // G15.8: Orion stealth bonus, lost while a warp engine is doubled (G15.82)
 const ewShift0=(s,foe,k)=>ckOn(foe)&&!ckFadeB(foe)?0:foe.dr?(k==='ph'?0:sqrtShift(4-(s.eccm||0))):cqSh(ecmOf(foe)+Math.max(foe.emOn?emToEn(foe):0,smallNat(s,foe,k))+astN(s,foe)+hzEcm(s,foe)+planEcm(s,foe)+zEcm()+(NEB()?9:0)+(s.emOn?emOwn(s):0)+(cq(s)<0?3:0)-(cq(s)>0?3:0)-(s.eccm||0),s);
 const ewShift=(s,foe,k)=>ewShift0(s,foe,k)+(optLand&&k==='ph'&&!ckOn(foe)?atmN(s,foe):0)-(hasRole(sh.includes(s)?s:null,'weapons')?1:0); // [G22.721] a legendary weapons officer improves every direct-fire die roll by one
 // [E2.4] Phaser damage from the type table, by range column and die roll (a shift past 6 moves to the next column, E1.82).

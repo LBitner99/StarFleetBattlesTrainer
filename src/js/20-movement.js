@@ -1,6 +1,6 @@
 /* ================= movement ================= */
 // [C3.1, C3.4] Has the unit moved straight far enough to turn?
-const elig=s=>s.sp<=1||s.st>=tmS(s);
+const elig=s=>dtmOn(s)?Math.abs(s.dtmA||0)>=dtmNeed(s):(s.sp<=1||s.st>=tmS(s));
 const slipOk=s=>optSlip&&s.sp>0&&(s.sl||0)>=1; // C4.1: slip mode of 1 for every ship
 const absI=i=>(turn-1)*32+i;
 // [C6.541] Is the ship unable to move after a breakdown?
@@ -15,14 +15,14 @@ const bdChance=s=>{const adj=cq(s)<0?0:(s.hetUsed&&!(cq(s)>0&&(s.hetN||0)<(nimbl
 function bestFacing(s,o){const a=Math.atan2(cy(o.c,o.r)-cy(s.c,s.r),cx(o.c)-cx(s.c))*180/Math.PI;return(((Math.round((a+90)/60))%6)+6)%6}
 function aiTurn(s,o){if(s.goal&&s!==sh[0]&&!s.out){const b=bestFacing(s,s.goal);if(b===s.f)return 0;return((b-s.f+6)%6)<=3?1:-1} /* [SH4.47] the freighter heads for the 42xx column */ if(s.qh&&s!==sh[0]&&o&&dist(s,o)<=8)qReveal(s,'erects its shields at full strength as the raider closes');if(aiBlind(s))return 0;if(s.merch&&s!==sh[0]){const cv=sh.filter(x=>x.merch&&!x.out&&x!==s&&!x.captured);if(cv.length){const far=cv.reduce((m,x)=>dist(s,x)>dist(s,m)?x:m,cv[0]);if(dist(s,far)>=8){const mid={c:Math.round(cv.reduce((a,x)=>a+x.c,s.c)/(cv.length+1)),r:Math.round(cv.reduce((a,x)=>a+x.r,s.r)/(cv.length+1))},b=bestFacing(s,mid);if(b===s.f)return 0;return((b-s.f+6)%6)<=3?1:-1}} /* [SG4.45] close up when any other freighter is 8 or more hexes away, so the convoy never spreads past 10 */ if(dist(s,o)>16)return 0;const b=(bestFacing(s,o)+3)%6;if(b===s.f)return 0;return((b-s.f+6)%6)<=3?1:-1}let b=bestFacing(s,o);const cv=aiCover(s,o);if(cv)b=bestFacing(s,cv);if(s.retreat&&s!==sh[0]){{const ed=s.tm===0?HUMAN_EDGES:AI_EDGES,ds=ed.map(e=>e==='E'?[COLS-s.c,{c:COLS,r:s.r}]:e==='N'?[s.r-1,{c:s.c,r:1}]:e==='W'?[s.c-1,{c:1,r:s.r}]:[ROWS-s.r,{c:s.c,r:ROWS}]),m=ds.reduce((a,x)=>x[0]<a[0]?x:a,ds[0]);b=bestFacing(s,m[1]);if(m[0]===0)b=s.f} /* [D18.0, SG2.41] a ship that must leave heads for the nearest edge it is allowed to leave by (the scenario's own list) */}else if(s.retreat)b=(b+3)%6;if(b===s.f)return 0;return((b-s.f+6)%6)<=3?1:-1}
 // [C6.1, C6.21, C6.32, C6.5] Make the high energy turn, roll for breakdown.
-function doHet(s,f,i){const foe=foeOf(s),turnBy=((f-s.f)+6)%6,ang=turnBy>3?60*(6-turnBy):60*turnBy;
+function doHet(s,f,i){s.pf0=s.f;const foe=foeOf(s),turnBy=((f-s.f)+6)%6,ang=turnBy>3?60*(6-turnBy):60*turnBy;
  let m=`Impulse ${i}: ${s.tag} makes a high energy turn from facing ${FL[s.f]} to ${FL[f]} (${ang}°). It costs ${hetC(s)} warp, ignores turn mode, and resets it to zero.`;
  s.f=f;s.st=0;s.sl=-1;s.hetAvail--;s.lastHet=absI(i);s.hetAt=absI(i);L(m+RL('C6.1, C6.21, C6.32, C4.36'));
  s.hetN=(s.hetN||0)+1;const first=s.hetN<=(nimble(s)?2:1)+(cq(s)>0?1:0),adj=first&&!isCrip(s)&&cq(s)>=0?2:0,emH=s.emOn&&!nimble(s)?1:0,d=d6(),navB=hasRole(s,'nav')&&!s.leg.used?(s.leg.used=true,1):0,net=d-adj+emH-navB; // [G22.86] the legendary navigator's one-time bonus on a breakdown rolls.hetUsed=true;
  let t=`  Breakdown roll for ${s.tag}: ${d}${adj?(nimble(s)?' − 2 (first two HETs of a nimble ship, C6.521)':' − 2 (first HET this scenario, C6.52)'):''}${navB?' − 1 (legendary navigator, G22.86)':''}${emH?' + 1 (erratic maneuvering, C10.55)':''} = ${net} against a breakdown rating of ${s.bd}–6`;
  const bdR=s.bd-(cq(s)<0?1:0);if(cq(s))t+=cq(s)<0?' (poor crew: rating lowered by one and no first-HET bonus, G21.121)':' (outstanding crew: one extra HET bonus, G21.221)';if(net>=bdR){L(t.replace(`rating of ${s.bd}–6`,`rating of ${bdR}–6`)+' → BREAKDOWN!'+RL('C6.51, C6.54'));breakdown(s,i)}else L(t.replace(`rating of ${s.bd}–6`,`rating of ${bdR}–6`)+' → safe'+RL('C6.51'))}
 // [C6.54, C6.541, C6.5421, C6.5422, C6.5471] Breakdown effects: stops dead, 16 impulses no move, 8 no fire, fifth warp boxes lost, crew losses.
-function breakdown(s,i){if(optFly&&!s.fwDead){s.hReset=true;if(s.fwBroke){s.fwDead=true;L(`  A second breakdown destroys the positron flywheel of ${s.tag}.`+RL('C9.234'))}else{s.fwBroke=true;L(`  The breakdown stops the positron flywheel of ${s.tag}: speeds before this cannot be used any more.`+RL('C9.234'))}}
+function breakdown(s,i){const sp0=s.sp,f0=s.pf0!==undefined?s.pf0:s.f,dir0=s.dir;s.pf0=undefined;if(optFly&&!s.fwDead){s.hReset=true;if(s.fwBroke){s.fwDead=true;L(`  A second breakdown destroys the positron flywheel of ${s.tag}.`+RL('C9.234'))}else{s.fwBroke=true;L(`  The breakdown stops the positron flywheel of ${s.tag}: speeds before this cannot be used any more.`+RL('C9.234'))}}
  s.sp=0;s.f=d6()-1;s.noMove=absI(i)+16;s.noFire=absI(i)+8;if(s.emOn||s.emPaid){s.emOn=false;s.emBegun=true}s.tacLeft=0;s.tacReady=false;s.stacLeft=0;s.freeTac=false;s.hetAvail=0;
  L(`  ${s.tag} stops dead and spins to face ${FL[s.f]}. It cannot move for 16 impulses or fire for 8, and its movement energy is lost.`+RL('C6.541, C6.5471'));
  const wk=['Left W En','Right W En','Center W En'].filter(k=>k in s.d.sys),wsum=()=>wk.reduce((a,k)=>a+s.sys[k],0),tot=wsum(),n=Math.floor(tot/5);
@@ -30,7 +30,7 @@ function breakdown(s,i){if(optFly&&!s.fwDead){s.hReset=true;if(s.fwBroke){s.fwDe
  L(`  Every fifth warp box is destroyed: ${n} lost (${tot} → ${wsum()} left).`+RL('C6.5422'));
  {const U=s.gc+s.bp/2,kill=Math.floor(U/3),bk=Math.floor(s.bp/4),gk=Math.max(0,Math.min(Math.floor(kill-bk/2),Math.floor(s.gc)-1));s.gc-=gk;s.bp-=bk;s.cK+=gk;s.bK+=bk;
  L(`  One third of the crew units are killed (${kill}, including a quarter of the boarding parties): ${gk} general crew unit${gk===1?'':'s'} and ${bk} boarding part${bk===1?'y':'ies'}.`+RL('C6.5421, G9.22')+crewNote(s))}
- L(`  Two internal damage points as a single volley:`+RL('C6.5423'));{const u=new Set();dac(s,null,u);dac(s,null,u)}
+ const tum=tumbleRoll(s,i,sp0,f0,dir0);L(`  Two internal damage points as a single volley${tum?' (plus the tumbling damage)':''}:`+RL('C6.5423'));{const u=new Set();dac(s,null,u);dac(s,null,u);if(tum)tumbleHurt(s,u)}
  s.bd=Math.max(1,s.bd-1);L(`  ${s.tag}'s breakdown rating is now ${s.bd}–6 for the rest of the scenario.`+RL('C6.544'));
  s.capCur=Math.min(s.capCur,capMax(s))}
 // [C6.0] Computer choice of when to make a high energy turn.
@@ -101,9 +101,11 @@ function moveShips(i){const t=sh.map((s,k)=>k===0?(pend===null?0:pend):(s.out?0:
   if(s.d.base){if(!s.out&&({4:[4,12,20,28],3:[7,17,28],2:[12,28],1:[28]}[s.d.rot||2]).includes(i)){s.f=(s.f+1)%6;L(`Impulse ${i}: ${s.tag} rotates 60° to facing ${FL[s.f]}.`+RL('C3.7, C3.71, C3.72'))}return} // C3.7: the computer base rotates twice a turn
 
   if(hf[k]!==undefined&&canHet(s,i)){doHet(s,hf[k],i);het=true}
+  if(s.tum&&tumbleMove(s,i))return;
   if(pairOn&&(s===LNK.by||s===LNK.on)){pairHet[k]=het;return}
   if(s.exitEdge)return;if(optLand&&s.pst&&s.pact!=='leave')return; // [P2.80] a ship in the atmosphere or on the ground does not move across the map
   if(!moves(spdOf(s),i)||blocked(s,i)){if(s.disOk&&moves(s.plan?s.plan.spd:s.sp,i)&&blocked(s,i))s.disOk=false;return}let m=`Impulse ${i}: ${s.tag}`,tr=false,slip=0,tk=t[k];const pc0=s.c,pr0=s.r;
+  if(dtmOn(s)){if(het){s.dtmA=0;s.dtmD=0;tk=0}else tk=dtmTk(s,tk)} // [C3.8] directed turn modes: the declaration decides, the points force the turn
   if(Math.abs(tk)===2){if(!het&&slipOk(s))slip=Math.sign(tk);tk=0}
   if((k>0||AUTOPL)&&(TBLK.size||TER.bh||TER.pul||MN.size||TER.moon||(AIO&&AIO.terr&&(ASTH.size||RGH.size)))&&!het&&!slip&&elig(s)){const LA=Math.min(TER.bh?20:12,4+Math.ceil(spdOf(s)/2)+(TER.bh?6:0)),aHz=AIO&&AIO.terr&&spdOf(s)>6,ahead=f=>{let c=s.c,r=s.r;for(let n=0;n<LA;n++){[c,r]=NB(c,r,f);if(terBlk(c,r)||hzNear(c,r)||(aHz&&(inAst(c,r)||inRing(c,r))))return n+1}return 99}/* [P3.2, P2.223] with the AI switch on the computer also steers clear of asteroid and ring hexes when it is fast enough to be hurt (speed above 6) */,f0=s.dir?(s.f+3)%6:s.f; // AI keeps clear of a planet: turn away when one lies straight ahead within a distance that grows with speed (a crash now destroys the ship, P2.812)
    const f1=((s.dir?(s.f+tk+3):(s.f+tk))%6+6)%6; // the heading after the turn the AI wanted
@@ -121,4 +123,5 @@ function moveShips(i){const t=sh.map((s,k)=>k===0?(pend===null?0:pend):(s.out?0:
   if(terBlk(nc,nr)){s.st=Math.max(s.st,tmS(s)); // a ship held at a planet may turn at once on its next impulse, so it cannot wedge itself
    if(s.tbT!==turn){s.tbT=turn;if(!ckHid(s))L(`Impulse ${i}: ${s.tag} is going slowly enough (speed 1 or less) to start a landing at ${hexNo(nc,nr)}, a planet hex, but landing and atmospheric flight (P2.41, P2.8) are not modelled, so it holds its position.`+RL('P2.212, P2.224'))}return}
   if(nc<1||nc>COLS||nr<1||nr>ROWS){if(s.disPlan&&!noDis(s)){const ex=nc<1?'W':nc>COLS?'E':nr<1?'N':'S';s.exitEdge=ex;m+=` leaves the map through the ${EDGE_NAME[ex]}`;tr=false}else{m+=' is stopped at the map edge (simplification: the real map floats)';s.sp=0}}else{s.c=nc;s.r=nr;if(s.pst&&!terBlk(nc,nr)){s.pst=undefined;s.pact=undefined;m+=' leaves the atmosphere and'}if(slip){s.st++;s.sl=0;m+=` sideslips ${slip>0?'right':'left'} into ${hexNo(nc,nr)}, still facing ${FL[s.f]}`}else{s.st++;s.sl=het?0:tr?1:Math.min(9,(s.sl||0)+1);m+=` ${s.dir?'reverses':'moves'} to ${hexNo(nc,nr)}`}s.path.push([nc,nr]);if(LNK&&LNK.by===s&&!s.exitEdge)m+=towHeld(s,df)}
+  if(dtmOn(s)||(optDTM&&!s.d.base))dtmAfter(s,tr);
   if(!ckHid(s))L(m+(s.exitEdge?RL('SG1.41'):slip?RL('C4.1, C4.2, C4.31, C4.32'):tr?RL('C3.1, C3.41, C4.33'):RL('C1.43')));if(optAst&&!s.exitEdge&&s.c===nc&&s.r===nr&&inAst(nc,nr))astHit(s,i);if(RGH.size&&!s.exitEdge&&s.c===nc&&s.r===nr&&inRing(nc,nr))ringHit(s,i);if(optWeb&&!s.exitEdge&&!over)webAfter(s,i,pc0,pr0)});if(pairOn&&pairMode())movePair(i,t,pairHet)}

@@ -25,8 +25,8 @@ function resolveFire(humanSel,aiSels){const vol={},DD={},sd={};
  if(humanSel.length&&TG().tm===0)L(`Impulse ${imp+1}: friendly fire: ${sh[0].tag} fires on the ${TG().tag}, allowed under ${ffRule(TG())}.`+RL('D1.5, '+ffRule(TG())));
  const groups=[{s:sh[0],foe:TG(),list:humanSel}].concat(aiSels.map(a=>({s:a.s,foe:a.foe||sh[0],list:a.list})));
  groups.forEach(({s,foe,list})=>{const k=sh.indexOf(s),ti=sh.indexOf(foe);if(s.qh&&list.some(x=>!x.dt&&!qStd(s,x)))qReveal(s,'fires a weapon no freighter carries');list.forEach(x=>{if(x.dt){const dd=fireOne(s,x,x.dt);if(dd>0)DD[x.dt.id]=(DD[x.dt.id]||0)+dd;return}const d=fireOne(s,x,foe,x.ns?(sd[k+x.kind+(x.w.px?'p':'')]=sd[k+x.kind+(x.w.px?'p':'')]||{}):null);if(d>0){const sk=shieldFor(foe,s);const key=ti+'|'+sk.k;(vol[key]=vol[key]||{t:ti,k:sk.k,d:0,src:k,note:sk.note}).d+=d}})});
- Object.keys(DD).forEach(id=>{const d=DR.find(z=>z.id==id);if(!d)return;if(d.pl){d.dmg=(d.dmg||0)+DD[id];const st=plStr(d);if(st<=0){rmDr(d);L(`Plasma torpedo #${d.id} takes ${DD[id]} damage and is destroyed.`+RL('FP1.61, FP1.611'))}else L(`Plasma torpedo #${d.id} takes ${DD[id]} phaser damage: its warhead falls to ${st} (it has ${d.dmg} damage in all).`+RL('FP1.611'))}else if(d.ft){ftHit(d,DD[id])}else if(DD[id]>=d.hp){rmDr(d);L(`Drone #${d.id} takes ${DD[id]} damage (${d.hp} needed) and is destroyed.`+RL('FD1.54'))}else L(`Drone #${d.id} takes ${DD[id]} damage but needs ${d.hp}: it survives.`+RL('FD1.54'))});
- Object.values(vol).forEach(v=>applyVolley(sh[v.t],v.k,v.d,sh[v.src],v.note));uimCheck();
+ Object.keys(DD).forEach(id=>{const d=DR.find(z=>z.id==id);if(!d)return;if(d.pl){d.dmg=(d.dmg||0)+DD[id];const st=plStr(d);if(st<=0){rmDr(d);L(`Plasma torpedo #${d.id} takes ${DD[id]} damage and is destroyed.`+RL('FP1.61, FP1.611'))}else L(`Plasma torpedo #${d.id} takes ${DD[id]} phaser damage: its warhead falls to ${st} (it has ${d.dmg} damage in all).`+RL('FP1.611'))}else if(d.ft){ftHit(d,DD[id])}else if(DD[id]>=d.hp){rmDr(d);L(`${d.ss?'Suicide shuttle':'Drone'} #${d.id} takes ${DD[id]} damage (${d.hp} needed) and is destroyed.`+RL('FD1.54'))}else L(`Drone #${d.id} takes ${DD[id]} damage but needs ${d.hp}: it survives.`+RL('FD1.54'))});
+ Object.values(vol).forEach(v=>{NVCNOW=true;try{applyVolley(sh[v.t],v.k,v.d,sh[v.src],v.note)}finally{NVCNOW=false}});uimCheck();
  FB.splice(0).forEach(f=>{const k=shieldFor(f.s,foeOf(f.s)).k;applyVolley(f.s,k,f.fb,f.s,'',`${f.s.tag}'s overload feedback of ${f.fb} hits its own shield #${k+1}.`)})}
 // [D8.1] Track damage per shield per impulse for critical hits (20 or more).
 function critTrack(tgt,k,dmg){if(!optD8||over)return;const key=turn+':'+imp;if(!tgt.cd||tgt.cd.key!==key)tgt.cd={key,v:[0,0,0,0,0,0]};tgt.cd.v[k]+=dmg;if(tgt.cd.v[k]>=20&&tgt.critRolled!==turn){tgt.critRolled=turn;critRoll(tgt,k)}}
@@ -39,7 +39,7 @@ function critRoll(s,k){const r=d6()+d6(),hid=isFoe(s)&&!openInfo;const say=(t,rc
  else if(r===4)add('tr','Transporter failure: transporters cannot be used (no beaming boarding parties) until repaired. Parties already aboard an enemy ship stay there.','D8.2');
  else if(r===5)add('lab','Power failure in the labs (labs and emergency damage repair are not used in a Duel, so this has no effect).','D8.2');
  else if(r===9){add('tow','Tractor beam breakdown: no tractor beam can be used until repaired. Any link or held drone is released.','D8.2');if(LNK&&LNK.by===s)breakLink('its tractor beam broke down','D8.2');DR.forEach(d=>{if(d.held===s)d.held=null})}
- else if(r===10)add('shl','Shuttle launch controls jammed on one bay (no shuttles are used in a Duel, so this has no effect).','D8.2, D8.24');
+ else if(r===10)add('shl','Shuttle launch controls jammed: no shuttle can launch until it is repaired (shuttles already flying are not affected, and they can still land).','D8.2, D8.24');
  else if(r===11){add('man','Maneuver restricted: speed at most 8, no HET or EM, and turn mode one higher until repaired.','D8.2');if(s.sp>8){s.sp=8}if(s.emOn)stopEM(s);s.hetAvail=0}
  else if(r===12){add('warp','Warp engine controls damaged: the ship stops moving at once and cannot use warp energy for movement. Half of the warp output (rounded down) is usable for other purposes, the rest is lost until repaired.','D8.2, D8.23');s.sp=0;s.hetAvail=0;if(s.emOn)stopEM(s)}}
 // [D8.3, D8.31] Damage control tries to repair a critical hit.
@@ -69,7 +69,8 @@ function envelop(t,W,from,d){const lb=`Enveloping plasma torpedo #${d.id} implod
 const exdOf=k=>{const g=((GEO[k]&&GEO[k].g)||[]).find(x=>x[1]==='Excess Damage');return g?g[3].length:0};
 const WCOL='ABCDEFGHIJKLM';
 // [D4.2, D4.3] Damage allocation chart: roll 2d6, destroy the box listed, or take the excess damage when it is empty.
-function dac(tgt,src,used,k){if(tgt.d.sb)return sbDac(tgt,src,used,k===undefined?d6()-1:k); // [R1.1D] starbases use their own procedure
+function dac(tgt,src,used,k){if(NVCNOW&&nvcOn(src)&&!tgt.d.sb)return nvcHit(tgt,src,used);return dacPlain(tgt,src,used,k)}
+function dacPlain(tgt,src,used,k){if(tgt.d.sb)return sbDac(tgt,src,used,k===undefined?d6()-1:k); // [R1.1D] starbases use their own procedure
  crewTick(tgt);used=used||new Set();const hid=isFoe(tgt);const r=d6()+d6(),row=DAC[r];
  const out=(j,txt,rc)=>LS(`  roll ${r}, column ${WCOL[j]}: ${txt}`+RL(rc),hid);
  const kill=c=>{c.alive=false;if('state' in c)c.state='empty';else if('st' in c){c.st=0;c.rdy=false}else if('armed' in c)c.armed=false;tgt.capCur=Math.min(tgt.capCur,capMax(tgt))};

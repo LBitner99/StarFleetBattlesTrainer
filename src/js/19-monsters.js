@@ -33,7 +33,7 @@ function monInfo(x,v){if(EEL.stage>=2)return;if(x.emOn){L(`${x.tag} is using err
  if(sg9On()){sg9Info(x,v*labs);return} // [SG9.45] each ship keeps its own research points
  EEL.info+=v*labs;L(`Scientific information gained this turn: ${v} x ${labs} lab${labs===1?'':'s'} = ${v*labs} (${EEL.info} of ${EEL.need} needed).`+RL('G4.12, G4.31, SM2.5'));
  if(EEL.info>=EEL.need&&!EEL.friendly&&!EEL.kill200){let d=d6();for(let g=0;g<20&&d>=5&&hasRole(x,'captain');g++){L(`${x.tag}'s legendary captain refuses the result (${d===5?'insufficient data':'friendly'}) and rolls S6.1 again.`+RL('G22.222'));d=d6()} /* [G22.222] a legendary captain keeps rolling until the result lets him kill the monster */ L(`The ${EEL.need} points are in. Monster defeat table (S6.1), rolled ${d}: `+[
-  'a suicide shuttle would destroy it, but this game has no shuttles. You need 100 more points and a new roll.',
+  'a suicide shuttle would destroy it, but the monster information that needs (J2.212) is not in the game. You need 100 more points and a new roll.',
   'it would be destroyed if held in a tractor beam, which this game cannot do to a monster. You need 100 more points and a new roll.',
   'it can be destroyed by 200 points of damage from any weapons.',
   'a probe would destroy it, but probes are not modelled against monsters here. You need 100 more points and a new roll.',

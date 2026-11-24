@@ -151,3 +151,17 @@ Not planned yet; this is the inventory (taken from the book's table of contents,
 - Built: D9.7 continuous damage repair (core rule; see rules-coverage-audit section 16).
 - New backlog items from the Standard-Game audit (rules the rulebook counts as core that the game lacks): shuttlecraft operations (J1, J2, suicide shuttles F4.23, ADD at shuttles E5.31, D7.6), Klingon mutiny (G6.2 to G6.6), rolling weapon status (S4.2), mine laying (M2.1) and transporter bombs (M3), ballistic targeting (F4.1 to F4.3). Shuttles are the biggest. Not started: the owner asked to hold new features during play testing; these need a go-ahead and order.
 - To confirm: planet landing (P2.4, P2.8) is unmarked in the text but default off.
+
+## v207 additions (shuttles)
+- Built: J1/J2 administrative shuttles (combat and suicide), see rules-coverage-audit section 17.
+- Backlog: J1.62 tractor landing, J1.63 enemy landing and capture (D7.6), J1.64-J1.66 overcrowding and crash landing, J1.7 shuttles left behind, J2.212 monster information from shuttles (SG9), J2.226-J2.228 dummy/inert/bay explosion for suicide shuttles, J2.214 cargo, J1.85 economic BPV, J5 warp booster packs, shuttles for carriers and starbases, a human-controlled shuttle (today the computer flies yours).
+
+## v208 (wild weasels, marked-rules audit)
+- Built: J3 wild weasels as an Advanced switch (off by default). See rules-coverage-audit section 18 for what is simplified or not built.
+- Open (marked rules, not built): G6 mutiny, C13 docking, C14 pinwheel, D6.4 non-violent combat, G4.2 labs, G7.8, D7.6, D7.7, C6.55 tumbling, C1.32 pre-plotted movement, C3.8 directed turns.
+- Open (standard, older): S4.2 weapon status roll, M2.1 mine laying / M3 transporter bombs, F4 ballistic targeting, planet landing default (P2.4/P2.8) to confirm.
+
+## v209 (seven marked rules)
+- Built as switches (off by default): C6.55 tumbling, D6.4 non-violent combat, D7.7 preventing self-destruction, G4.2 labs identify seeking weapons, D7.6/G7.8 capturing shuttles, C3.8 directed turn modes, C1.32 pre-plotted movement (basic). Detail and omissions in rules-coverage-audit section 19.
+- Open from these: pursuit/evasion/station-keeping plots (C1.322), half-turn and segmented plotting, plot levels other than C1; J1.62 tractor landing of your own shuttles, J1.63-J1.65 enemy landing and crash landing; C3.89; G22.74 weapons officer on NVC; tumbling into an atmosphere without a surface (C6.556).
+- Still the last three marked rules: G6 mutiny, C13 docking, C14 pinwheel (v210).
