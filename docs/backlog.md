@@ -189,3 +189,9 @@ Not planned yet; this is the inventory (taken from the book's table of contents,
 
 ## v215
 - Interface: Cadet's Tutorial button beside Start, always visible.
+
+## v216
+- Interface: rule pop-ups appear above the tutorial call-outs.
+
+## v217
+- Interface: map background is now a star field.

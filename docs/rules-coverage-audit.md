@@ -494,3 +494,9 @@ Mission box: the scenario description no longer has a fixed height (v179 reserve
 
 ## 25. v215 (interface only)
 The Cadet's Tutorial button now sits beside the Start button and is shown for every scenario, so you can read a scenario's description and still open the tutorial. Starting a tutorial section replaces whatever scenario was selected with the plain Duel for that section.
+
+## 26. v216 (interface only)
+The rule pop-up (hover or tap on a rule number) now sits above the Cadet's Tutorial cards and menus (z-index 100001), so it is no longer hidden behind the yellow call-out.
+
+## 27. v217 (interface only)
+- Map background is a seeded procedural star field with a faint nebula haze (25-map-zoom.js `starField()`). No rules affected.

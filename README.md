@@ -18,7 +18,7 @@ The game is one self-contained file, so there is nothing to install and no serve
 
 If you change anything in `src/`, run `build.ps1` (Windows PowerShell) or `python3 build.py` to regenerate `sfb-duel.html` before opening it. Downloaders of the finished game do not need to do this.
 
-Current build: v215.
+Current build: v217.
 
 ## Source layout
 
